@@ -1,6 +1,6 @@
 <?php
 
-require("./vendor/autoload.php");
+require("../vendor/autoload.php");
 
 define("BASE_URL", isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] . "/" : "http://localhost:8000/");
 
