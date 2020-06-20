@@ -3,6 +3,7 @@ $email = (isset($_POST["email"])) ? $_POST["email"] : false;
 $type = (isset($_POST["type"])) ? $_POST["type"] : false;
 
 include_once("../../vendor/autoload.php");
+include_once("../../vendor/phpmailer/phpmailer");
 include_once("../helper.php");
 include_once("../database.php");
 include_once("../controller/Auth/ForgetPasswordAuthController.php");
