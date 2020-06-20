@@ -25,7 +25,8 @@ class RegisterController
             return ["success" => false, "error" => "Email is already in used"];
         } else {
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-            $query = "INSERT INTO users (name, email, password, status ) VALUES ('$this->name', '$this->email', '$this->password', 'off')";
+            $current_date = date("Y-m-d H:i:s");
+            $query = "INSERT INTO users (name, email, password, status, updated_at) VALUES ('$this->name', '$this->email', '$this->password', 'off', '$current_date')";
             $res = mysqli_query($this->conn, $query);
             if (!$res) {
                 return ["success" => false, "error" => mysqli_error($this->conn)];
