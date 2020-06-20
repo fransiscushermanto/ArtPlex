@@ -1,0 +1,77 @@
+//Variables
+@import "./template/variable.scss";
+@import "./template/style.scss";
+@import "./Auth.scss";
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: $font-primary !important;
+  overflow-x: hidden;
+}
+
+#root {
+  overflow: hidden;
+}
+
+main {
+  scroll-behavior: smooth;
+}
+
+a {
+  color: $black;
+  &:hover {
+    color: $yellow;
+  }
+}
+
+.text-link {
+  color: $black;
+  font-weight: bold;
+  transition: 0.3s all ease;
+  cursor: pointer;
+  &:hover {
+    color: $yellow !important;
+    text-decoration: underline;
+  }
+}
+
+.disabled {
+  color: $red;
+  &:hover {
+    color: $red !important;
+    text-decoration: none;
+    cursor: not-allowed !important;
+  }
+}
+
+body,
+html,
+#root,
+main,
+.app-wrapper {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+@import "Header";
+
+.dashboard {
+  padding: 0 40px;
+}
+
+.status {
+  color: red;
+}
+
+.height-100 {
+  height: 100%;
+}
+
+.hidden {
+  display: none !important;
+  z-index: -1 !important;
+}

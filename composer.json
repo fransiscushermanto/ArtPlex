@@ -1,0 +1,6 @@
+{
+  "require": {
+    "vlucas/phpdotenv": "^5.0",
+    "phpmailer/phpmailer": "^6.1"
+  }
+}

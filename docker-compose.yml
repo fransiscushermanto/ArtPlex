@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  mysql-development:
+    image: mysql
+    environment:
+      MYSQL_DATABASE: "ArtPlex"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    volumes:
+      - dbdata:/var/lib/mysql/
+    ports:
+      - "3306:3306"
+
+volumes:
+  dbdata:
+    driver: local
