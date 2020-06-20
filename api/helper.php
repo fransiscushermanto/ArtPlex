@@ -4,12 +4,9 @@ define("BASE_URL", isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] . "/
 
 use Dotenv\Dotenv;
 
-if (isset($_SERVER['HTTP_ORIGIN'])) {
-    if ($_SERVER['HTTP_ORIGIN'] !== "http://localhost:8000") {
-        putenv("APP_ENV=production");
-    } else {
-        putenv("APP_ENV=development");
-    }
+$host = explode(":", $_SERVER['HTTP_HOST'])[0];
+if ($host !== "localhost") {
+    putenv("APP_ENV=production");
 } else {
     putenv("APP_ENV=development");
 }
