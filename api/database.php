@@ -6,4 +6,4 @@ $database = env("DB_DATABASE", "");
 
 echo "$host $username $password $database";
 
-$conn = mysqli_connect($host, $username, $password, $database) or die("Failed when try to connecting db" . mysqli_connect_error());
+$conn = mysqli_connect($host, $username, $password, $database) or die("Failed when try to connecting db " . mysqli_connect_error());
