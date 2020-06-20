@@ -8,7 +8,8 @@ const CheckMail = ({ email, type }) => {
     const data = new FormData();
     data.append("email", email);
     data.append("type", type);
-    await axios.post("/api/actions/send_mail.php", data);
+    const res = await axios.post("/api/actions/send_mail.php", data);
+    console.log(res.data);
   };
 
   useEffect(() => {
