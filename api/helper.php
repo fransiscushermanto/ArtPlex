@@ -4,7 +4,15 @@ define("BASE_URL", isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] . "/
 
 use Dotenv\Dotenv;
 
-$dotenv;
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    if ($_SERVER['HTTP_ORIGIN'] !== "http://localhost:8000") {
+        putenv("APP_ENV=production");
+    } else {
+        putenv("APP_ENV=development");
+    }
+} else {
+    putenv("APP_ENV=development");
+}
 
 if (getenv('APP_ENV') === 'development') {
     $dotenv = Dotenv::createImmutable(__DIR__ . "/../");

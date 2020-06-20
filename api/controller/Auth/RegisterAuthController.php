@@ -7,7 +7,7 @@ class RegisterController
 {
     protected $name, $email, $password, $conn;
 
-    public function __construct($conn, $email = "",  $name = "", $password = "")
+    public function __construct($conn, $email,  $name = "", $password = "")
     {
         $this->name = $name;
         $this->email = $email;
@@ -18,7 +18,7 @@ class RegisterController
 
     public function createUser()
     {
-        $query_check_email = mysqli_query($this->conn, "SELECT 'email' FROM users WHERE email = '$this->email'");
+        $query_check_email = mysqli_query($this->conn, "SELECT * FROM users WHERE email = '$this->email'");
 
         $row = mysqli_fetch_array($query_check_email);
         if ($row > 0) {
