@@ -17,7 +17,6 @@ const VerifyEmail = ({ keyStatus }) => {
     };
     if (keyStatus !== undefined) {
       if (keyStatus) {
-        console.log(keyStatus);
         verifyEmail();
       }
     }
