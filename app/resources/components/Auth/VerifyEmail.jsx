@@ -15,7 +15,11 @@ const VerifyEmail = ({ keyStatus }) => {
       const res = await axios.post("/api/actions/verify_email.php", data);
       console.log(res.data);
     };
-    verifyEmail();
+    if (keyStatus !== undefined) {
+      if (keyStatus) {
+        verifyEmail();
+      }
+    }
   }, []);
 
   useEffect(() => {
