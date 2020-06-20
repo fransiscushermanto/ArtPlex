@@ -4,6 +4,7 @@ session_start();
 $user_id = isset($_SESSION["user_id"]) ? $_SESSION["user_id"] : null;
 
 
+require_once("./vendor/autoload.php");
 require_once("./api/helper.php");
 require_once("./api/database.php");
 require_once("./api/controller/Auth.php");
