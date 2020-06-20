@@ -26,15 +26,19 @@ const VerifyEmail = ({ keyStatus }) => {
       data.append("type", "delete");
       await axios.post("/api/actions/verify_email.php", data);
     };
-    setTimeout(() => {
-      if (time > 0) {
-        setTime(time - 1);
+    if (keyStatus !== undefined) {
+      if (keyStatus) {
+        setTimeout(() => {
+          if (time > 0) {
+            setTime(time - 1);
+          }
+        }, 1000);
+        if (time === 0) {
+          deleteToken();
+          history.push("/login");
+          window.location.reload();
+        }
       }
-    }, 1000);
-    if (time === 0) {
-      deleteToken();
-      history.push("/login");
-      window.location.reload();
     }
   }, [time]);
 
