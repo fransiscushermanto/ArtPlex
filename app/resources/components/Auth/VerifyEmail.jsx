@@ -1,18 +1,41 @@
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 const VerifyEmail = ({ keyStatus }) => {
   const history = useHistory();
   const [time, setTime] = useState(5);
+  let query = new URLSearchParams(location.search);
 
   useEffect(() => {
+    const verifyEmail = async () => {
+      const data = new FormData();
+      data.append("key", query.get("key"));
+      data.append("user_id", query.get("user_id"));
+      data.append("type", "verify");
+      const res = await axios.post("/api/actions/verify_email.php", data);
+      console.log(res.data);
+    };
+    verifyEmail();
+  }, []);
+
+  useEffect(() => {
+    const deleteToken = async () => {
+      const data = new FormData();
+      data.append("user_id", query.get("user_id"));
+      data.append("key", query.get("key"));
+      data.append("type", "delete");
+      await axios.post("/api/actions/verify_email.php", data);
+    };
     setTimeout(() => {
       if (time > 0) {
         setTime(time - 1);
       }
     }, 1000);
-    // if (time === 0) {
-    //   history.push("/login");
-    // }
+    if (time === 0) {
+      deleteToken();
+      history.push("/login");
+      window.location.reload();
+    }
   }, [time]);
 
   return keyStatus !== undefined ? (
@@ -37,7 +60,7 @@ const VerifyEmail = ({ keyStatus }) => {
               <p>
                 Thank you for verifying your emails.{" "}
                 {time > 0
-                  ? `You will be redirected in ${time} seconds.`
+                  ? `You will be redirected to login page in ${time} seconds.`
                   : "Redirecting ..."}
               </p>
             </div>

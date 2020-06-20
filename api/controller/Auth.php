@@ -64,20 +64,6 @@ class Auth
     function deleteToken($key)
     {
         $query_delete_token =  "DELETE FROM `tokens_temp` WHERE v_key = '$key' and user_id = '$this->user_id';";
-        if (mysqli_query($this->conn, $query_delete_token)) { //if deletion success
-            return (object) array(
-                "success" => true,
-                "user_id" => $this->user_id,
-                "key" => $key,
-                "error" => "",
-            );
-        } else { //deletion fails
-            return (object) array(
-                "success" => false,
-                "user_id" => $this->user_id,
-                "error" => "something when wrong when deleting token related to id",
-            );
-            //something when wrong when deleting tokens related to email from email verification table
-        }
+        mysqli_query($this->conn, $query_delete_token);
     }
 }
