@@ -6,8 +6,12 @@ define("BASE_URL", isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] . "/
 
 use Dotenv\Dotenv;
 
-$dotenv = Dotenv::createImmutable(__DIR__ . "/../");
-$dotenv->load();
+if (getenv('APP_ENV') === 'development') {
+    $dotenv = Dotenv::createImmutable(__DIR__ . "/../");
+    $dotenv->load();
+}
+$dotenv->required('OTHER_VAR');
+
 
 function env($env, $default)
 {
