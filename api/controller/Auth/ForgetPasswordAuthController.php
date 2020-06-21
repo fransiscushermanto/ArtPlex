@@ -131,34 +131,34 @@ class ForgetPasswordController
     }
 
 
-    function changePassword($user_id, $password_new_1, $password_new_2)
+    function checkPassword($user_id, $new_password_1, $new_password_2)
     {
         $query = "SELECT password FROM users WHERE user_id = '$user_id'";
         if ($result = mysqli_query($this->conn, $query)) {
             $row = mysqli_fetch_assoc($result);
             $old_password = $row['password'];
-            if (password_verify($password_new_1, $old_password)) { //if new password is the same as the old one
+            if (password_verify($new_password_1, $old_password)) { //if new password is the same as the old one
                 return (object) array(
                     "success" => false,
                     "error" => "Password is the same as the old password",
-                    "password" => $password_new_1,
-                    "confirm_password" => $password_new_2,
+                    "password" => $new_password_1,
+                    "confirm_password" => $new_password_2,
                     "old_password" => $old_password,
                 );
             } else { //if new password is not the same as the old one
-                if ($password_new_1 !== $password_new_2) { //check if password is confirmed, if not...
+                if ($new_password_1 !== $new_password_2) { //check if password is confirmed, if not...
                     return (object) array(
                         "success" => false,
                         "error" => "Input password is not same",
-                        "password" => $password_new_1,
-                        "confirm_password" => $password_new_2,
+                        "password" => $new_password_1,
+                        "confirm_password" => $new_password_2,
                     );
                 } else { //if password is confirmed
                     return (object) array(
                         "success" => true,
                         "error" => "",
-                        "password" => $password_new_1,
-                        "confirm_password" => $password_new_2,
+                        "password" => $new_password_1,
+                        "confirm_password" => $new_password_2,
                     );
                 }
             }

@@ -137,16 +137,12 @@ class RegisterController
         if (mysqli_query($this->conn, $query_update_user)) { //if user status update success
             return (object) array(
                 "success" => true,
-                "user_id" => $user_id,
-                "date" => $cur_date,
                 "error" => "",
             );
             //redirect to email_verified page
         } else { //if user status update fails
             return (object) array(
                 "success" => false,
-                "user_id" => $user_id,
-                "date" => $cur_date,
                 "error" => "Something went wrong when updating status in user table",
             );
             //something when wrong when updating user table
