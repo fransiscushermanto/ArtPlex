@@ -8,6 +8,7 @@ export default (OriginalComponent) => {
     const history = useHistory();
     const { user } = myApp;
     const [keyStatus, setKeyStatus] = useState();
+    const [email, setEmail] = useState();
     useEffect(() => {
       const verifyToken = async (key, user_id, type) => {
         const data = new FormData();
@@ -16,6 +17,10 @@ export default (OriginalComponent) => {
         data.append("type", type);
         const res = await axios.post("/api/actions/verify_token.php", data);
         setKeyStatus(res.data.success);
+        console.log(res.data);
+        if (res.data.email) {
+          setEmail(res.data.email);
+        }
       };
 
       if (user !== null) {
@@ -30,9 +35,17 @@ export default (OriginalComponent) => {
           history.push("/");
           window.location.reload();
         }
+      } else if (location.pathname === "/reset") {
+        let query = new URLSearchParams(location.search);
+        if (query.get("key")) {
+          verifyToken(query.get("key"), query.get("user_id"), "forget");
+        } else {
+          history.push("/");
+          window.location.reload();
+        }
       }
     }, []);
-    return <OriginalComponent keyStatus={keyStatus} />;
+    return <OriginalComponent email={email} keyStatus={keyStatus} />;
   };
 
   return MixedComponent;

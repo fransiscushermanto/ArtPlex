@@ -70,7 +70,8 @@
 }
 
 .auth-wrapper .col:nth-child(2) .btn-action,
-.forget-wrapper .col:nth-child(2) .btn-action {
+.forget-wrapper .col:nth-child(2) .btn-action,
+.reset-password .btn-action {
   position: relative;
   border-radius: 50px !important;
   color: $white !important;

@@ -13,7 +13,6 @@ const VerifyEmail = ({ keyStatus }) => {
       data.append("user_id", query.get("user_id"));
       data.append("type", "verify");
       const res = await axios.post("/api/actions/verify_email.php", data);
-      console.log(res.data);
     };
     console.log(keyStatus);
     if (keyStatus !== undefined) {

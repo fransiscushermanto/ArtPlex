@@ -33,6 +33,7 @@ const RegisterGroup = () => {
     validationSchema: schema,
   });
 
+  const [email, setEmail] = useState("");
   const [auth, setAuth] = useState(null);
 
   const onSubmit = async (formData) => {
@@ -42,10 +43,18 @@ const RegisterGroup = () => {
     data.append("password", formData.password);
     const res = await axios.post("/api/actions/register.php", data);
     if (res.data.success) {
+      sendMail();
       setAuth(res.data.error);
     } else {
       setAuth(res.data.error);
     }
+  };
+
+  const sendMail = () => {
+    const data = new FormData();
+    data.append("email", email);
+    data.append("type", "verify");
+    axios.post("/api/actions/send_mail.php", data);
   };
 
   const goHome = () => {
@@ -61,9 +70,10 @@ const RegisterGroup = () => {
       errors={errors}
       auth={auth}
       goHome={goHome}
+      setEmail={setEmail}
     ></Register>
   ) : (
-    <CheckMail email={watch("email")} type={"verify"} />
+    <CheckMail email={email} type={"verify"} />
   );
 };
 

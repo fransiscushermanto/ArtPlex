@@ -9,6 +9,9 @@ const ForgetPassword = ({
   loading,
   goBack,
   register,
+  verifiedStatus,
+  verifyEmail,
+  setEmail,
 }) => {
   return (
     <div
@@ -67,8 +70,8 @@ const ForgetPassword = ({
               <div className="form-group">
                 <p className="description">
                   <b>
-                    Insert registered email. We will send you link to reset your
-                    password.
+                    Insert your verified email. We will send you link to reset
+                    your password.
                   </b>
                 </p>
               </div>
@@ -88,6 +91,7 @@ const ForgetPassword = ({
                       ? { border: "1px solid red", marginBottom: "5px" }
                       : null
                   }
+                  onChange={(e) => setEmail(e.target.value)}
                 />
                 {(errors.email && (
                   <p
@@ -102,7 +106,15 @@ const ForgetPassword = ({
                       style={{ fontSize: "13px" }}
                       className="text-danger font-weight-bold"
                     >
-                      {auth}
+                      {auth}{" "}
+                      {verifiedStatus === "off" ? (
+                        <span>
+                          Click here to verify your email.{" "}
+                          <span className="text-link" onClick={verifyEmail}>
+                            Verify
+                          </span>{" "}
+                        </span>
+                      ) : null}
                     </p>
                   ))}
               </div>
@@ -138,6 +150,7 @@ ForgetPassword.propTypes = {
   loading: PropTypes.bool.isRequired,
   goBack: PropTypes.func.isRequired,
   register: PropTypes.any.isRequired,
+  setEmail: PropTypes.func.isRequired,
 };
 
 export default ForgetPassword;

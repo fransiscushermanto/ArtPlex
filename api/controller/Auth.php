@@ -35,11 +35,20 @@ class Auth
         return !empty($this->user());
     }
 
-    function verifyToken($key)
+    function verifyToken($key, $type)
     {
+        $query = "";
         //check if token exist or not
-        $query_check_token = mysqli_query($this->conn, "SELECT * FROM `tokens_temp` WHERE v_key = '$key' and  user_id = '$this->user_id';");
+        if ($type === "verify") {
+            $query =  "SELECT * FROM `verify_tokens_temp` WHERE v_key = '$key' and  user_id = '$this->user_id';";
+        } else if ($type === "forget") {
+            $query = "SELECT * FROM `reset_tokens_temp` WHERE v_key = '$key' and  user_id = '$this->user_id';";
+        }
+        $query_check_token = mysqli_query($this->conn, $query);
+        $query_get_user_data = mysqli_query($this->conn, "SELECT * FROM users WHERE user_id = '$this->user_id'");
         $row = mysqli_fetch_assoc($query_check_token);
+        $rowUser = mysqli_fetch_assoc($query_get_user_data);
+
         if ($row <= 0) { //if token doesn't exist
             return (object) array(
                 "success" => false,
@@ -56,14 +65,20 @@ class Auth
             } else { //if token still valid
                 return (object) array(
                     "success" => true,
+                    "email" => $rowUser['email'],
                 );
             }
         }
     }
 
-    function deleteToken($key)
+    function deleteToken($key, $type)
     {
-        $query_delete_token =  "DELETE FROM `tokens_temp` WHERE v_key = '$key' and user_id = '$this->user_id';";
+        $query_delete_token = "";
+        if ($type === "verify") {
+            $query_delete_token = "DELETE FROM `verify_tokens_temp` WHERE v_key = '$key' and user_id = '$this->user_id';";
+        } else if ($type === "delete_reset") {
+            $query_delete_token = "DELETE FROM `reset_tokens_temp` WHERE v_key = '$key' and user_id = '$this->user_id';";
+        }
         mysqli_query($this->conn, $query_delete_token);
     }
 }

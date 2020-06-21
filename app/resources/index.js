@@ -16,6 +16,7 @@ import NotFound from "./components/NotFound";
 import HomeGroup from "./components/Home/HomeGroup";
 import AuthPage from "./components/HOC/AuthPage";
 import VerifyEmail from "./components/Auth/VerifyEmail";
+import ResetPassword from "./components/Auth/ResetPassword";
 import myApp from "myApp";
 
 /* globals __webpack_public_path__ */
@@ -34,6 +35,7 @@ if (document.getElementById("app")) {
             component={AuthPage(ForgetPasswordGroup)}
           />
           <Route exact path="/verify" component={AuthPage(VerifyEmail)} />
+          <Route exact path="/reset" component={AuthPage(ResetPassword)} />
           <Route exact path="*" component={NotFound} />
           <Route exact path="/404" component={NotFound} />
         </Switch>

@@ -9,6 +9,7 @@ const Register = ({
   register,
   errors,
   auth,
+  setEmail,
 }) => {
   return (
     <div className="auth-wrapper row height-100">
@@ -246,6 +247,7 @@ const Register = ({
                         ? { border: "1px solid red", marginBottom: "5px" }
                         : null
                     }
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                   {(errors.email && (
                     <p

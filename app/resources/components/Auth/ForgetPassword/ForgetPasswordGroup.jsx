@@ -20,19 +20,39 @@ const ForgetPasswordGroup = () => {
 
   const [loading, setLoading] = useState(false);
   const [auth, setAuth] = useState(null);
+  const [verifiedStatus, setVerifiedStatus] = useState(undefined);
+  const [type, setType] = useState("");
+  const [email, setEmail] = useState("");
+
+  const verifyEmail = async () => {
+    setAuth("");
+    setType("verify");
+  };
 
   const onSubmit = async (formData) => {
     setAuth(null);
     setLoading(!loading);
     const data = new FormData();
     data.append("email", formData.email);
+    data.append("type", "check");
     const res = await axios.post("/api/actions/forget_password.php", data);
     // console.log(res.data);
     if (res.data.success) {
+      setType("reset");
       setAuth(res.data.error);
+      setVerifiedStatus(res.data.status);
+      sendMail();
     } else {
       setAuth(res.data.error);
+      setVerifiedStatus(res.data.status);
     }
+  };
+
+  const sendMail = () => {
+    const data = new FormData();
+    data.append("email", email);
+    data.append("type", "reset");
+    axios.post("/api/actions/send_mail.php", data);
   };
 
   const goBack = () => {
@@ -54,9 +74,12 @@ const ForgetPasswordGroup = () => {
       onSubmit={onSubmit}
       goBack={goBack}
       loading={loading}
+      verifiedStatus={verifiedStatus}
+      verifyEmail={verifyEmail}
+      setEmail={setEmail}
     ></ForgetPassword>
   ) : (
-    <CheckMail email={watch("email")} type={"forget"}></CheckMail>
+    <CheckMail email={email} type={type}></CheckMail>
   );
 };
 

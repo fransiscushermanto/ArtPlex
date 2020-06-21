@@ -8480,7 +8480,8 @@ textarea.form-control {
     padding: 30px 50px 0px 15px; }
 
 .auth-wrapper .col:nth-child(2) .btn-action,
-.forget-wrapper .col:nth-child(2) .btn-action {
+.forget-wrapper .col:nth-child(2) .btn-action,
+.reset-password .btn-action {
   position: relative;
   border-radius: 50px !important;
   color: #fff !important;
@@ -8491,7 +8492,8 @@ textarea.form-control {
   background: linear-gradient(45deg, #2980b9 0%, #aa4b6b 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#2980b9', endColorstr='#aa4b6b', GradientType=1 ); }
   .auth-wrapper .col:nth-child(2) .btn-action::before,
-  .forget-wrapper .col:nth-child(2) .btn-action::before {
+  .forget-wrapper .col:nth-child(2) .btn-action::before,
+  .reset-password .btn-action::before {
     position: absolute;
     border-radius: 50px !important;
     content: "";
@@ -8507,7 +8509,8 @@ textarea.form-control {
     transition: opacity 0.3s linear;
     opacity: 0; }
   .auth-wrapper .col:nth-child(2) .btn-action:hover::before,
-  .forget-wrapper .col:nth-child(2) .btn-action:hover::before {
+  .forget-wrapper .col:nth-child(2) .btn-action:hover::before,
+  .reset-password .btn-action:hover::before {
     opacity: 1; }
 
 .back-btn {

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 const CheckMail = ({ email, type }) => {
-  const [time, setTime] = useState(0);
+  const [time, setTime] = useState(30);
 
-  const sendMail = async () => {
+  const sendMail = () => {
     setTime(30);
     const data = new FormData();
     data.append("email", email);
     data.append("type", type);
-    const res = await axios.post("/api/actions/send_mail.php", data);
-    console.log(res.data);
+    axios.post("/api/actions/send_mail.php", data);
   };
 
   useEffect(() => {
@@ -18,11 +17,13 @@ const CheckMail = ({ email, type }) => {
         setTime(time - 1);
       }
     }, 1000);
+    return () =>
+      setTimeout(() => {
+        if (time > 0) {
+          setTime(time - 1);
+        }
+      }, 1000);
   }, [time]);
-
-  useEffect(() => {
-    sendMail();
-  }, []);
 
   return (
     <div className="container height-100">

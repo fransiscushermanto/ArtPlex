@@ -1,6 +1,6 @@
 <?php
 
-ob_start();
+//ob_start();
 
 use PHPMailer\PHPMailer\PHPMailer;
 
@@ -19,17 +19,24 @@ class ForgetPasswordController
         $q = mysqli_query($this->conn, "SELECT user_id, status FROM users WHERE email = '$this->email'");
         $row = mysqli_fetch_assoc($q);
         if ($row > 0) {
-
-            return (object) array(
-                "success" => true,
-                "error" => "",
-                "email" => $this->email,
-            );
+            $status = $row["status"];
+            if ($status === 'on') {
+                return (object) array(
+                    "success" => true,
+                    "error" => "",
+                    "status" => $status,
+                );
+            } else {
+                return (object) array(
+                    "success" => false,
+                    "error" => "Email is not verified yet.",
+                    "status" => $status,
+                );
+            }
         } else {
             return (object) array(
                 "success" => false,
-                "error" => "Email is not registered.",
-                "email" => $this->email,
+                "error" => "Email is not registered",
             );
         }
     }
@@ -44,6 +51,7 @@ class ForgetPasswordController
             //fetching data from query result
             $user_id = $row["user_id"];
             $name = $row["name"];
+
 
             //setting expiry date for key
             $expiry_date_format = mktime(
@@ -60,11 +68,19 @@ class ForgetPasswordController
             //generating key
             $any =  (2418 * 2);
             $key = md5(((string) $any . $this->email));
-            $addKey = substr(md5(uniqid(rand(), 1)), 3, 10);
-            $key = $key . $addKey;
+            $addKey = password_hash(uniqid(rand(), 1), PASSWORD_BCRYPT);
+            $key = $key . "." . $addKey;
 
+            $query = '';
+            $query_check_user_token = mysqli_query($this->conn, "SELECT * FROM reset_tokens_temp WHERE user_id = '$user_id'");
+            $token_user_row = mysqli_fetch_assoc($query_check_user_token);
+            if ($token_user_row > 0) {
+                $query = "UPDATE `reset_tokens_temp` SET v_key = '$key' WHERE user_id = '$user_id'";
+            } else {
+                $query = "INSERT INTO `reset_tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES ('$key','$user_id','$expiry_date')";
+            }
+            $query_insert_token = mysqli_query($this->conn, $query);
             //inserting key into database
-            $query_insert_token = mysqli_query($this->conn, "INSERT INTO `tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES ('$key','$user_id','$expiry_date')");
             if ($query_insert_token) {
                 $mail = new PHPMailer(true);
                 try {
@@ -73,7 +89,7 @@ class ForgetPasswordController
                     $output .= '<p>Please click on the following link to reset your password.</p>';
                     $output .= '<p>-------------------------------------------------------------</p>';
                     $output .= '<p><a href="' . BASE_URL . 'reset?key=' . $key . '&user_id=' . $user_id .
-                        '&action=reset" target="_blank">Click here to recover your password</a></p>';
+                        '" target="_blank">Click here to recover your password</a></p>';
                     $output .= '<p>-------------------------------------------------------------</p>';
                     $output .= '<p>Please be sure to copy the entire link into your browser.
                     The link will expire after 30 minutes for security reason.</p>';
@@ -108,9 +124,9 @@ class ForgetPasswordController
                     } else {
                         return (object) array(
                             "success" => true,
-                            "message" => "Successfully send password recovery mail."
+                            "error" => "",
                         );
-                        header("Location: " . BASE_URL . "PleaseCheckYourMail.php?name=" . $name);
+                        //header("Location: " . BASE_URL . "PleaseCheckYourMail.php?name=" . $name);
                     }
                 } catch (Exception $e) {
                     echo "Caught Exception: " . $e->getMessage() . "<br>";
@@ -119,46 +135,41 @@ class ForgetPasswordController
             } else {
                 return (object) array(
                     "success" => false,
-                    "message" => "Something went wrong when trying to insert token to database"
+                    "error" => "Something went wrong when trying to insert token to database $query_insert_token"
                 );
             }
         } else {
             return (object) array(
                 "success" => false,
-                "message" => "Email doesn't exist."
+                "Error" => "Email doesn't exist.",
             );
         }
     }
 
 
-    function checkPassword($user_id, $new_password_1, $new_password_2)
+    function changePassword($user_id, $new_password)
     {
-        $query = "SELECT password FROM users WHERE user_id = '$user_id'";
-        if ($result = mysqli_query($this->conn, $query)) {
+        $query_check_old_password = "SELECT password FROM users WHERE user_id = '$user_id'";
+        if ($result = mysqli_query($this->conn, $query_check_old_password)) {
             $row = mysqli_fetch_assoc($result);
             $old_password = $row['password'];
-            if (password_verify($new_password_1, $old_password)) { //if new password is the same as the old one
+            if (password_verify($new_password, $old_password)) { //if new password is the same as the old one
                 return (object) array(
                     "success" => false,
-                    "error" => "Password is the same as the old password",
-                    "password" => $new_password_1,
-                    "confirm_password" => $new_password_2,
-                    "old_password" => $old_password,
+                    "error" => "Password may not same as the old password.",
                 );
             } else { //if new password is not the same as the old one
-                if ($new_password_1 !== $new_password_2) { //check if password is confirmed, if not...
-                    return (object) array(
-                        "success" => false,
-                        "error" => "Input password is not same",
-                        "password" => $new_password_1,
-                        "confirm_password" => $new_password_2,
-                    );
-                } else { //if password is confirmed
+                $new_password = password_hash($new_password, PASSWORD_BCRYPT);
+                $query_change_password = "UPDATE users SET `password`= '$new_password' WHERE user_id = '$user_id'";
+                if ($result = mysqli_query($this->conn, $query_change_password)) {
                     return (object) array(
                         "success" => true,
                         "error" => "",
-                        "password" => $new_password_1,
-                        "confirm_password" => $new_password_2,
+                    );
+                } else {
+                    return (object) array(
+                        "success" => false,
+                        "error" => "Failed to update password",
                     );
                 }
             }

@@ -14,21 +14,16 @@ class LoginController
     public function authenticateUser()
     {
 
-        $q = mysqli_query($this->conn, "SELECT user_id AS id, status, password FROM users WHERE email = '$this->email'");
+        $q = mysqli_query($this->conn, "SELECT user_id AS id,  password FROM users WHERE email = '$this->email'");
 
         $row = mysqli_fetch_assoc($q);
         if ($row > 0) {
-            $status = $row['status'];
             if (password_verify($this->password, $row['password'])) {
-                if ($status === "on") {
-                    session_start();
+                session_start();
 
-                    $_SESSION['user_id'] = $row['id'];
-                    return ["success" => true, "status" => $status];
-                } else {
-                    return ["success" => false, "error" => "Account is not activated", "status" => $status];
-                }
-            } else return ["success" => false, "error" => "Sorry, Email or Password is incorrect", "status" => $status];
+                $_SESSION['user_id'] = $row['id'];
+                return ["success" => true, "error" => ""];
+            } else return ["success" => false, "error" => "Sorry, Email or Password is incorrect"];
         } else return ["success" => false, "error" => "Email is not registered"];
     }
 }
