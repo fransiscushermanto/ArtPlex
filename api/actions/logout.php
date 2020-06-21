@@ -1,4 +1,6 @@
 <?php
+
+include_once("../../vendor/autoload.php");
 include_once("../helper.php");
 session_start();
 unset($_SESSION['user_id']);
