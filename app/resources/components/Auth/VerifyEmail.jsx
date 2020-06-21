@@ -15,12 +15,13 @@ const VerifyEmail = ({ keyStatus }) => {
       const res = await axios.post("/api/actions/verify_email.php", data);
       console.log(res.data);
     };
+    console.log(keyStatus);
     if (keyStatus !== undefined) {
       if (keyStatus) {
         verifyEmail();
       }
     }
-  }, []);
+  }, [keyStatus]);
 
   useEffect(() => {
     const deleteToken = async () => {
@@ -40,11 +41,10 @@ const VerifyEmail = ({ keyStatus }) => {
         if (time === 0) {
           deleteToken();
           history.push("/login");
-          window.location.reload();
         }
       }
     }
-  }, [time]);
+  }, [time, keyStatus]);
 
   return keyStatus !== undefined ? (
     keyStatus ? (
