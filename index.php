@@ -13,7 +13,7 @@ use Api\Actions\Route;
 
 $route = new Route();
 $auth = new Auth($conn, $user_id);
-
+$auth->checkCookie();
 $stories =  [
     (object) array(
         "title" => "This is injected",
@@ -61,7 +61,6 @@ $stories =  [
 </script>
 
 <body>
-    <?php echo isset($_COOKIE["remember_me"]) ? $_COOKIE["remember_me"] : ""; ?>
     <div id="root">
         <?php include_once("./api/view/layout/nav.php") ?>
         <main class="py-0">

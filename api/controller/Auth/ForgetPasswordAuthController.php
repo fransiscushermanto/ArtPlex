@@ -160,7 +160,7 @@ class ForgetPasswordController
                 );
             } else { //if new password is not the same as the old one
                 $new_password = password_hash($new_password, PASSWORD_BCRYPT);
-                $current_date = date("H:i:s d-m-Y");
+                $current_date = date("Y-m-d H:i:s");
                 $query_change_password = "UPDATE users SET `password`= '$new_password', updated_at = '$current_date' WHERE user_id = '$user_id'";
                 if ($result = mysqli_query($this->conn, $query_change_password)) {
                     return (object) array(
