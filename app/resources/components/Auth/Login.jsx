@@ -31,7 +31,7 @@ const Login = () => {
     data.append("password", formData.password);
     data.append("remember_me", formData.remember_me);
     const res = await axios.post("/api/actions/login.php", data);
-    console.log(res);
+    // console.log(res);
     if (res.data.success) {
       history.push("/");
       window.location.reload();

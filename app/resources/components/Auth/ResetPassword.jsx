@@ -39,7 +39,7 @@ const ResetPassword = ({ email, keyStatus }) => {
     data.append("password", formData.password);
     data.append("type", "reset");
     const res = await axios.post("/api/actions/forget_password.php", data);
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data.success) {
       setAuth(res.data.error);
     } else {

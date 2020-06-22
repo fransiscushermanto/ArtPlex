@@ -99,29 +99,8 @@ class Auth
                     $this->user_id = $row["user_id"];
                     //set session
                     $_SESSION["user_id"] = $row["user_id"];
-                    return (object) array(
-                        "success" => true,
-                        "error" => "",
-                    );
-                } else {
-                    return (object) array(
-                        "success" => false,
-                        "error" => "Token in database is not the same with the one in cookie",
-                    );
                 }
-            } else {
-                echo "fail";
-                return (object) array(
-                    "success" => false,
-                    "error" => "There's no user with this token",
-                );
             }
-        } else {
-            echo "fail - token doesn't exist";
-            return (object) array(
-                "success" => false,
-                "error" => "Token doesn't exist",
-            );
         }
     }
 }
