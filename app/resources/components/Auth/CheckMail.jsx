@@ -3,12 +3,13 @@ import axios from "axios";
 const CheckMail = ({ email, type }) => {
   const [time, setTime] = useState(30);
 
-  const sendMail = () => {
+  const sendMail = async () => {
     setTime(30);
     const data = new FormData();
     data.append("email", email);
     data.append("type", type);
-    axios.post("/api/actions/send_mail.php", data);
+    const res = await axios.post("/api/actions/send_mail.php", data);
+    console.log(res.data);
   };
 
   useEffect(() => {

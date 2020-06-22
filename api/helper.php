@@ -24,13 +24,14 @@ function env($env, $default)
     return $var;
 }
 
-function keygen($header, $payload, $verify_signature)
+function keygen($payload)
 {
     $header = (object) array(
         "alg" => "salt",
         "typ" => "BCRYPT"
     );
-    $header = password_hash($header, PASSWORD_BCRYPT);
+    $verify_signature = "ArtplexTheBest1";
+    $header = password_hash(json_encode($header), PASSWORD_BCRYPT);
     $payload = password_hash($payload, PASSWORD_BCRYPT);
     $verify_signature = password_hash($verify_signature, PASSWORD_BCRYPT);
 

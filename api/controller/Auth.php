@@ -50,6 +50,7 @@ class Auth
         $rowUser = mysqli_fetch_assoc($query_get_user_data);
 
         if ($row <= 0) { //if token doesn't exist
+            $this->deleteToken($key, $type);
             return (object) array(
                 "success" => false,
             );
@@ -80,5 +81,47 @@ class Auth
             $query_delete_token = "DELETE FROM `reset_tokens_temp` WHERE v_key = '$key' and user_id = '$this->user_id';";
         }
         mysqli_query($this->conn, $query_delete_token);
+    }
+
+    function checkCookie()
+    {
+        //check cookie if it set
+        if (isset($_COOKIE['remember_token'])) {
+            $remember_token = $_COOKIE['remember_token'];
+            $query_read_rtoken = mysqli_query($this->conn, "SELECT `user_id`, `name`, `email`, `status`, `email_verified_at`, `remember_token`, `last_activity`, `created_at`, `updated_at`  FROM `users` WHERE `remember_token` = '$remember_token';");
+            //check if cookie exists in `users` table`
+            $row = mysqli_fetch_assoc($query_read_rtoken);
+            if ($row > 0) {
+                //check if remember_token in user table is the same with the one in cookie
+                if ($row['remember_token'] === $remember_token) {
+                    //login
+                    session_start();
+                    $this->user_id = $row["user_id"];
+                    //set session
+                    $_SESSION["user_id"] = $row["user_id"];
+                    return (object) array(
+                        "success" => true,
+                        "error" => "",
+                    );
+                } else {
+                    return (object) array(
+                        "success" => false,
+                        "error" => "Token in database is not the same with the one in cookie",
+                    );
+                }
+            } else {
+                echo "fail";
+                return (object) array(
+                    "success" => false,
+                    "error" => "There's no user with this token",
+                );
+            }
+        } else {
+            echo "fail - token doesn't exist";
+            return (object) array(
+                "success" => false,
+                "error" => "Token doesn't exist",
+            );
+        }
     }
 }

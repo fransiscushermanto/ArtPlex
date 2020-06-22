@@ -25,6 +25,7 @@ class RegisterController
             return ["success" => false, "error" => "Email is already being used"];
         } else {
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
+            date_default_timezone_set("Europe/Kaliningrad");
             $current_date = date("Y-m-d H:i:s");
             $query = "INSERT INTO users (name, email, password, status, updated_at) VALUES ('$this->name', '$this->email', '$this->password', 'off', '$current_date')";
             $res = mysqli_query($this->conn, $query);
@@ -55,7 +56,7 @@ class RegisterController
                     date("d"),
                     date("Y")
                 );
-
+                date_default_timezone_set("Europe/Kaliningrad");
                 $expiry_date = date("Y-m-d H:i:s", $expiry_date_format);
 
                 //generating key
@@ -149,12 +150,15 @@ class RegisterController
 
     public function verifyEmail($user_id, $key)
     {
-        $cur_date = date("Y-m-d H:i:s");
-        $query_update_user = "UPDATE users SET status='on', email_verified_at = '$cur_date' where user_id = '$user_id';";
+
+        date_default_timezone_set("Europe/Kaliningrad");
+        $current_date = date("H:i:s d-m-Y");
+        $query_update_user = "UPDATE users SET status='on', email_verified_at = '$current_date', updated_at = '$current_date' where user_id = '$user_id';";
         if (mysqli_query($this->conn, $query_update_user)) { //if user status update success
             return (object) array(
                 "success" => true,
                 "error" => "",
+                "updated_at" => $current_date
             );
             //redirect to email_verified page
         } else { //if user status update fails

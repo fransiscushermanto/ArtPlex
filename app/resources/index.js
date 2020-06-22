@@ -7,6 +7,7 @@ import {
   Switch,
   useHistory,
 } from "react-router-dom";
+import HttpsRedirect from "react-https-redirect";
 
 import App from "./components/App";
 import Login from "./components/Auth/Login";
@@ -23,24 +24,26 @@ import myApp from "myApp";
 __webpack_public_path__ = `${window.STATIC_URL}/app/assets/bundle/`;
 if (document.getElementById("app")) {
   ReactDOM.render(
-    <Router>
-      <App history={useHistory}>
-        <Switch>
-          <Route exact path="/" component={HomeGroup} />
-          <Route exact path="/login" component={AuthPage(Login)} />
-          <Route exact path="/register" component={AuthPage(RegisterGroup)} />
-          <Route
-            exact
-            path="/forget"
-            component={AuthPage(ForgetPasswordGroup)}
-          />
-          <Route exact path="/verify" component={AuthPage(VerifyEmail)} />
-          <Route exact path="/reset" component={AuthPage(ResetPassword)} />
-          <Route exact path="*" component={NotFound} />
-          <Route exact path="/404" component={NotFound} />
-        </Switch>
-      </App>
-    </Router>,
+    <HttpsRedirect>
+      <Router>
+        <App history={useHistory}>
+          <Switch>
+            <Route exact path="/" component={HomeGroup} />
+            <Route exact path="/login" component={AuthPage(Login)} />
+            <Route exact path="/register" component={AuthPage(RegisterGroup)} />
+            <Route
+              exact
+              path="/forget"
+              component={AuthPage(ForgetPasswordGroup)}
+            />
+            <Route exact path="/verify" component={AuthPage(VerifyEmail)} />
+            <Route exact path="/reset" component={AuthPage(ResetPassword)} />
+            <Route exact path="*" component={NotFound} />
+            <Route exact path="/404" component={NotFound} />
+          </Switch>
+        </App>
+      </Router>
+    </HttpsRedirect>,
     document.getElementById("app")
   );
 }
