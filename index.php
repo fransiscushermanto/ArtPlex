@@ -9,7 +9,6 @@ require_once("./api/database.php");
 require_once("./api/controller/Auth.php");
 require_once("./api/controller/route.php");
 
-redirectTohttps();
 
 use Api\Actions\Route;
 
