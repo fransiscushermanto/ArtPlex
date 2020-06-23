@@ -37,3 +37,14 @@ function keygen($payload)
 
     return $header . "." . $payload . "." . $verify_signature;
 }
+
+
+function redirectTohttps()
+{
+    if (getenv("APP_ENV") === "production") {
+        if ($_SERVER['HTTPS'] != "on") {
+            $redirect = "https://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+            header("Location:$redirect");
+        }
+    }
+}

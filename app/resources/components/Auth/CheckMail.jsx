@@ -27,7 +27,7 @@ const CheckMail = ({ email, type }) => {
   }, [time]);
 
   return (
-    <div className="container height-100">
+    <div className="check-mail-wrapper container height-100">
       <div className="row height-100">
         <div className="col">
           <div

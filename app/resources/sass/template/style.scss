@@ -100,16 +100,42 @@ h5,
   left: 0;
   right: 0;
   z-index: 3;
+  box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.05);
+  padding: 0;
   @include media-breakpoint-down(md) {
-    background: $black !important;
+    // background: $black !important;
     position: relative;
     top: 0;
+  }
+
+  .container {
+    flex-wrap: nowrap;
+    @include media-breakpoint-down(md) {
+      padding: 0px 30px;
+    }
+    @include media-breakpoint-down(sm) {
+      padding: 0px 10px;
+    }
   }
 
   .navbar-brand {
     color: $white;
     @include media-breakpoint-down(md) {
       color: $white;
+    }
+  }
+
+  .nav-wrapper {
+    display: flex;
+    flex-basis: auto;
+    width: 100%;
+    .navbar-nav {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      .nav-item {
+        padding: 2px;
+      }
     }
   }
 
@@ -122,9 +148,9 @@ h5,
         color: $black;
       }
       @include media-breakpoint-down(md) {
-        color: $white;
+        color: $black;
         &:hover {
-          color: $white;
+          color: $black;
         }
       }
     }
@@ -134,7 +160,7 @@ h5,
         > .nav-link {
           color: rgba(0, 0, 0, 0.8);
           @include media-breakpoint-down(md) {
-            color: $white;
+            color: $black;
           }
           &:hover {
             color: $yellow;
@@ -193,12 +219,36 @@ h5,
       }
 
       .dropdown-menu {
+        position: absolute;
         top: 90%;
-        border: 1px solid rgba(0, 0, 0, 0.8);
+        width: 200px;
+        min-width: 200px;
+        padding: 0;
         background: $white;
         -webkit-box-shadow: 0px 10px 34px -20px rgba(0, 0, 0, 0.41);
         -moz-box-shadow: 0px 10px 34px -20px rgba(0, 0, 0, 0.41);
         box-shadow: 0px 10px 34px -20px rgba(0, 0, 0, 0.41);
+        .wrapper-dropdown-menu {
+          position: relative;
+          padding: 5px 0px;
+          .popover-arrow {
+            position: absolute;
+            top: -36%;
+            left: 60%;
+            clip: rect(0 18px 14px -4px);
+            -webkit-transform: rotate(45deg) translate(6px, 6px);
+            transform: rotate(45deg) translate(6px, 6px);
+            -webkit-box-shadow: -1px -1px 1px -1px rgba(0, 0, 0, 0.54);
+            box-shadow: -1px -1px 1px -1px rgba(0, 0, 0, 0.54);
+            &::after {
+              content: "";
+              display: block;
+              width: 14px;
+              height: 14px;
+              background: #fff;
+            }
+          }
+        }
       }
 
       &.ftco-seperator {

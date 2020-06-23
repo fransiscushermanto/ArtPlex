@@ -80,7 +80,9 @@ class Auth
         } else if ($type === "delete_reset") {
             $query_delete_token = "DELETE FROM `reset_tokens_temp` WHERE v_key = '$key' and user_id = '$this->user_id';";
         }
-        mysqli_query($this->conn, $query_delete_token);
+        if ($query_delete_token !== "") {
+            mysqli_query($this->conn, $query_delete_token);
+        }
     }
 
     function checkCookie()

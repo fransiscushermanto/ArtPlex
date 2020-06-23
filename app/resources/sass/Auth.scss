@@ -29,6 +29,13 @@
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#aa4b6b', endColorstr='#2980b9', GradientType=1 );
 }
 
+.auth-wrapper,
+.forget-wrapper,
+.check-mail-wrapper,
+.verify-email-wrapper {
+  height: 100vh !important;
+}
+
 .auth-wrapper.row {
   flex-wrap: nowrap;
 }

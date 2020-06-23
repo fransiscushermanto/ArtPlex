@@ -9,6 +9,8 @@ require_once("./api/database.php");
 require_once("./api/controller/Auth.php");
 require_once("./api/controller/route.php");
 
+redirectTohttps();
+
 use Api\Actions\Route;
 
 $route = new Route();
@@ -39,7 +41,6 @@ $stories =  [
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
-    <?php echo getenv("APP_ENV") === "production" ? '<meta http-equiv="Refresh" content=0";URL=https://' . $_SERVER['HTTP_HOST'] . '" />' : '' ?>
     <link rel="stylesheet" href="/app/assets/css/open-iconic-bootstrap.min.css" />
     <link rel="stylesheet" href="/app/assets/css/animate.css" />
     <link rel="stylesheet" href="/app/assets/css/owl.carousel.min.css" />

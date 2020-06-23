@@ -33,7 +33,7 @@ AOS.init({
     },
   };
 
-  $("main").stellar({
+  $(window).stellar({
     responsive: true,
     parallaxBackgrounds: true,
     parallaxElements: true,
@@ -43,9 +43,9 @@ AOS.init({
   });
 
   var fullHeight = function() {
-    $(".js-fullheight").css("height", $("main").height());
-    $("main").resize(function() {
-      $(".js-fullheight").css("height", $("main").height());
+    $(".js-fullheight").css("height", $(window).height());
+    $(window).resize(function() {
+      $(".js-fullheight").css("height", $(window).height());
     });
   };
   fullHeight();
@@ -90,7 +90,8 @@ AOS.init({
   };
   carousel();
 
-  $("nav .dropdown").hover(
+  $("nav .dropdown").on(
+    "click",
     function() {
       var $this = $(this);
       // 	 timer;
@@ -118,7 +119,7 @@ AOS.init({
 
   // scroll
   var scrollWindow = function() {
-    $("main").scroll(function() {
+    $(window).scroll(function() {
       var $w = $(this),
         st = $w.scrollTop(),
         navbar = $(".ftco_navbar"),

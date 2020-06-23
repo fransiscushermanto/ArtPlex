@@ -47,7 +47,7 @@ const VerifyEmail = ({ keyStatus }) => {
 
   return keyStatus !== undefined ? (
     keyStatus ? (
-      <div className="container height-100">
+      <div className="verify-email-wrapper container height-100">
         <div className="row height-100">
           <div
             className="col"
@@ -75,7 +75,7 @@ const VerifyEmail = ({ keyStatus }) => {
         </div>
       </div>
     ) : (
-      <div className="container height-100 d-flex align-items-center justify-content-center">
+      <div className="verify-email-wrapper container height-100 d-flex align-items-center justify-content-center">
         <h1 className="text-danger">
           <b>Link not found or expired</b>
         </h1>

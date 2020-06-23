@@ -15,7 +15,9 @@ import RegisterGroup from "./components/Auth/Register/RegisterGroup.jsx";
 import ForgetPasswordGroup from "./components/Auth/ForgetPassword/ForgetPasswordGroup";
 import NotFound from "./components/NotFound";
 import HomeGroup from "./components/Home/HomeGroup";
+import StoryGroup from "./components/Home/Story/StoryGroup";
 import AuthPage from "./components/HOC/AuthPage";
+import ContentPage from "./components/HOC/ContentPage";
 import VerifyEmail from "./components/Auth/VerifyEmail";
 import ResetPassword from "./components/Auth/ResetPassword";
 import myApp from "myApp";
@@ -29,6 +31,7 @@ if (document.getElementById("app")) {
         <App history={useHistory}>
           <Switch>
             <Route exact path="/" component={HomeGroup} />
+            <Route path="/story" component={ContentPage(StoryGroup)} />
             <Route exact path="/login" component={AuthPage(Login)} />
             <Route exact path="/register" component={AuthPage(RegisterGroup)} />
             <Route

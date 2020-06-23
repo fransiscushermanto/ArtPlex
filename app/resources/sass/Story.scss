@@ -1,0 +1,209 @@
+.story-wrapper {
+  margin-top: 64px;
+  @include media-breakpoint-down(md) {
+    margin: 34px 10px 0px 10px;
+  }
+  .col {
+    .row {
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+    .row:nth-child(1) {
+      padding-bottom: 10px;
+      .title {
+        font-weight: 650;
+        display: flex;
+        flex: 1;
+        span:nth-child(1) {
+          margin-right: 5px;
+        }
+        span {
+          letter-spacing: -2px;
+        }
+      }
+      .action-wrapper {
+        display: flex;
+        flex-direction: row;
+        flex-basis: auto;
+        padding: 0px 10px;
+        width: 100%;
+        .inner-action-wrapper {
+          display: flex;
+          flex-direction: row;
+          width: 100%;
+          padding: 20px 0px;
+        }
+      }
+    }
+    .row:nth-child(2) {
+      .data-table {
+        width: 100%;
+        border-bottom: 1px solid rgba(230, 230, 230, 1);
+        .list-data-table {
+          margin: 0px;
+          padding: 0px;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          li {
+            list-style: none;
+            padding-bottom: 8px;
+            margin-right: 20px;
+            line-height: 40px;
+            outline: none;
+            span > a {
+              color: rgba(0, 0, 0, 0.2);
+              &:hover {
+                color: black;
+              }
+            }
+          }
+          li.active {
+            border-bottom: 1px solid black;
+            span > a {
+              color: black;
+            }
+          }
+        }
+      }
+    }
+    .row:nth-child(3) > .col {
+      padding: 0;
+    }
+  }
+}
+
+.story {
+  padding: 15px 2px;
+  width: 100%;
+  .col {
+    width: 100%;
+    .row {
+      width: 100%;
+      .header {
+        background: transparent;
+        color: black;
+        padding: 0px;
+        .title {
+          font-size: 25px;
+          font-weight: 600;
+          span {
+            overflow: hidden;
+            letter-spacing: 0px;
+          }
+        }
+        .body {
+          font-size: 15px;
+          font-weight: 500;
+          color: rgba(0, 0, 0, 0.5);
+          span {
+            letter-spacing: 0px;
+          }
+        }
+      }
+      .footer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-wrap: wrap;
+        .last-updated > p,
+        .read-speed > p {
+          font-size: 13px;
+          font-weight: 100;
+        }
+        .seperator {
+          .cc {
+            fill: rgba(117, 117, 117, 1);
+          }
+          .cb {
+            color: rgba(117, 117, 117, 1);
+          }
+          .ca {
+            letter-spacing: 0px;
+          }
+          .bz {
+            font-size: 15.8px;
+          }
+          .by {
+            line-height: 20px;
+          }
+          .bx {
+            font-style: normal;
+          }
+          .bw {
+            font-family: medium-content-sans-serif-font, "Lucida Grande",
+              "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
+          }
+          .r {
+            display: block;
+          }
+          .b {
+            font-weight: 400;
+          }
+        }
+      }
+      .action-btn {
+        .cc {
+          fill: rgba(117, 117, 117, 1);
+          &:hover {
+            fill: black;
+          }
+        }
+        .cb {
+          color: rgba(117, 117, 117, 1);
+        }
+        .ca {
+          letter-spacing: 0px;
+        }
+        .bz {
+          font-size: 15.8px;
+        }
+        .by {
+          line-height: 20px;
+        }
+        .bx {
+          font-style: normal;
+        }
+        .cu {
+          fill: inherit;
+        }
+
+        .ct {
+          color: inherit;
+        }
+        .bm {
+          margin: 0;
+        }
+        .bl {
+          padding: 0;
+        }
+        .bk {
+          font-weight: inherit;
+        }
+        .bj {
+          letter-spacing: inherit;
+        }
+        .bi {
+          font-family: inherit;
+        }
+        .bh {
+          border: inherit;
+        }
+        .bg {
+          font-size: inherit;
+        }
+        button,
+        input,
+        optgroup,
+        select,
+        textarea {
+          margin: 0;
+        }
+        button {
+          background: transparent;
+          overflow: visible;
+        }
+      }
+    }
+  }
+}

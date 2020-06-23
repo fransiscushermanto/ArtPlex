@@ -2,6 +2,7 @@
 @import "./template/variable.scss";
 @import "./template/style.scss";
 @import "./Auth.scss";
+@import "./Story.scss";
 * {
   box-sizing: border-box;
 }
@@ -9,9 +10,15 @@
 body {
   font-family: $font-primary !important;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  margin: 0;
+  height: auto;
 }
 
-#root {
+#root,
+.app-wrapper {
   overflow: hidden;
 }
 
@@ -24,6 +31,9 @@ a {
   &:hover {
     color: $yellow;
   }
+}
+p {
+  margin: 0;
 }
 
 .text-link {
@@ -46,15 +56,13 @@ a {
   }
 }
 
-body,
-html,
 #root,
 main,
 .app-wrapper {
   padding: 0;
   margin: 0;
   height: 100%;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
 @import "Header";

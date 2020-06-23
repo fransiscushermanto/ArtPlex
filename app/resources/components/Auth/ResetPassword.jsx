@@ -84,7 +84,7 @@ const ResetPassword = ({ email, keyStatus }) => {
 
   return keyStatus !== undefined ? (
     keyStatus ? (
-      <div className="container d-flex flex-column  justify-content-center height-100 reset-password">
+      <div className="forget-wrapper container d-flex flex-column  justify-content-center height-100 reset-password">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group d-flex flex-column align-items-center">
             <div className="col-md-6">
@@ -178,6 +178,7 @@ const ResetPassword = ({ email, keyStatus }) => {
               <button
                 className="btn btn-action d-inline-flex w-100 justify-content-center"
                 type="submit"
+                disabled={auth === "" ? true : false}
               >
                 {auth === "" ? (
                   <div>
@@ -199,7 +200,7 @@ const ResetPassword = ({ email, keyStatus }) => {
         </form>
       </div>
     ) : (
-      <div className="container height-100 d-flex align-items-center justify-content-center">
+      <div className="forget-wrapper container height-100 d-flex align-items-center justify-content-center">
         <h1 className="text-danger">
           <b>Link not found or expired</b>
         </h1>
