@@ -9,9 +9,9 @@ require_once("./api/database.php");
 require_once("./api/controller/Auth.php");
 require_once("./api/controller/route.php");
 
-if (!isset($_SERVER['HTTPS'])) {
-    redirectTohttps();
-}
+// if (!isset($_SERVER['HTTPS'])) {
+//     redirectTohttps();
+// }
 
 use Api\Actions\Route;
 
