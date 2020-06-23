@@ -41,7 +41,7 @@ $stories =  [
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
     <?php if (getenv("APP_ENV") === "production") {
-        echo '<meta http-equiv="Refresh" content="0;URL=https://www.artplex.herokuapp.com"/>';
+        echo '<meta http-equiv="Refresh" content="0;URL=https://artplex.herokuapp.com"/>';
     } ?>
     <link rel="stylesheet" href="/app/assets/css/open-iconic-bootstrap.min.css" />
     <link rel="stylesheet" href="/app/assets/css/animate.css" />
