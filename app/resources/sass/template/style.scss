@@ -325,6 +325,7 @@ h5,
 
   &.transparent {
     background: transparent !important;
+    box-shadow: none;
     @include media-breakpoint-down(md) {
       background: $black !important;
     }
