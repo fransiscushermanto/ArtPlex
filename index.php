@@ -62,7 +62,7 @@ $stories =  [
 
 </head>
 <script type="text/javascript">
-    var STATIC_URL = "<?php echo BASE_URL; ?>";
+    var STATIC_URL = `${window.location.origin}/`;
     console.log(STATIC_URL);
     var myApp = {
         user: <?php echo $auth->hasUser() ? json_encode($auth->user()) : "null"; ?>,
