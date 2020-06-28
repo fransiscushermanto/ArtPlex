@@ -124,8 +124,6 @@ class StoriesController
         }
     }
 
-
-
     function deleteStory()
     {
         $delete_query = "DELETE from stories where `story_id` = '$this->story_id' and `user_id` = '$this->user_id'";
@@ -225,11 +223,6 @@ class StoriesController
                 "error" => "No story found",
             );
         }
-    }
-
-    function getStoryId()
-    {
-        return (object) array("story_id" => $this->story_id,);
     }
 
     function generateStoryID($user_id)

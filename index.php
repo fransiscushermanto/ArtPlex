@@ -60,6 +60,7 @@ $stories =  [
 </head>
 <script type="text/javascript">
     var STATIC_URL = "<?php echo BASE_URL; ?>";
+    console.log(STATIC_URL);
     var myApp = {
         user: <?php echo $auth->hasUser() ? json_encode($auth->user()) : "null"; ?>,
         articles: <?php echo json_encode($stories); ?>
