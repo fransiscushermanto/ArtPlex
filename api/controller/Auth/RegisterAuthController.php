@@ -15,7 +15,6 @@ class RegisterController
         $this->conn = $conn;
     }
 
-
     public function createUser()
     {
         $query_check_email = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
@@ -29,7 +28,7 @@ class RegisterController
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
             //date_default_timezone_set("Europe/Kaliningrad");
             $current_date = date("Y-m-d H:i:s");
-            $query_insert_user = $this->conn->prepare("INSERT INTO users (name, email, password, status, updated_at, levels) VALUES (?, ?, ?, 'off', ?', 'reader')");
+            $query_insert_user = $this->conn->prepare("INSERT INTO users (name, email, password, status, updated_at, levels) VALUES (?, ?, ?, 'off', ?, 'reader')");
             $query_insert_user->bind_param("ssss", $this->name, $this->email, $this->password, $current_date);
             $res = $query_insert_user->execute();
             if (!$res) {
@@ -119,7 +118,7 @@ class RegisterController
                         $mail->Body = $body;
 
                         if (!$mail->send()) {
-                            echo "Mailer Error: " . $mail->ErrorInfo;
+                            // echo "Mailer Error: " . $mail->ErrorInfo;
                             return (object) array(
                                 "success" => false,
                                 "error" => "Something went wrong when server trying to send password recovery mail."

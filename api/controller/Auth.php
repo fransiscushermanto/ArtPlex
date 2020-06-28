@@ -35,7 +35,7 @@ class Auth
         return !empty($this->user());
     }
 
-    function verifyKey($key, $type)
+    function verifyToken($key, $type)
     {
         $query_check_token = null;
         //check if token exist or not
@@ -57,13 +57,11 @@ class Auth
             $expiry_date = $row['exp_date'];
             $current_date = $cur_date = date("Y-m-d H:i:s");
             if ($current_date > $expiry_date) { //compare if token expire or not, if expired..
-                echo "token expired";
                 return (object) array(
                     "success" => false,
                 );
                 //redirect to token expired
             } else { //if token still valid
-                echo "Success - " . $key;
                 return (object) array(
                     "success" => true,
                 );

@@ -16,9 +16,8 @@ class ForgetPasswordController
 
     function checkEmail()
     {
-        $query_check = $this->conn->prepare("SELECT user_id, status FROM users WHERE email = ?");
-        $query_check->param_bind("s", $this->email);
-        $email = $this->email;
+        $query_check = $this->conn->prepare("SELECT `user_id`, `status` FROM `users` WHERE `email` = ?");
+        $query_check->bind_param("s", $this->email);
         $query_check->execute();
         $res = $query_check->get_result();
         $row = $res->fetch_assoc();
@@ -48,7 +47,7 @@ class ForgetPasswordController
     function composeMail()
     {
         $query_check = $this->conn->prepare("SELECT user_id, name FROM users WHERE email = ?");
-        $query_check->param_bind("s", $this->email);
+        $query_check->bind_param("s", $this->email);
         $email = $this->email;
         $query_check->execute();
         $res = $query_check->get_result();
@@ -124,7 +123,7 @@ class ForgetPasswordController
                     $mail->Body = $body;
 
                     if (!$mail->send()) {
-                        echo "Mailer Error: " . $mail->ErrorInfo;
+                        // echo "Mailer Error: " . $mail->ErrorInfo;
                         return (object) array(
                             "success" => false,
                             "message" => "Something went wrong when server trying to send password recovery mail."
