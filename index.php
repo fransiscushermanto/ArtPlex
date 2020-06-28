@@ -13,6 +13,10 @@ require_once("./api/controller/route.php");
 //     redirectTohttps();
 // }
 
+if (isset($_SERVER['HTTP_ORIGIN'])) {
+    echo $_SERVER['HTTP_ORIGIN'];
+}
+
 use Api\Actions\Route;
 
 $route = new Route();
@@ -55,7 +59,6 @@ $stories =  [
     <link rel="stylesheet" href="/app/assets/css/flaticon.css" />
     <link rel="stylesheet" href="/app/assets/css/icomoon.css" />
     <link rel="stylesheet" href="/app/assets/css/app.css" />
-    <link href="highlight.js/monokai-sublime.min.css" rel="stylesheet">
 
 </head>
 <script type="text/javascript">
