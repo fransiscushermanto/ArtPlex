@@ -3,6 +3,7 @@
 @import "./template/style.scss";
 @import "./Auth.scss";
 @import "./Story.scss";
+@import "./Modals.scss";
 * {
   box-sizing: border-box;
 }
@@ -14,12 +15,13 @@ body {
   flex-direction: column;
   padding: 0;
   margin: 0;
-  height: auto;
+  height: 100%;
 }
 
 #root,
 .app-wrapper {
   overflow: hidden;
+  height: 100%;
 }
 
 main {
@@ -56,13 +58,20 @@ p {
   }
 }
 
+main {
+  padding: 0;
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
 #root,
-main,
 .app-wrapper {
   padding: 0;
   margin: 0;
   height: 100%;
   overflow: hidden;
+  min-height: 100vh;
 }
 
 @import "Header";
@@ -82,4 +91,12 @@ main,
 .hidden {
   display: none !important;
   z-index: -1 !important;
+}
+
+.no-animation {
+  color: black !important;
+  cursor: pointer;
+  &:hover {
+    color: black !important;
+  }
 }

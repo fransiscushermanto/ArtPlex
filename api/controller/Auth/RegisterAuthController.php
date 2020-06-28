@@ -18,17 +18,20 @@ class RegisterController
 
     public function createUser()
     {
-        $query_check_email = mysqli_query($this->conn, "SELECT * FROM users WHERE email = '$this->email'");
-
-        $row = mysqli_fetch_array($query_check_email);
+        $query_check_email = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
+        $query_check_email->bind_param("s", $this->email);
+        $query_check_email->execute();
+        $res = $query_check_email->get_result();
+        $row = $res->fetch_assoc();
         if ($row > 0) {
             return ["success" => false, "error" => "Email is already being used"];
         } else {
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
             //date_default_timezone_set("Europe/Kaliningrad");
             $current_date = date("Y-m-d H:i:s");
-            $query = "INSERT INTO users (name, email, password, status, updated_at, levels) VALUES ('$this->name', '$this->email', '$this->password', 'off', '$current_date', 'reader')";
-            $res = mysqli_query($this->conn, $query);
+            $query_insert_user = $this->conn->prepare("INSERT INTO users (name, email, password, status, updated_at, levels) VALUES (?, ?, ?, 'off', ?', 'reader')");
+            $query_insert_user->bind_param("ssss", $this->name, $this->email, $this->password, $current_date);
+            $res = $query_insert_user->execute();
             if (!$res) {
                 return ["success" => false, "error" => mysqli_error($this->conn)];
             } else return ["success" => true, "error" => ""];
@@ -38,8 +41,11 @@ class RegisterController
     public function composeMail()
     {
 
-        $q = mysqli_query($this->conn, "SELECT user_id, name, status FROM users WHERE email = '$this->email';");
-        $row = mysqli_fetch_assoc($q);
+        $query_check_email = $this->conn->prepare("SELECT user_id, name, status FROM users WHERE email = ?;");
+        $query_check_email->bind_param("s", $this->email);
+        $query_check_email->execute();
+        $res = $query_check_email->get_result();
+        $row = $res->fetch_assoc();
 
         if ($row > 0) {
             if ($row["status"] === "off") { //if user status is 'off'
@@ -68,16 +74,17 @@ class RegisterController
                 $query = '';
                 $query_check_user_token = mysqli_query($this->conn, "SELECT * FROM verify_tokens_temp WHERE user_id = '$user_id'");
                 $token_user_row = mysqli_fetch_assoc($query_check_user_token);
+                $res = null;
                 if ($token_user_row > 0) {
-                    $query = "UPDATE `verify_tokens_temp` SET v_key = '$key' WHERE user_id = '$user_id'";
+                    $query_insert_token = $this->conn->prepare("UPDATE `verify_tokens_temp` SET v_key = '$key' WHERE user_id = ?");
+                    $query_insert_token->bind_param("i", $user_id);
+                    $res = $query_insert_token->execute();
                 } else {
-                    $query = "INSERT INTO `verify_tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES ('$key','$user_id','$expiry_date')";
+                    $query_insert_token = $this->conn->prepare("INSERT INTO `verify_tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES (?, ?, ?)");
+                    $query_insert_token->bind_param("sis", $key, $user_id, $expiry_date);
+                    $res = $query_insert_token->execute();
                 }
-                $query_insert_token = mysqli_query(
-                    $this->conn,
-                    $query
-                );
-                if ($query_insert_token) {
+                if ($res) {
                     $mail = new PHPMailer(true);
                     try {
                         //body email

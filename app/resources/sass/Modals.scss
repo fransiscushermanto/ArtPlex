@@ -1,0 +1,105 @@
+.modals-wrapper {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  z-index: 1000;
+  top: 0;
+  right: 0;
+  background: white;
+  opacity: 0.97;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .content-modals {
+    .header {
+      background-color: transparent;
+      .title {
+        font-size: 28px;
+        font-weight: 600;
+        color: black;
+        text-align: center;
+      }
+      .subtitle {
+        font-size: 16px;
+        color: rgba(117, 117, 117, 1);
+      }
+    }
+    .btn-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .btn {
+        padding: 8px 10px;
+        &:nth-child(1) {
+          margin-right: 5px;
+        }
+      }
+    }
+  }
+  .close-button {
+    top: 15%;
+    right: 15%;
+    &.ia {
+      right: 200px;
+    }
+
+    &.hz {
+      top: 100px;
+    }
+    &.s {
+      position: absolute;
+    }
+    &.r {
+      display: block;
+    }
+    .inner-close-button {
+      &.ig {
+        margin: 12px;
+      }
+      &.v {
+        right: 0;
+      }
+      &.s {
+        position: absolute;
+      }
+      span {
+        &.r {
+          display: block;
+        }
+        &.cc {
+          fill: rgba(117, 117, 117, 1);
+        }
+        &.cb {
+          color: rgba(117, 117, 117, 1);
+        }
+        &.ca {
+          letter-spacing: 0px;
+        }
+        &.bz {
+          font-size: 15.8px;
+        }
+        &.by {
+          line-height: 20px;
+        }
+        &.bx {
+          font-style: normal;
+        }
+        &.bw {
+          font-family: medium-content-sans-serif-font, "Lucida Grande",
+            "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
+          button {
+            background-color: transparent;
+            border: none;
+          }
+        }
+        &.r {
+          display: block;
+        }
+        &.b {
+          font-weight: 400;
+        }
+      }
+    }
+  }
+}

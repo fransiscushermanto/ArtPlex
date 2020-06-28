@@ -45,7 +45,9 @@ export default (OriginalComponent) => {
         }
       }
     }, []);
-    return <OriginalComponent email={email} keyStatus={keyStatus} />;
+    return (
+      <OriginalComponent email={email} keyStatus={keyStatus} user={user} />
+    );
   };
 
   return MixedComponent;

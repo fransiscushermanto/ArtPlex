@@ -15,15 +15,17 @@ import RegisterGroup from "./components/Auth/Register/RegisterGroup.jsx";
 import ForgetPasswordGroup from "./components/Auth/ForgetPassword/ForgetPasswordGroup";
 import NotFound from "./components/NotFound";
 import HomeGroup from "./components/Home/HomeGroup";
-import StoryGroup from "./components/Home/Story/StoryGroup";
+import StoryGroup from "./components/Stories/StoryGroup";
+import EditGroup from "./components/Stories/EditGroup";
 import AuthPage from "./components/HOC/AuthPage";
 import ContentPage from "./components/HOC/ContentPage";
 import VerifyEmail from "./components/Auth/VerifyEmail";
 import ResetPassword from "./components/Auth/ResetPassword";
+import StoryEditor from "./components/Stories/StoryEditor";
 import myApp from "myApp";
 
 /* globals __webpack_public_path__ */
-__webpack_public_path__ = `${window.STATIC_URL}/app/assets/bundle/`;
+// __webpack_public_path__ = `${window.STATIC_URL}/app/assets/bundle/`;
 if (document.getElementById("app")) {
   ReactDOM.render(
     <HttpsRedirect>
@@ -32,6 +34,8 @@ if (document.getElementById("app")) {
           <Switch>
             <Route exact path="/" component={HomeGroup} />
             <Route path="/story" component={ContentPage(StoryGroup)} />
+            <Route path="/p" component={ContentPage(EditGroup)} />
+            <Route path="/new-story" component={ContentPage(StoryEditor)} />
             <Route exact path="/login" component={AuthPage(Login)} />
             <Route exact path="/register" component={AuthPage(RegisterGroup)} />
             <Route

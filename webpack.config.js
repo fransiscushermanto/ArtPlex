@@ -77,6 +77,10 @@ let config = {
       __API_HOST__: JSON.stringify("http://localhost"),
       __API_APP_NAME__: JSON.stringify("testing"),
     }),
+    new webpack.ProvidePlugin({
+      "window.Quill": "quill/dist/quill.js",
+      Quill: "quill/dist/quill.js",
+    }),
   ],
 };
 

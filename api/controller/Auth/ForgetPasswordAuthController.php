@@ -16,8 +16,12 @@ class ForgetPasswordController
 
     function checkEmail()
     {
-        $q = mysqli_query($this->conn, "SELECT user_id, status FROM users WHERE email = '$this->email'");
-        $row = mysqli_fetch_assoc($q);
+        $query_check = $this->conn->prepare("SELECT user_id, status FROM users WHERE email = ?");
+        $query_check->param_bind("s", $this->email);
+        $email = $this->email;
+        $query_check->execute();
+        $res = $query_check->get_result();
+        $row = $res->fetch_assoc();
         if ($row > 0) {
             $status = $row["status"];
             if ($status === 'on') {
@@ -43,9 +47,12 @@ class ForgetPasswordController
 
     function composeMail()
     {
-
-        $q = mysqli_query($this->conn, "SELECT user_id, name FROM users WHERE email = '$this->email'");
-        $row = mysqli_fetch_assoc($q);
+        $query_check = $this->conn->prepare("SELECT user_id, name FROM users WHERE email = ?");
+        $query_check->param_bind("s", $this->email);
+        $email = $this->email;
+        $query_check->execute();
+        $res = $query_check->get_result();
+        $row = $res->fetch_assoc();
 
         if ($row > 0) {
             //fetching data from query result
@@ -71,17 +78,18 @@ class ForgetPasswordController
             $addKey = password_hash(uniqid(rand(), 1), PASSWORD_BCRYPT);
             $key = $key . "." . $addKey;
 
-            $query = '';
+            $query = null;
             $query_check_user_token = mysqli_query($this->conn, "SELECT * FROM reset_tokens_temp WHERE user_id = '$user_id'");
             $token_user_row = mysqli_fetch_assoc($query_check_user_token);
             if ($token_user_row > 0) {
-                $query = "UPDATE `reset_tokens_temp` SET v_key = '$key' WHERE user_id = '$user_id'";
+                $query = $this->conn->prepare("UPDATE `reset_tokens_temp` SET v_key = ? WHERE user_id = '$user_id'");
+                $query->bind_param("s", $key);
             } else {
-                $query = "INSERT INTO `reset_tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES ('$key','$user_id','$expiry_date')";
+                $query = $this->conn->prepare("INSERT INTO `reset_tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES (?,?,?)");
+                $query->bind_param("sss", $key, $user_id, $expiry_date);
             }
-            $query_insert_token = mysqli_query($this->conn, $query);
             //inserting key into database
-            if ($query_insert_token) {
+            if ($query->execute()) {
                 $mail = new PHPMailer(true);
                 try {
                     //body email
@@ -129,13 +137,12 @@ class ForgetPasswordController
                         //header("Location: " . BASE_URL . "PleaseCheckYourMail.php?name=" . $name);
                     }
                 } catch (Exception $e) {
-                    echo "Caught Exception: " . $e->getMessage() . "<br>";
-                    echo "Something went wrong when trying to send password recovery mail.";
+                    return  $e->getMessage() . "<br>";
                 }
             } else {
                 return (object) array(
                     "success" => false,
-                    "error" => "Something went wrong when trying to insert token to database $query_insert_token"
+                    "error" => "Something went wrong when trying to insert token to database",
                 );
             }
         } else {
@@ -161,8 +168,10 @@ class ForgetPasswordController
             } else { //if new password is not the same as the old one
                 $new_password = password_hash($new_password, PASSWORD_BCRYPT);
                 $current_date = date("Y-m-d H:i:s");
-                $query_change_password = "UPDATE users SET `password`= '$new_password', updated_at = '$current_date' WHERE user_id = '$user_id'";
-                if ($result = mysqli_query($this->conn, $query_change_password)) {
+                $query_change_password = $this->conn->prepare("UPDATE users SET `password`= ?, updated_at = '$current_date' WHERE user_id = '$user_id'");
+                $query_change_password->bind_param("s", $new_password);
+
+                if ($query_change_password->execute()) {
                     return (object) array(
                         "success" => true,
                         "error" => "",

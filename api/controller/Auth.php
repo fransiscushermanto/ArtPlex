@@ -35,22 +35,20 @@ class Auth
         return !empty($this->user());
     }
 
-    function verifyToken($key, $type)
+    function verifyKey($key, $type)
     {
-        $query = "";
+        $query_check_token = null;
         //check if token exist or not
         if ($type === "verify") {
-            $query =  "SELECT * FROM `verify_tokens_temp` WHERE v_key = '$key' and  user_id = '$this->user_id';";
+            $query_check_token = $this->conn->prepare("SELECT * FROM `verify_tokens_temp` WHERE v_key = ? and  user_id = '$this->user_id';");
         } else if ($type === "forget") {
-            $query = "SELECT * FROM `reset_tokens_temp` WHERE v_key = '$key' and  user_id = '$this->user_id';";
+            $query_check_token = $this->conn->prepare("SELECT * FROM `reset_tokens_temp` WHERE v_key = ? and  user_id = '$this->user_id';");
         }
-        $query_check_token = mysqli_query($this->conn, $query);
-        $query_get_user_data = mysqli_query($this->conn, "SELECT * FROM users WHERE user_id = '$this->user_id'");
-        $row = mysqli_fetch_assoc($query_check_token);
-        $rowUser = mysqli_fetch_assoc($query_get_user_data);
-
+        $query_check_token->bind_param("s", $key);
+        $query_check_token->execute();
+        $res = $query_check_token->get_result();
+        $row = $res->fetch_assoc();
         if ($row <= 0) { //if token doesn't exist
-            $this->deleteToken($key, $type);
             return (object) array(
                 "success" => false,
             );
@@ -59,14 +57,15 @@ class Auth
             $expiry_date = $row['exp_date'];
             $current_date = $cur_date = date("Y-m-d H:i:s");
             if ($current_date > $expiry_date) { //compare if token expire or not, if expired..
+                echo "token expired";
                 return (object) array(
                     "success" => false,
                 );
                 //redirect to token expired
             } else { //if token still valid
+                echo "Success - " . $key;
                 return (object) array(
                     "success" => true,
-                    "email" => $rowUser['email'],
                 );
             }
         }
@@ -74,14 +73,15 @@ class Auth
 
     function deleteToken($key, $type)
     {
-        $query_delete_token = "";
+        $query_delete_token = null;
         if ($type === "verify") {
-            $query_delete_token = "DELETE FROM `verify_tokens_temp` WHERE v_key = '$key' and user_id = '$this->user_id';";
+            $query_delete_token = $this->conn->prepare("DELETE FROM `verify_tokens_temp` WHERE v_key = ? and user_id = '$this->user_id';");
         } else if ($type === "delete_reset") {
-            $query_delete_token = "DELETE FROM `reset_tokens_temp` WHERE v_key = '$key' and user_id = '$this->user_id';";
+            $query_delete_token = $this->conn->prepare("DELETE FROM `reset_tokens_temp` WHERE v_key = ? and user_id = '$this->user_id';");
         }
-        if ($query_delete_token !== "") {
-            mysqli_query($this->conn, $query_delete_token);
+        if (!empty($query_delete_token)) {
+            $query_delete_token->bind_param("s", $key);
+            $query_delete_token->execute();
         }
     }
 
@@ -90,9 +90,13 @@ class Auth
         //check cookie if it set
         if (isset($_COOKIE['remember_token'])) {
             $remember_token = $_COOKIE['remember_token'];
-            $query_read_rtoken = mysqli_query($this->conn, "SELECT `user_id`, `name`, `email`, `status`, `email_verified_at`, `remember_token`, `last_activity`, `created_at`, `updated_at`  FROM `users` WHERE `remember_token` = '$remember_token';");
+            $query_read_rtoken = $this->conn->prepare("SELECT `user_id`, `name`, `email`, `status`, `email_verified_at`, `remember_token`, `last_activity`, `created_at`, `updated_at`  FROM `users` WHERE `remember_token` = ?;");
+            $rtoken = $remember_token;
+            $query_read_rtoken->bind_param("s", $rtoken);
             //check if cookie exists in `users` table`
-            $row = mysqli_fetch_assoc($query_read_rtoken);
+            $query_read_rtoken->execute();
+            $res = $query_read_rtoken->get_result();
+            $row = $res->fetch_assoc();
             if ($row > 0) {
                 //check if remember_token in user table is the same with the one in cookie
                 if ($row['remember_token'] === $remember_token) {

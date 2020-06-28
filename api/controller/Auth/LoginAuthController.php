@@ -14,9 +14,11 @@ class LoginController
     public function authenticateUser()
     {
 
-        $q = mysqli_query($this->conn, "SELECT user_id AS id,  password, created_at FROM users WHERE email = '$this->email'");
-
-        $row = mysqli_fetch_assoc($q);
+        $query_select = $this->conn->prepare("SELECT user_id AS id,  password, created_at FROM users WHERE email = ?");
+        $query_select->bind_param("s", $this->email);
+        $query_select->execute();
+        $res = $query_select->get_result();
+        $row = $res->fetch_assoc();
         if ($row > 0) {
             if (password_verify($this->password, $row['password'])) {
                 $user_id = $row["id"];
@@ -24,9 +26,12 @@ class LoginController
                 if ($this->remember_me) {
                     $created_at = $row["created_at"];
                     $remember_token = keygen($this->email . $created_at);
-                    $query_insert_remember_token = "UPDATE `users` SET `remember_token` = '$remember_token' WHERE `user_id` = '$user_id';";
-                    if (mysqli_query($this->conn, $query_insert_remember_token)) {
-                        $cookie_name = "remember_me";
+                    $query_insert_remember_token = $this->conn->prepare("UPDATE `users` SET `remember_token` = ? WHERE `user_id` = '$user_id';");
+                    $query_insert_remember_token->bind_param("s", $remember_token);
+
+
+                    if ($query_insert_remember_token->execute()) {
+                        $cookie_name = "remember_token";
                         $cookie_value = $remember_token;
                         $domain = ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false;
                         setcookie($cookie_name, $cookie_value, time() + 30 * 24 * 3600, '/', $domain, false); //1 bulan
