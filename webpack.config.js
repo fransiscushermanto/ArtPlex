@@ -90,14 +90,19 @@ let config = {
 if (process.env.NODE_ENV === "production") {
   config.optimization.minimizer.push(
     new UglifyJsPlugin({
-      sourceMap: false,
-      compress: {
-        sequences: true,
-        conditionals: true,
-        booleans: true,
-        if_return: true,
-        join_vars: true,
-        drop_console: true,
+      uglifyOptions: {
+        sourceMap: false,
+        compress: {
+          sequences: true,
+          conditionals: true,
+          booleans: true,
+          if_return: true,
+          join_vars: true,
+          drop_console: true,
+        },
+        output: {
+          comments: false,
+        },
       },
     })
   );
