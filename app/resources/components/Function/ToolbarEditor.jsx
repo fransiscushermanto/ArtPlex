@@ -188,6 +188,7 @@ const ToolBarEditor = ({ quillRef }) => {
           const res = await axios.post("/api/actions/store_image.php", data, {
             headers: { "Content-Type": "multipart/form-data" },
           });
+          console.log(res.data.url);
           quill.insertText(range.index, "\n", "user");
           quill.insertEmbed(
             range.index + 1,
