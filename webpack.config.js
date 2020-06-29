@@ -99,10 +99,6 @@ if (process.env.NODE_ENV === "production") {
         join_vars: true,
         drop_console: true,
       },
-      output: {
-        comments: false,
-      },
-      minimize: true,
     })
   );
 }
