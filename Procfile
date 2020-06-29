@@ -1,1 +1,1 @@
-web: heroku-run-build-script && vendor/bin/heroku-php-apache2 
+web: heroku open && vendor/bin/heroku-php-apache2 
