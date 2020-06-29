@@ -3,7 +3,7 @@
 const webpack = require("webpack");
 const path = require("path");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 let config = {
   entry: {
     main: ["./app/resources/index.js", "./app/resources/sass/app.scss"],
@@ -82,11 +82,14 @@ let config = {
       Quill: "quill/dist/quill.js",
     }),
   ],
+  optimization: {
+    minimizer: [],
+  },
 };
 
 if (process.env.NODE_ENV === "production") {
-  config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
+  config.optimization.minimizer.push(
+    new UglifyJsPlugin({
       sourceMap: false,
       compress: {
         sequences: true,
