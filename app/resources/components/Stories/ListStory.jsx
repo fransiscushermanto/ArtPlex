@@ -3,7 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 
 import Story from "./Story";
-import ActionModals from "../Modals/DeleteModals";
+import DeleteModals from "../Modals/DeleteModals";
 const ListStory = ({ user, setModal, modal, setStoryId, storyId }) => {
   let { type } = useParams();
   const [draftStories, setDraftStories] = useState([]);
@@ -17,7 +17,7 @@ const ListStory = ({ user, setModal, modal, setStoryId, storyId }) => {
       if (res.data.success) {
         setDraftStories(res.data.draftStories);
         setPublishStories(res.data.publishStories);
-        console.log(res.data);
+        // console.log(res.data);
       }
     };
     getUserStory();
@@ -87,7 +87,7 @@ const ListStory = ({ user, setModal, modal, setStoryId, storyId }) => {
   return (
     <>
       {modal ? (
-        <ActionModals
+        <DeleteModals
           setModal={setModal}
           onClick={deleteStory}
           param={storyId}

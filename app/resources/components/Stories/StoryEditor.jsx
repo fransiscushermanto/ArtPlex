@@ -7,6 +7,7 @@ import ImageResize from "quill-image-resize-module";
 
 import { restrictedKey, totalWord } from "../Function/Factories";
 import ToolbarEditor from "../Function/ToolbarEditor";
+import PublishModal from "../Modals/PublishModals";
 
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.core.css";
@@ -53,6 +54,8 @@ const StoryEditor = ({ user }) => {
   const [body, setBody] = useState("");
   const [saved, setSaved] = useState(null);
   const [typing, setTyping] = useState(false);
+  const [publish, setPublish] = useState(false);
+  const [modal, setModal] = useState(false);
   const quillRef = useRef(null);
   const titleQuillRef = useRef(null);
   let timer,
@@ -76,7 +79,16 @@ const StoryEditor = ({ user }) => {
         bodyChange = new Delta();
       });
     }
+    if (type === "edit") {
+      setPublish(true);
+    }
   }, []);
+
+  useEffect(() => {
+    document.getElementsByTagName("body")[0].style.overflowY = modal
+      ? "hidden"
+      : "scroll";
+  }, [modal]);
 
   useEffect(() => {
     if (quillRef.current !== null) {
@@ -115,11 +127,13 @@ const StoryEditor = ({ user }) => {
 
   const handleTitleChange = (text, delta, source, editor) => {
     setTitle(text);
+    setPublish(true);
     titleChange = titleChange.compose(delta);
   };
 
   const handleBodyChange = (text, delta, source, editor) => {
     setBody(text);
+    setPublish(true);
     bodyChange = bodyChange.compose(delta);
   };
 
@@ -276,54 +290,60 @@ const StoryEditor = ({ user }) => {
   };
 
   return (
-    <div id="new-story" className="container new-story-wrapper height-100">
-      <Prompt
-        when={bodyChange.length() > 0 || titleChange.length() > 0}
-        message={"There are unsaved changes. Are you sure you want to leave?"}
-      />
-      <div className="col height-100">
-        <div className="row">
-          <div className="title" id="title">
-            <ReactQuill
-              className="title-editable"
-              theme={"bubble"}
-              ref={titleQuillRef}
-              onChange={handleTitleChange}
-              value={title}
-              formats={StoryEditor.titleFormats}
-              placeholder={"Title"}
-              modules={StoryEditor.titleModules}
-              onKeyPress={handleStillTyping}
-              onKeyDown={handleKeySave}
-            />
+    <>
+      {modal ? <PublishModal setModal={setModal} /> : null}
+      <div id="new-story" className="container new-story-wrapper height-100">
+        <Prompt
+          when={bodyChange.length() > 0 || titleChange.length() > 0}
+          message={"There are unsaved changes. Are you sure you want to leave?"}
+        />
+        <div className="col height-100">
+          <div className="row">
+            <div className="title" id="title">
+              <ReactQuill
+                className="title-editable"
+                theme={"bubble"}
+                ref={titleQuillRef}
+                onChange={handleTitleChange}
+                value={title}
+                formats={StoryEditor.titleFormats}
+                placeholder={"Title"}
+                modules={StoryEditor.titleModules}
+                onKeyPress={handleStillTyping}
+                onKeyDown={handleKeySave}
+              />
+            </div>
+          </div>
+          <div className="row">
+            <div className="body">
+              <ToolbarEditor quillRef={quillRef} />
+              <ReactQuill
+                ref={quillRef}
+                className="body-editable"
+                id="body-editable"
+                theme={"bubble"}
+                onChange={handleBodyChange}
+                value={body}
+                formats={StoryEditor.formats}
+                placeholder={"Body"}
+                modules={StoryEditor.modules}
+                bounds={"#body-editable"}
+                onKeyPress={handleStillTyping}
+                onKeyDown={handleKeySave}
+              />
+            </div>
           </div>
         </div>
-        <div className="row">
-          <div className="body">
-            <ToolbarEditor quillRef={quillRef} />
-            <ReactQuill
-              ref={quillRef}
-              className="body-editable"
-              id="body-editable"
-              theme={"bubble"}
-              onChange={handleBodyChange}
-              value={body}
-              formats={StoryEditor.formats}
-              placeholder={"Body"}
-              modules={StoryEditor.modules}
-              bounds={"#body-editable"}
-              onKeyPress={handleStillTyping}
-              onKeyDown={handleKeySave}
-            />
+        <div className="floating-button" title="Publish">
+          <div
+            className={!publish ? "action-btn disabled" : "action-btn"}
+            onClick={() => setModal(!modal)}
+          >
+            <i className="fa fa-upload" aria-hidden="true"></i>
           </div>
         </div>
       </div>
-      <div className="floating-button" title="Publish">
-        <div className="action-btn">
-          <i class="fa fa-upload" aria-hidden="true"></i>
-        </div>
-      </div>
-    </div>
+    </>
   );
 };
 

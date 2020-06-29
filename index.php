@@ -9,14 +9,6 @@ require_once("./api/database.php");
 require_once("./api/controller/Auth.php");
 require_once("./api/controller/route.php");
 
-// if (!isset($_SERVER['HTTPS'])) {
-//     redirectTohttps();
-// }
-
-if (isset($_SERVER['HTTP_ORIGIN'])) {
-    echo $_SERVER['HTTP_ORIGIN'];
-}
-
 use Api\Actions\Route;
 
 $route = new Route();
@@ -63,7 +55,6 @@ $stories =  [
 </head>
 <script type="text/javascript">
     var STATIC_URL = `${window.location.origin}/`;
-    console.log(STATIC_URL);
     var myApp = {
         user: <?php echo $auth->hasUser() ? json_encode($auth->user()) : "null"; ?>,
         articles: <?php echo json_encode($stories); ?>

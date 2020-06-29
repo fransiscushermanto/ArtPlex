@@ -1,8 +1,8 @@
 import React from "react";
 
-const ActionModals = ({ setModal, onClick, param }) => {
+const DeleteModals = ({ setModal, onClick, param }) => {
   return (
-    <div className="modals-wrapper">
+    <div className="modals-wrapper" style={{ overflow: "hidden" }}>
       <div className="content-modals">
         <div className="header">
           <div className="title">Delete</div>
@@ -51,4 +51,4 @@ const ActionModals = ({ setModal, onClick, param }) => {
   );
 };
 
-export default ActionModals;
+export default DeleteModals;

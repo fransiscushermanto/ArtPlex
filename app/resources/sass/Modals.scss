@@ -11,6 +11,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  @include media-breakpoint-down(sm) {
+    overflow-y: scroll;
+  }
+
   .content-modals {
     .header {
       background-color: transparent;
@@ -37,6 +41,7 @@
       }
     }
   }
+
   .close-button {
     top: 15%;
     right: 15%;
@@ -99,6 +104,139 @@
         &.b {
           font-weight: 400;
         }
+      }
+    }
+  }
+
+  &.publish-wrapper {
+    .publish-content {
+      margin: auto;
+      outline: 0;
+      overflow: hidden;
+      max-width: 1040px;
+      padding: 100px 5px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      @include media-breakpoint-down(sm) {
+        max-width: 580px;
+        padding: 0px;
+        margin: auto;
+      }
+      .row {
+        margin: 0px;
+        width: 100%;
+        height: 100%;
+        @include media-breakpoint-down(sm) {
+          flex-direction: column;
+          width: 80%;
+        }
+        .col {
+          flex: 1;
+          padding: 40px !important;
+        }
+        .col:nth-child(1) {
+          .ui-title {
+            --x-height-multiplier: 0.342 !important;
+            --baseline-multiplier: 0.22 !important;
+            font-family: medium-content-sans-serif-font, "Lucida Grande",
+              "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif !important;
+            letter-spacing: -0.02em !important;
+            font-weight: 400 !important;
+            font-style: normal !important;
+            letter-spacing: 0 !important;
+            font-size: 16px !important;
+            line-height: 24px !important;
+            -webkit-transform: translateY(-1.32px);
+            transform: translateY(-1.32px);
+
+            color: rgba(0, 0, 0, 0.76) !important;
+            fill: rgba(0, 0, 0, 0.76) !important;
+
+            margin-bottom: 10px;
+          }
+          .image-previewer {
+            width: 100% !important;
+            background: #fafafa !important;
+            .image-wrapper {
+              height: 200px !important;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              span {
+                text-align: center;
+                margin: 0px 80px !important;
+                --x-height-multiplier: 0.342 !important;
+                --baseline-multiplier: 0.22 !important;
+                font-family: medium-content-sans-serif-font, "Lucida Grande",
+                  "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial,
+                  sans-serif !important;
+                letter-spacing: -0.02em !important;
+                font-weight: 400 !important;
+                font-style: normal !important;
+                letter-spacing: 0 !important;
+                font-size: 13px !important;
+                line-height: 20px !important;
+                -webkit-transform: translateY(1.52px);
+                transform: translateY(1.52px);
+              }
+            }
+          }
+          .title-body-previewer {
+            .title-preview,
+            .body-preview {
+              #previewer {
+                width: 100%;
+                border: 0px;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+                outline: none;
+              }
+            }
+
+            .title-preview {
+              #previewer {
+                font-weight: 600;
+                &::placeholder {
+                  font-weight: 600;
+                  color: rgba(117, 117, 117, 1) !important;
+                }
+              }
+            }
+            .body-preview {
+              #previewer {
+                font-size: 13px;
+                &::placeholder {
+                  color: rgba(117, 117, 117, 1);
+                }
+              }
+            }
+          }
+          .notes {
+            p {
+              font-size: 13px;
+              padding-right: 10px;
+            }
+          }
+        }
+        .col:nth-child(2) {
+          .tags-previewer {
+            p {
+              color: black;
+              font-size: 13px;
+            }
+          }
+        }
+      }
+    }
+    .close-button {
+      top: 6%;
+      right: 17%;
+      @include media-breakpoint-down(sm) {
+        top: 2%;
+        right: 4%;
       }
     }
   }
