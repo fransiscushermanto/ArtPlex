@@ -2,7 +2,6 @@
 // if (!$route->has("login") && !$route->has("register")) {
 //     $auth->hasUser() ? null : include_once("welcome.php");
 // }
-echo !$route->notFoundHandler($route->getCurrentPathName());
 ?>
 <?php
 echo $auth->hasUser() || $route->has("login") || $route->has("register") || $route->has("forget") || !$route->notFoundHandler($route->getCurrentPathName()) ?
