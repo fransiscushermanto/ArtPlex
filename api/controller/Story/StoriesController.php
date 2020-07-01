@@ -209,7 +209,7 @@ class StoriesController
         return $res;
     }
 
-    public function getStory($type)
+    public function getStory($type = "")
     {
         $query_view_story = "SELECT * from `stories` WHERE `story_id` = '$this->story_id' ";
         if ($type === "public") $query_view_story .= " AND `status` = 'on'";

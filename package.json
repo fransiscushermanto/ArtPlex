@@ -24,6 +24,7 @@
     "quill-image-resize-module": "^3.0.0",
     "react": "^16.7.0",
     "react-async-component": "^2.0.0",
+    "react-avatar": "^3.9.7",
     "react-dom": "^16.7.0",
     "react-helmet": "^5.2.0",
     "react-highlight.js": "^1.0.7",
