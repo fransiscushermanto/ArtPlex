@@ -5,35 +5,50 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class RegisterController
 {
-    protected $name, $email, $password, $conn;
+    protected $name, $email, $password, $conn, $username;
 
-    public function __construct($conn, $email,  $name = "", $password = "")
+    public function __construct($conn, $email,  $name = "", $password = "", $username = "")
     {
         $this->name = $name;
         $this->email = $email;
         $this->password = $password;
+        $this->username = $username;
         $this->conn = $conn;
     }
 
     public function createUser()
     {
+        //check email
         $query_check_email = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
         $query_check_email->bind_param("s", $this->email);
         $query_check_email->execute();
         $res = $query_check_email->get_result();
         $row = $res->fetch_assoc();
-        if ($row > 0) {
-            return ["success" => false, "error" => "Email is already being used"];
+        $email_error = ($row > 0) ? true : false;
+
+        //check username
+        $query_check_username = $this->conn->prepare("SELECT *  FROM users WHERE username = ?");
+        $query_check_username->bind_param("s", $this->username);
+        $query_check_username->execute();
+        $res = $query_check_username->get_result();
+        $row = $res->fetch_assoc();
+        $username_error = ($row > 0) ? true : false;
+
+        if ($email_error && $username_error) {
+            return ["success" => false, "error" => (object) array("email" => "Email already being used", "username" => "username already being used")];
+        } else if ($email_error) {
+            return ["success" => false, "error" => (object) array("email" => "Email already being used", "username" => null)];
+        } else if ($username_error) {
+            return ["success" => false, "error" => (object) array("email" => null, "username" => "username already being used")];
         } else {
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-            //date_default_timezone_set("Europe/Kaliningrad");
             $current_date = date("Y-m-d H:i:s");
-            $query_insert_user = $this->conn->prepare("INSERT INTO users (name, email, password, status, updated_at, levels) VALUES (?, ?, ?, 'off', ?, 'reader')");
-            $query_insert_user->bind_param("ssss", $this->name, $this->email, $this->password, $current_date);
+            $query_insert_user = $this->conn->prepare("INSERT INTO users (`name`, `email`, `password`, `status`, `updated_at`, `levels`,`username`) VALUES (?, ?, ?, 'off', ?, 'reader', ?)");
+            $query_insert_user->bind_param("sssss", $this->name, $this->email, $this->password, $current_date, $this->username);
             $res = $query_insert_user->execute();
             if (!$res) {
-                return ["success" => false, "error" => mysqli_error($this->conn)];
-            } else return ["success" => true, "error" => ""];
+                return ["success" => false, "error" => (object) array("email" => null, "username" => null, "other" => mysqli_error($this->conn))];
+            } else return ["success" => true, "error" => (object) array("email" => null, "username" => null)];
         }
     }
 
@@ -154,10 +169,8 @@ class RegisterController
         }
     }
 
-    public function verifyEmail($user_id, $key)
+    public function verifyEmail($user_id)
     {
-
-        //date_default_timezone_set("Europe/Kaliningrad");
         $current_date = date("Y-m-d H:i:s");
         $query_update_user = "UPDATE users SET status='on', email_verified_at = '$current_date', updated_at = '$current_date' where user_id = '$user_id';";
         if (mysqli_query($this->conn, $query_update_user)) { //if user status update success

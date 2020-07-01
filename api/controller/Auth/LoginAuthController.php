@@ -2,7 +2,7 @@
 
 class LoginController
 {
-    protected $conn, $email, $password, $remember_me;
+    protected $conn, $email, $password, $remember_me, $input;
     public function __construct($conn, $email, $password, $remember_me)
     {
         $this->conn = $conn;
@@ -13,9 +13,8 @@ class LoginController
 
     public function authenticateUser()
     {
-
-        $query_select = $this->conn->prepare("SELECT user_id AS id,  password, created_at FROM users WHERE email = ?");
-        $query_select->bind_param("s", $this->email);
+        $query_select = $this->conn->prepare("SELECT user_id AS id,  password, created_at FROM users WHERE `email` = ? OR `username` = ?");
+        $query_select->bind_param("ss", $this->email, $this->email);
         $query_select->execute();
         $res = $query_select->get_result();
         $row = $res->fetch_assoc();
@@ -59,7 +58,7 @@ class LoginController
                         "error" => "",
                     );
                 }
-            } else return ["success" => false, "error" => "Sorry, Email or Password is incorrect"];
-        } else return ["success" => false, "error" => "Email is not registered"];
+            } else return ["success" => false, "error" => "Sorry, Email/Username or Password is incorrect"];
+        } else return ["success" => false, "error" => "Email or Username is not registered"];
     }
 }

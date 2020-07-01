@@ -230,6 +230,48 @@ const Register = ({
                 </div>
               </div>
               <div className="form-group">
+                <label className="col-md-12 col-form-label">Username</label>
+                <div className="col-md-12">
+                  <input
+                    className="form-control"
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    ref={register}
+                    style={
+                      errors.username
+                        ? errors.username.message
+                          ? { border: "1px solid red", marginBottom: "5px" }
+                          : null
+                        : auth
+                        ? auth.username
+                          ? { border: "1px solid red", marginBottom: "5px" }
+                          : null
+                        : null
+                    }
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  {(errors.email && (
+                    <p
+                      style={{ fontSize: "13px" }}
+                      className="text-danger font-weight-bold"
+                    >
+                      {errors.username.message}
+                    </p>
+                  )) ||
+                  auth
+                    ? auth.username && (
+                        <p
+                          style={{ fontSize: "13px" }}
+                          className="text-danger font-weight-bold"
+                        >
+                          {auth}
+                        </p>
+                      )
+                    : null}
+                </div>
+              </div>
+              <div className="form-group">
                 <label className="col-md-12 col-form-label">E-mail</label>
                 <div className="col-md-12">
                   <input
@@ -244,7 +286,9 @@ const Register = ({
                           ? { border: "1px solid red", marginBottom: "5px" }
                           : null
                         : auth
-                        ? { border: "1px solid red", marginBottom: "5px" }
+                        ? auth.email
+                          ? { border: "1px solid red", marginBottom: "5px" }
+                          : null
                         : null
                     }
                     onChange={(e) => setEmail(e.target.value)}
@@ -257,14 +301,16 @@ const Register = ({
                       {errors.email.message}
                     </p>
                   )) ||
-                    (auth && (
-                      <p
-                        style={{ fontSize: "13px" }}
-                        className="text-danger font-weight-bold"
-                      >
-                        {auth}
-                      </p>
-                    ))}
+                  auth
+                    ? auth.email && (
+                        <p
+                          style={{ fontSize: "13px" }}
+                          className="text-danger font-weight-bold"
+                        >
+                          {auth.email}
+                        </p>
+                      )
+                    : null}
                 </div>
               </div>
               <div className="form-group">
@@ -317,7 +363,7 @@ Register.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   errors: PropTypes.object,
-  auth: PropTypes.string,
+  auth: PropTypes.object,
   register: PropTypes.any,
 };
 

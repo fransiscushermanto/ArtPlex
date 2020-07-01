@@ -11,7 +11,7 @@ include_once("../database.php");
 
 if ($type === "verify") {
     $verify_email = new RegisterController($conn, "", "", "");
-    echo json_encode($verify_email->verifyEmail($user_id, $key));
+    echo json_encode($verify_email->verifyEmail($user_id));
     $auth = new Auth($conn, $user_id);
     $auth->deleteToken($key, $type);
 }

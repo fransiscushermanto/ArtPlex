@@ -170,13 +170,6 @@ const ToolBarEditor = ({ quillRef }) => {
     var img = document.getElementById("artplex-img");
     img.click();
     img.addEventListener("change", async function() {
-      // const data = new FormData();
-      // data.append("file", img.files[0]);
-      // data.append("user_id", user.id);
-      // const res = await axios.post("/api/actions/store_image.php", data, {
-      //   headers: { "Content-Type": "multipart/form-data" },
-      // });
-      var src;
       if (img.files && img.files[0]) {
         var FR = new FileReader();
 
@@ -202,10 +195,8 @@ const ToolBarEditor = ({ quillRef }) => {
           quill.setSelection(range.index + 2, "silent");
         });
 
-        console.log(FR.readAsDataURL(img.files[0]));
+        FR.readAsDataURL(img.files[0]);
       }
-
-      console.log(src);
     });
     ele.removeChild(img);
   };

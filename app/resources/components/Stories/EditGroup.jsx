@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, useRouteMatch, useLocation } from "react-router-dom";
+import { Switch, Route, useRouteMatch } from "react-router-dom";
 import StoryEditor from "./StoryEditor";
 const EditGroup = ({ user }) => {
   let match = useRouteMatch();

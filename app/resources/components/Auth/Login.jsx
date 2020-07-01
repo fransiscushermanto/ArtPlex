@@ -8,10 +8,7 @@ const Login = () => {
   const history = useHistory();
   const [auth, setAuth] = useState("");
   const schema = yup.object().shape({
-    email: yup
-      .string()
-      .required("This field is required")
-      .email("Email is in invalid form"),
+    email: yup.string().required("This field is required"),
     password: yup.string().required("This field is required"),
   });
 
@@ -183,13 +180,15 @@ const Login = () => {
           <div className="d-flex align-items-center flex-grow-1">
             <form className="col-md-12" onSubmit={handleSubmit(onSubmit)}>
               <div className="form-group">
-                <label className="col-md-12 col-form-label">E-mail</label>
+                <label className="col-md-12 col-form-label">
+                  E-mail or Username
+                </label>
                 <div className="col-md-12">
                   <input
                     className="form-control"
-                    type="email"
+                    type="text"
                     name="email"
-                    placeholder="E-mail Address"
+                    placeholder="E-mail Address or Username"
                     ref={register}
                     style={
                       errors.email

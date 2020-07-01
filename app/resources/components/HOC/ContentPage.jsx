@@ -13,7 +13,7 @@ export default (OriginalComponent) => {
         history.push("/");
         window.location.reload();
       } else {
-        if (location.pathname.split("/")[1] === "p") {
+        if (arrLocation[1] === "p") {
           if (arrLocation[2] === undefined) {
             history.push("/");
           } else {
@@ -24,12 +24,43 @@ export default (OriginalComponent) => {
               .post("/api/actions/verify_user_story.php", data)
               .then((res) => {
                 if (!res.data.success) {
-                  history.push("/");
+                  history.push("/404");
                 }
               });
           }
-        } else if (location.pathname.split("/")[1] === "story") {
-          history.push("/story/draft");
+        } else if (arrLocation[1] === "story") {
+          let type = arrLocation[2];
+          if (type !== undefined) {
+            if (type === "draft") {
+              history.push("/story/draft");
+            } else if (type === "publish") {
+              history.push("/story/publish");
+            }
+          } else {
+            history.push("/story/draft");
+          }
+        } else if (arrLocation[1].split("@")[1] !== undefined) {
+          const data = new FormData();
+          data.append("username", arrLocation[1].split("@")[1]);
+          axios.post("/api/actions/check_username.php", data).then((res) => {
+            console.log(res.data);
+            if (res.data.success) {
+              if (arrLocation[2] !== undefined) {
+                const data = new FormData();
+                data.append("author_id", res.data.author_id);
+                data.append("story_id", arrLocation[2]);
+                axios
+                  .post("/api/actions/check_story_public.php", data)
+                  .then((res) => {
+                    if (!res.data.success) {
+                      history.push("/404");
+                    }
+                  });
+              }
+            } else {
+              history.push("/404");
+            }
+          });
         }
       }
     }, []);

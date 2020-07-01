@@ -16,6 +16,11 @@ const RegisterGroup = () => {
       .required("This field is required")
       .min(3, "Name too short")
       .matches(/^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$/g, "Invalid"),
+    username: yup
+      .string()
+      .required("This field is required")
+      .min(4, "Username too short")
+      .max(30, "Username too long"),
     email: yup
       .string()
       .required("This field is required")
@@ -39,6 +44,7 @@ const RegisterGroup = () => {
   const onSubmit = async (formData) => {
     let data = new FormData();
     data.append("name", formData.name);
+    data.append("username", formData.username);
     data.append("email", formData.email);
     data.append("password", formData.password);
     const res = await axios.post("/api/actions/register.php", data);
@@ -62,7 +68,21 @@ const RegisterGroup = () => {
     window.location.reload();
   };
 
-  return auth !== "" || auth === null ? (
+  return auth ? (
+    auth.email !== null && auth.username !== null ? (
+      <Register
+        register={register}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        errors={errors}
+        auth={auth}
+        goHome={goHome}
+        setEmail={setEmail}
+      ></Register>
+    ) : (
+      <CheckMail email={email} type={"verify"} />
+    )
+  ) : (
     <Register
       register={register}
       handleSubmit={handleSubmit}
@@ -72,8 +92,6 @@ const RegisterGroup = () => {
       goHome={goHome}
       setEmail={setEmail}
     ></Register>
-  ) : (
-    <CheckMail email={email} type={"verify"} />
   );
 };
 

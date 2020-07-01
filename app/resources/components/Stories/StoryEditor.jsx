@@ -262,7 +262,6 @@ const StoryEditor = ({ user }) => {
         titleChange.length() > 0 &&
         bodyChange.length() > 0
       ) {
-        console.log("HELD");
         titleChange = new Delta();
         bodyChange = new Delta();
         setSaved(true);
@@ -291,7 +290,20 @@ const StoryEditor = ({ user }) => {
 
   return (
     <>
-      {modal ? <PublishModal setModal={setModal} /> : null}
+      {modal ? (
+        <PublishModal
+          setModal={setModal}
+          user_id={user.id}
+          titleParams={title ? titleQuillRef.current.editor.getText() : ""}
+          bodyParams={quillRef.current.editor.getContents(0).ops[0].insert}
+          story_id={storyId}
+          displayImage={
+            document.getElementsByTagName("img").length > 0
+              ? document.getElementsByTagName("img")[0].currentSrc
+              : null
+          }
+        />
+      ) : null}
       <div id="new-story" className="container new-story-wrapper height-100">
         <Prompt
           when={bodyChange.length() > 0 || titleChange.length() > 0}
@@ -336,8 +348,18 @@ const StoryEditor = ({ user }) => {
         </div>
         <div className="floating-button" title="Publish">
           <div
-            className={!publish ? "action-btn disabled" : "action-btn"}
-            onClick={() => setModal(!modal)}
+            className={
+              (saved && type === "edit") || type === "edit"
+                ? "action-btn "
+                : "action-btn disabled"
+            }
+            onClick={() => {
+              setModal(!modal);
+              if (bodyChange.length() > 0 || titleChange.length() > 0) {
+                sendToServer();
+              }
+              setSaved(null);
+            }}
           >
             <i className="fa fa-upload" aria-hidden="true"></i>
           </div>

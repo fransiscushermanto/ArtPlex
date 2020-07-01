@@ -10,18 +10,19 @@ import {
 import HttpsRedirect from "react-https-redirect";
 
 import App from "./components/App";
-import Login from "./components/Auth/Login";
-import RegisterGroup from "./components/Auth/Register/RegisterGroup.jsx";
-import ForgetPasswordGroup from "./components/Auth/ForgetPassword/ForgetPasswordGroup";
 import NotFound from "./components/NotFound";
-import HomeGroup from "./components/Home/HomeGroup";
-import StoryGroup from "./components/Stories/StoryGroup";
-import EditGroup from "./components/Stories/EditGroup";
 import AuthPage from "./components/HOC/AuthPage";
 import ContentPage from "./components/HOC/ContentPage";
+import Login from "./components/Auth/Login";
+import ForgetPasswordGroup from "./components/Auth/ForgetPassword/ForgetPasswordGroup";
+import RegisterGroup from "./components/Auth/Register/RegisterGroup.jsx";
 import VerifyEmail from "./components/Auth/VerifyEmail";
 import ResetPassword from "./components/Auth/ResetPassword";
+import HomeGroup from "./components/Home/HomeGroup";
+import StoryUserGroup from "./components/Stories/StoryUserGroup";
+import EditGroup from "./components/Stories/EditGroup";
 import StoryEditor from "./components/Stories/StoryEditor";
+import StoryPublishGroup from "./components/Stories/StoryPublishGroup";
 import myApp from "myApp";
 
 /* globals __webpack_public_path__ */
@@ -33,9 +34,10 @@ if (document.getElementById("app")) {
         <App history={useHistory}>
           <Switch>
             <Route exact path="/" component={HomeGroup} />
-            <Route path="/story" component={ContentPage(StoryGroup)} />
+            <Route path="/story" component={ContentPage(StoryUserGroup)} />
             <Route path="/p" component={ContentPage(EditGroup)} />
             <Route path="/new-story" component={ContentPage(StoryEditor)} />
+            <Route path="/@:email" component={ContentPage(StoryPublishGroup)} />
             <Route exact path="/login" component={AuthPage(Login)} />
             <Route exact path="/register" component={AuthPage(RegisterGroup)} />
             <Route
