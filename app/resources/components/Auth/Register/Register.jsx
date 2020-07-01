@@ -11,6 +11,7 @@ const Register = ({
   auth,
   setEmail,
 }) => {
+  console.log(auth);
   return (
     <div className="auth-wrapper row height-100">
       <div className="col">
@@ -265,7 +266,7 @@ const Register = ({
                           style={{ fontSize: "13px" }}
                           className="text-danger font-weight-bold"
                         >
-                          {auth}
+                          {auth.username}
                         </p>
                       )
                     : null}

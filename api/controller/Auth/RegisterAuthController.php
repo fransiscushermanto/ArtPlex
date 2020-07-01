@@ -35,11 +35,11 @@ class RegisterController
         $username_error = ($row > 0) ? true : false;
 
         if ($email_error && $username_error) {
-            return ["success" => false, "error" => (object) array("email" => "Email already being used", "username" => "username already being used")];
+            return ["success" => false, "error" => (object) array("email" => "Email already being used", "username" => "Username already being used")];
         } else if ($email_error) {
             return ["success" => false, "error" => (object) array("email" => "Email already being used", "username" => null)];
         } else if ($username_error) {
-            return ["success" => false, "error" => (object) array("email" => null, "username" => "username already being used")];
+            return ["success" => false, "error" => (object) array("email" => null, "username" => "Username already being used")];
         } else {
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
             $current_date = date("Y-m-d H:i:s");

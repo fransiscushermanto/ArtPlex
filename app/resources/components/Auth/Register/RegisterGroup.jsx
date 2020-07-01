@@ -6,6 +6,7 @@ import * as yup from "yup";
 
 import Register from "./Register";
 import CheckMail from "../CheckMail";
+import { useEffect } from "react";
 
 const RegisterGroup = () => {
   const history = useHistory();
@@ -39,7 +40,7 @@ const RegisterGroup = () => {
   });
 
   const [email, setEmail] = useState("");
-  const [auth, setAuth] = useState(null);
+  const [auth, setAuth] = useState({ email: "", username: "" });
 
   const onSubmit = async (formData) => {
     let data = new FormData();
@@ -48,6 +49,7 @@ const RegisterGroup = () => {
     data.append("email", formData.email);
     data.append("password", formData.password);
     const res = await axios.post("/api/actions/register.php", data);
+    console.log(res.data.error);
     if (res.data.success) {
       sendMail();
       setAuth(res.data.error);
@@ -68,21 +70,16 @@ const RegisterGroup = () => {
     window.location.reload();
   };
 
-  return auth ? (
-    auth.email !== null && auth.username !== null ? (
-      <Register
-        register={register}
-        handleSubmit={handleSubmit}
-        onSubmit={onSubmit}
-        errors={errors}
-        auth={auth}
-        goHome={goHome}
-        setEmail={setEmail}
-      ></Register>
-    ) : (
-      <CheckMail email={email} type={"verify"} />
-    )
-  ) : (
+  useEffect(() => {
+    console.log(auth);
+  }, [auth]);
+
+  return auth.email !== null ||
+    auth.username !== null ||
+    auth.email === "" ||
+    auth.username === "" ||
+    auth.email !== "" ||
+    auth.username !== "" ? (
     <Register
       register={register}
       handleSubmit={handleSubmit}
@@ -92,6 +89,8 @@ const RegisterGroup = () => {
       goHome={goHome}
       setEmail={setEmail}
     ></Register>
+  ) : (
+    <CheckMail email={email} type={"verify"} />
   );
 };
 
