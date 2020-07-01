@@ -11,7 +11,7 @@ const Register = ({
   auth,
   setEmail,
 }) => {
-  console.log(auth);
+  console.log(errors);
   return (
     <div className="auth-wrapper row height-100">
       <div className="col">
@@ -252,15 +252,16 @@ const Register = ({
                     }
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  {(errors.email && (
-                    <p
-                      style={{ fontSize: "13px" }}
-                      className="text-danger font-weight-bold"
-                    >
-                      {errors.username.message}
-                    </p>
-                  )) ||
-                  auth
+                  {errors.username
+                    ? errors.username && (
+                        <p
+                          style={{ fontSize: "13px" }}
+                          className="text-danger font-weight-bold"
+                        >
+                          {errors.username.message}
+                        </p>
+                      )
+                    : auth
                     ? auth.username && (
                         <p
                           style={{ fontSize: "13px" }}
@@ -294,15 +295,16 @@ const Register = ({
                     }
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  {(errors.email && (
-                    <p
-                      style={{ fontSize: "13px" }}
-                      className="text-danger font-weight-bold"
-                    >
-                      {errors.email.message}
-                    </p>
-                  )) ||
-                  auth
+                  {errors.email
+                    ? errors.email && (
+                        <p
+                          style={{ fontSize: "13px" }}
+                          className="text-danger font-weight-bold"
+                        >
+                          {errors.email.message}
+                        </p>
+                      )
+                    : auth
                     ? auth.email && (
                         <p
                           style={{ fontSize: "13px" }}
