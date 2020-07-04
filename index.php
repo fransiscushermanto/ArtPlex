@@ -11,6 +11,11 @@ require_once("./api/controller/route.php");
 
 use Api\Actions\Route;
 
+echo var_dump($_COOKIE["remember_token"]);
+if (isset($_COOKIE["remember_token"])) {
+    echo $_COOKIE["remember_token"];
+}
+
 $route = new Route();
 $auth = new Auth($conn, $user_id);
 $auth->checkCookie();
