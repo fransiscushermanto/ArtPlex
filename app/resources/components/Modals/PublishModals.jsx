@@ -18,8 +18,11 @@ const PublishModals = ({
   setModal,
   displayImage,
   titleParams,
+  bodyParams,
   story_id,
   user_id,
+  status,
+  loaded_categories,
 }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -31,6 +34,7 @@ const PublishModals = ({
 
   useEffect(() => {
     setTitle(titleParams);
+    setBody(bodyParams);
   }, []);
 
   useEffect(() => {
@@ -44,7 +48,7 @@ const PublishModals = ({
   }, [searchTag]);
 
   useEffect(() => {
-    // console.log(selectedTag);
+    console.log(selectedTag);
   }, [selectedTag]);
 
   const Publish = async () => {
@@ -55,6 +59,7 @@ const PublishModals = ({
     data.append("story_id", story_id);
     data.append("image_preview", displayImage);
     data.append("user_id", user_id);
+    data.append("status", status);
     const res = await axios.post("/api/actions/publish_story.php", data);
     if (res.data.success) {
       history.push("/story/publish");
@@ -124,13 +129,16 @@ const PublishModals = ({
                     setSelectedTag={setSelectedTag}
                     searchTag={searchTag}
                     selectedTag={selectedTag}
+                    defaultValue={loaded_categories}
                   />
                 )}
               </ThemeProvider>
             </div>
             <div className="btn-action">
               <button onClick={Publish} className="btn btn-publish">
-                <span>Publish Now</span>
+                <span>
+                  {status === "on" ? "Save and Update Publish" : "Publish Now"}
+                </span>
               </button>
             </div>
           </div>

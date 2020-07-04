@@ -378,6 +378,200 @@
   }
 }
 
+.story-public {
+  min-height: 100vh;
+  .profile-avatar {
+    span {
+      font-size: 25px;
+    }
+  }
+  .col {
+    max-width: 680px;
+  }
+  .col:nth-child(1) {
+    max-width: 680px;
+    .title {
+      font-size: 42px;
+      font-weight: 500;
+      padding-bottom: 0px;
+      color: black;
+      margin-top: 31px;
+    }
+
+    .title,
+    .body {
+      font-family: Garamond, Georgia, serif;
+    }
+
+    .author-info {
+      margin-top: 10px;
+
+      .row {
+        width: 100%;
+        .col {
+          margin-top: 0px;
+          p {
+            font-size: 15px;
+          }
+        }
+      }
+      .seperator {
+        .cc {
+          fill: rgba(117, 117, 117, 1);
+        }
+        .cb {
+          color: rgba(117, 117, 117, 1);
+        }
+        .ca {
+          letter-spacing: 0px;
+        }
+        .bz {
+          font-size: 15.8px;
+        }
+        .by {
+          line-height: 20px;
+        }
+        .bx {
+          font-style: normal;
+        }
+        .bw {
+          font-family: medium-content-sans-serif-font, "Lucida Grande",
+            "Lucida Sans Unicode", "Lucida Sans", Geneva, Arial, sans-serif;
+        }
+        .r {
+          display: block;
+        }
+        .b {
+          font-weight: 400;
+        }
+      }
+    }
+
+    .body {
+      font-size: 30px;
+      font-weight: 500;
+      font-family: Garamond, Georgia, serif;
+      color: black;
+
+      margin-top: 42px;
+      p {
+        width: 100%;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+  .col:nth-child(2) {
+    margin-top: 50px;
+    .tags {
+    }
+    .written-by {
+      margin-top: 25px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(230, 230, 230, 1);
+      .profile-avatar {
+        span {
+          font-size: 35px;
+        }
+      }
+      .author-profile-info {
+        .x {
+          line-height: 20px;
+          letter-spacing: 1px;
+          font-size: 15px;
+        }
+        .author-name {
+          color: rgba(25, 25, 25, 1);
+          font-size: 23px;
+          line-height: 32px;
+          font-weight: 600;
+        }
+      }
+    }
+    .comment {
+      margin-top: 25px;
+      padding-top: 32px;
+      border-top: 1px solid rgba(230, 230, 230, 1);
+      .profile-avatar {
+        span {
+          font-size: 25px;
+        }
+      }
+      .comment-editor-wrapper {
+        .col {
+          margin: 0;
+          padding-right: 0;
+          .wrapper-editable {
+            position: relative;
+            padding-bottom: 10px;
+            .label-editable {
+              position: absolute;
+              cursor: none;
+              pointer-events: none;
+            }
+            .comment-editable {
+              padding-bottom: 3px;
+              outline: none;
+              border-bottom: 1px solid rgba(230, 230, 230, 1);
+              transition: border-bottom ease-in 0.1s;
+              &:focus {
+                border-bottom: 2px solid black;
+              }
+            }
+          }
+          .row {
+            margin: 0;
+            .btn.submit {
+              padding: 0px 15px;
+              background-color: #3367d6;
+              color: white;
+              &:disabled {
+                cursor: auto;
+                color: white;
+                background-color: #888888;
+              }
+            }
+          }
+        }
+      }
+
+      .comment-list {
+        margin-top: 30px;
+        .no-comment {
+          padding: 50px 0px;
+          p {
+            text-align: center;
+          }
+        }
+        .comment-wrapper {
+          margin: 15px 0px;
+          .col {
+            .wrapper-editable {
+              .head {
+                line-height: 20px;
+                .commenter-name {
+                  color: black;
+                  font-weight: 500;
+                  font-size: 17px;
+                }
+                .comment-date {
+                  font-size: 14px;
+                }
+              }
+              .body-comment {
+                padding-top: 3px;
+                font-size: 15px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .ql-editor[contenteditable] {
   overflow: visible !important;
   .artplex-image,

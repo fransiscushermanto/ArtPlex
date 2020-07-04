@@ -43,7 +43,6 @@ export default (OriginalComponent) => {
           const data = new FormData();
           data.append("username", arrLocation[1].split("@")[1]);
           axios.post("/api/actions/check_username.php", data).then((res) => {
-            console.log(res.data);
             if (res.data.success) {
               if (arrLocation[2] !== undefined) {
                 const data = new FormData();

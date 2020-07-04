@@ -11,7 +11,7 @@
                             <div class="text">
                                 <p>ArtPlex. is an abbreviation of Article Complex. This is place where people can find lots of article. We serve you and let you make your own article here. Keep Exploring below to see the article.</p>
                                 <div class="mouse">
-                                    <a href="#article-wrapper" class="mouse-icon">
+                                    <a href="#card-wrapper" class="mouse-icon">
                                         <div class="mouse-wheel"><span class="ion-ios-arrow-round-down"></span></div>
                                     </a>
                                 </div>

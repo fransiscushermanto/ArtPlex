@@ -69,6 +69,7 @@ $stories =  [
             include_once("./api/view/content.php")
             ?>
         </main>
+        <?php $auth->hasUser() || $route->has("login") || $route->has("register") || $route->has("forget") ? null : include_once("./api/view/layout/footer.php") ?>
         <!-- loader -->
         <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
                 <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />

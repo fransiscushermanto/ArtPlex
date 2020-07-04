@@ -71,3 +71,8 @@ export function detectOnBlur(ref, state, setState) {
   }
   document.addEventListener("mousedown", handleClickOutside);
 }
+
+export function calculateSpeed(length) {
+  const perMinute = 200;
+  return Math.round(length / perMinute);
+}

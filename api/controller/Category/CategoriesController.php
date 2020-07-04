@@ -12,17 +12,22 @@ class CategoriesController
 
     public function addTag()
     {
-        $query_add = $this->conn->prepare("INSERT INTO `categories` (`tag`) VALUES(?)");
-        $query_add->bind_param("s", $this->tag);
+        $this->category_id = $this->generateTagID();
+        $query_add = $this->conn->prepare("INSERT INTO `categories` (`category_id`, `tag`) VALUES(?, ?)");
+        $query_add->bind_param("s", $this->category_id, $this->tag);
         if ($query_add->execute()) {
             return (object) array(
                 "success" => true,
+                "tag" => (object) array(
+                    "category_id" => $this->category_id,
+                    "tag" => $this->tag,
+                ),
                 "error" => "",
             );
         } else {
             return (object) array(
                 "success" => true,
-                "error" => "Failed to adding category",
+                "error" => "Failed to add category",
             );
         }
     }
@@ -57,7 +62,17 @@ class CategoriesController
     {
         $query_delete = $this->conn->prepare("DELETE FROM `categories` WHERE `category_id` = ?");
         $query_delete->bind_param("s", $this->category_id);
-        $query_delete->execute();
+        if ($query_delete->execute()) {
+            return (object) array(
+                "success" => true,
+                "error" => "",
+            );
+        } else {
+            return (object) array(
+                "success" => false,
+                "error" => "Failed to delete category.",
+            );
+        }
     }
 
     public function editTag()
@@ -71,9 +86,29 @@ class CategoriesController
             );
         } else {
             return (object) array(
-                "success" => true,
-                "error" => "Failed when updating category.",
+                "success" => false,
+                "error" => "Failed to update category.",
             );
         }
+    }
+
+    // public function getAllTag()
+    // {
+    //     $arr_tag = array();
+    //     $query_get = $this->conn->prepare("SELECT * `categories`");
+    //     $query_get->execute();
+    //     $res = $query_get->get_result();
+    //     $row = $res->fetch_assoc();
+    //     if ($row > 0) {
+    //         array_push($arr_tag, (object) array());
+    //     }
+    // }
+
+    public function generateTagID()
+    {
+        $dt = new DateTime();
+        $time = $dt->format('HisvldFY');
+        $result = md5($time . $this->tag);
+        return $result;
     }
 }

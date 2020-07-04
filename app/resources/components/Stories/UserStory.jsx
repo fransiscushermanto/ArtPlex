@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import Moment from "react-moment";
 
-import { detectOnBlur } from "../Function/Factories";
+import { detectOnBlur, calculateSpeed } from "../Function/Factories";
 const Story = ({
   title,
   body,
@@ -58,11 +58,6 @@ const Story = ({
       fix = body;
     }
     return fix;
-  };
-
-  const calculateSpeed = (length) => {
-    const perMinute = 200;
-    return Math.round(length / perMinute);
   };
 
   const deleteTrigger = () => {

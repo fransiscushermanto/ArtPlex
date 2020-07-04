@@ -136,6 +136,7 @@ const CustomizedHook = ({
   setSearchTag,
   searchTag,
   selectedTag,
+  defaultValue,
 }) => {
   const onChange = (e, value) => {
     setSearchTag(value);
@@ -156,6 +157,7 @@ const CustomizedHook = ({
     id: "customized-hook-demo",
     multiple: true,
     options: searchTag !== "" ? listTag : [],
+    defaultValue: defaultValue,
     getOptionLabel: (option) =>
       selectedTag.filter((item) => item.tag.includes(option.tag)).length === 0
         ? option.tag

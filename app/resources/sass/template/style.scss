@@ -201,10 +201,10 @@ h5,
     > .nav-item {
       > .nav-link {
         font-size: 18px;
-        padding-top: 0.9rem;
+        padding-top: 0.9rem !important;
         padding-bottom: 0.9rem;
-        padding-left: 20px;
-        padding-right: 20px;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
         color: rgba(255, 255, 255, 0.8);
         font-weight: 400;
         &:hover {
@@ -332,7 +332,7 @@ h5,
   }
 
   &.scrolled {
-    position: fixed;
+    position: fixed !important;
     right: 0;
     left: 0;
     top: 0;
@@ -342,8 +342,6 @@ h5,
     .nav-item {
       > .nav-link {
         @include media-breakpoint-down(md) {
-          padding-left: 0 !important;
-          padding-right: 0 !important;
           padding-bottom: 0 !important;
         }
       }

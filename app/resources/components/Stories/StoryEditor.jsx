@@ -54,8 +54,10 @@ const StoryEditor = ({ user }) => {
   const [body, setBody] = useState("");
   const [saved, setSaved] = useState(null);
   const [typing, setTyping] = useState(false);
-  const [publish, setPublish] = useState(false);
+  const [status, setStatus] = useState("");
   const [modal, setModal] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [shown, setShown] = useState({ title: "", body: "" });
   const quillRef = useRef(null);
   const titleQuillRef = useRef(null);
   let timer,
@@ -73,14 +75,14 @@ const StoryEditor = ({ user }) => {
       data.append("type", type);
       axios.post("/api/actions/get_story.php", data).then((res) => {
         console.log(res.data);
+        setCategories(res.data.categories);
+        setStatus(res.data.status);
         setTitle(res.data.title_html);
         setBody(res.data.body_html);
+        setShown({ title: res.data.title, body: res.data.body });
         titleChange = new Delta();
         bodyChange = new Delta();
       });
-    }
-    if (type === "edit") {
-      setPublish(true);
     }
   }, []);
 
@@ -127,13 +129,11 @@ const StoryEditor = ({ user }) => {
 
   const handleTitleChange = (text, delta, source, editor) => {
     setTitle(text);
-    setPublish(true);
     titleChange = titleChange.compose(delta);
   };
 
   const handleBodyChange = (text, delta, source, editor) => {
     setBody(text);
-    setPublish(true);
     bodyChange = bodyChange.compose(delta);
   };
 
@@ -292,16 +292,18 @@ const StoryEditor = ({ user }) => {
     <>
       {modal ? (
         <PublishModal
+          status={status}
           setModal={setModal}
           user_id={user.id}
-          titleParams={title ? titleQuillRef.current.editor.getText() : ""}
-          bodyParams={quillRef.current.editor.getContents(0).ops[0].insert}
+          titleParams={shown.title}
+          bodyParams={shown.body}
           story_id={storyId}
           displayImage={
             document.getElementsByTagName("img").length > 0
               ? document.getElementsByTagName("img")[0].currentSrc
               : null
           }
+          loaded_categories={categories}
         />
       ) : null}
       <div id="new-story" className="container new-story-wrapper height-100">
@@ -346,6 +348,7 @@ const StoryEditor = ({ user }) => {
             </div>
           </div>
         </div>
+
         <div className="floating-button" title="Publish">
           <div
             className={
@@ -357,8 +360,11 @@ const StoryEditor = ({ user }) => {
               setModal(!modal);
               if (bodyChange.length() > 0 || titleChange.length() > 0) {
                 sendToServer();
+                bodyChange = new Delta();
+                titleChange = new Delta();
+              } else {
+                setSaved(null);
               }
-              setSaved(null);
             }}
           >
             <i className="fa fa-upload" aria-hidden="true"></i>

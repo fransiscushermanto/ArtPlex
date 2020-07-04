@@ -15,7 +15,6 @@ const ListStory = ({ user, setModal, modal, setStoryId, storyId }) => {
       data.append("user_id", user.id);
       const res = await axios.post("/api/actions/get_story.php", data);
       if (res.data.success) {
-        console.log(res.data.publishStories);
         setDraftStories(res.data.draftStories);
         setPublishStories(res.data.publishStories);
       }

@@ -1,0 +1,57 @@
+#card-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 50px 0px 0px 0px;
+
+  .row.services {
+    justify-content: center;
+    margin-bottom: 100px;
+    .card {
+      width: 300px;
+      margin-right: 10px;
+      border: none;
+      .card-body {
+        .icon-wrapper {
+          display: flex;
+          justify-content: center;
+          padding: 0px 30px 30px 30px;
+          img {
+            width: 70px;
+            height: 70px;
+          }
+        }
+        .description {
+          text-align: center;
+        }
+      }
+    }
+  }
+  .join-us {
+    position: relative;
+    padding: 20px 250px;
+    @include media-breakpoint-down(md) {
+      padding: 20px 200px;
+      .row {
+        flex-direction: column !important;
+      }
+    }
+    @include media-breakpoint-down(sm) {
+      padding: 20px 50px;
+    }
+    h1 {
+      font-weight: bold;
+    }
+    h1,
+    h2 {
+      color: white;
+      white-space: nowrap;
+    }
+    .btn {
+      padding: 10px 30px;
+      font-weight: bold;
+    }
+  }
+}

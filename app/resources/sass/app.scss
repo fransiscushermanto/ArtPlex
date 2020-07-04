@@ -1,6 +1,7 @@
 //Variables
 @import "./template/variable.scss";
 @import "./template/style.scss";
+@import "./landing.scss";
 @import "./Auth.scss";
 @import "./Story.scss";
 @import "./Modals.scss";
@@ -18,14 +19,13 @@ body {
   height: 100%;
 }
 
+html {
+  scroll-behavior: smooth;
+}
 #root,
 .app-wrapper {
   overflow: hidden;
   height: 100%;
-}
-
-main {
-  scroll-behavior: smooth;
 }
 
 a {
@@ -88,6 +88,10 @@ main {
   height: 100%;
 }
 
+.width-100 {
+  width: 100%;
+}
+
 .hidden {
   display: none !important;
   z-index: -1 !important;
@@ -99,4 +103,12 @@ main {
   &:hover {
     color: black !important;
   }
+}
+
+footer {
+  background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+
+  padding: 10px 100px;
 }
