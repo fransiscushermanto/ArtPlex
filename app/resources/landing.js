@@ -7,7 +7,6 @@ import ArticleComponent from "./components/Home/LandingComponent/ArticleComponen
 import myApp from "myApp";
 __webpack_public_path__ = `${window.STATIC_URL}app/assets/img`;
 const ArticleGroup = () => {
-  const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
@@ -15,15 +14,6 @@ const ArticleGroup = () => {
     }, 500);
     return () => setLoading(false);
   }, [loading]);
-
-  const renderArticle = () => {
-    console.log(articles);
-    return articles.map((article, index) => {
-      return (
-        <ArticleComponent key={index} article={article}></ArticleComponent>
-      );
-    });
-  };
 
   return loading ? (
     <div className="col-md-12 d-flex justify-content-center">
