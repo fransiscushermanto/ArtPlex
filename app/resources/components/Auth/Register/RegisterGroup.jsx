@@ -49,10 +49,10 @@ const RegisterGroup = () => {
     data.append("email", formData.email);
     data.append("password", formData.password);
     const res = await axios.post("/api/actions/register.php", data);
-    console.log(res.data.error);
+    console.log(res.data);
     if (res.data.success) {
-      sendMail();
       setAuth(res.data.error);
+      sendMail();
     } else {
       setAuth(res.data.error);
     }
@@ -74,24 +74,21 @@ const RegisterGroup = () => {
     console.log(auth);
   }, [auth]);
 
-  return auth.email !== null ||
-    auth.username !== null ||
-    auth.email === "" ||
-    auth.username === "" ||
-    auth.email !== "" ||
-    auth.username !== "" ? (
-    <Register
-      register={register}
-      handleSubmit={handleSubmit}
-      onSubmit={onSubmit}
-      errors={errors}
-      auth={auth}
-      goHome={goHome}
-      setEmail={setEmail}
-    ></Register>
-  ) : (
-    <CheckMail email={email} type={"verify"} />
-  );
+  if (auth.email === null && auth.username === null) {
+    return <CheckMail email={email} type={"verify"} />;
+  } else {
+    return (
+      <Register
+        register={register}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        errors={errors}
+        auth={auth}
+        goHome={goHome}
+        setEmail={setEmail}
+      ></Register>
+    );
+  }
 };
 
 export default RegisterGroup;

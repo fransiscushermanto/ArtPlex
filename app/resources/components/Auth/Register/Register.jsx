@@ -11,7 +11,6 @@ const Register = ({
   auth,
   setEmail,
 }) => {
-  console.log(errors);
   return (
     <div className="auth-wrapper row height-100">
       <div className="col">
