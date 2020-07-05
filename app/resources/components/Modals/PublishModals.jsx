@@ -23,18 +23,20 @@ const PublishModals = ({
   user_id,
   status,
   loaded_categories,
+  sendEmailVerification,
 }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [searchTag, setSearchTag] = useState("");
   const [listTag, setListTag] = useState([]);
   const [selectedTag, setSelectedTag] = useState([]);
+  const [errors, setErrors] = useState(null);
 
   const history = useHistory();
 
   useEffect(() => {
     setTitle(titleParams);
-    setBody(bodyParams);
+    setBody(status === "on" ? bodyParams : "");
   }, []);
 
   useEffect(() => {
@@ -61,8 +63,11 @@ const PublishModals = ({
     data.append("user_id", user_id);
     data.append("status", status);
     const res = await axios.post("/api/actions/publish_story.php", data);
+    console.log(res.data.error);
     if (res.data.success) {
       history.push("/story/publish");
+    } else {
+      setErrors(res.data.error);
     }
   };
 
@@ -141,6 +146,28 @@ const PublishModals = ({
                 </span>
               </button>
             </div>
+            {errors ? (
+              <div className="error-message mt-5">
+                <p className="bg-danger">
+                  {errors.email ? (
+                    <span>
+                      {errors.email}
+                      <span
+                        className="send-message"
+                        onClick={() => {
+                          setModal(false);
+                          sendEmailVerification();
+                        }}
+                      >
+                        here.
+                      </span>
+                    </span>
+                  ) : (
+                    errors.message
+                  )}
+                </p>
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

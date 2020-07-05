@@ -1,5 +1,5 @@
 <?php
-$tag = (isset($_POST["tag"])) ? $_POST["tag"] : null;
+$tag = (isset($_POST["tag"])) ? $_POST["tag"] : "";
 include_once("../../vendor/autoload.php");
 include_once("../helper.php");
 include_once("../database.php");

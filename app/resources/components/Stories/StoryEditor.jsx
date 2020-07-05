@@ -8,6 +8,7 @@ import ImageResize from "quill-image-resize-module";
 import { restrictedKey, totalWord } from "../Function/Factories";
 import ToolbarEditor from "../Function/ToolbarEditor";
 import PublishModal from "../Modals/PublishModals";
+import CheckMail from "../Auth/CheckMail";
 
 import "react-quill/dist/quill.snow.css";
 import "react-quill/dist/quill.core.css";
@@ -58,6 +59,7 @@ const StoryEditor = ({ user }) => {
   const [modal, setModal] = useState(false);
   const [categories, setCategories] = useState([]);
   const [shown, setShown] = useState({ title: "", body: "" });
+  const [openSendEmailPage, setOpenSendEmailPage] = useState(false);
   const quillRef = useRef(null);
   const titleQuillRef = useRef(null);
   let timer,
@@ -65,6 +67,7 @@ const StoryEditor = ({ user }) => {
 
   useEffect(() => {
     // window.location.lasthash.Push(window.location.hash);
+
     if (document.getElementById("body-editable")) {
       document.getElementById("body-editable").focus();
     }
@@ -126,6 +129,19 @@ const StoryEditor = ({ user }) => {
       });
     }
   }, [quillRef]);
+
+  const sendMail = () => {
+    const data = new FormData();
+    data.append("email", user.email);
+    data.append("type", "verify");
+    axios.post("/api/actions/send_mail.php", data);
+  };
+
+  const sendEmailVerification = () => {
+    setOpenSendEmailPage(true);
+    document.getElementById("ftco-navbar").style.display = "none";
+    sendMail();
+  };
 
   const handleTitleChange = (text, delta, source, editor) => {
     setTitle(text);
@@ -288,7 +304,9 @@ const StoryEditor = ({ user }) => {
     }
   };
 
-  return (
+  return openSendEmailPage ? (
+    <CheckMail email={user.email} type={"verify"} />
+  ) : (
     <>
       {modal ? (
         <PublishModal
@@ -298,6 +316,7 @@ const StoryEditor = ({ user }) => {
           titleParams={shown.title}
           bodyParams={shown.body}
           story_id={storyId}
+          sendEmailVerification={sendEmailVerification}
           displayImage={
             document.getElementsByTagName("img").length > 0
               ? document.getElementsByTagName("img")[0].currentSrc

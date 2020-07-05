@@ -18,7 +18,7 @@ class CategoriesController
         if ($query_add->execute()) {
             return (object) array(
                 "success" => true,
-                "tag" => (object) array(
+                "category" => (object) array(
                     "category_id" => $this->category_id,
                     "tag" => $this->tag,
                 ),
@@ -92,17 +92,28 @@ class CategoriesController
         }
     }
 
-    // public function getAllTag()
-    // {
-    //     $arr_tag = array();
-    //     $query_get = $this->conn->prepare("SELECT * `categories`");
-    //     $query_get->execute();
-    //     $res = $query_get->get_result();
-    //     $row = $res->fetch_assoc();
-    //     if ($row > 0) {
-    //         array_push($arr_tag, (object) array());
-    //     }
-    // }
+    public function getAllTag()
+    {
+        $categoryArr = array();
+        $query_search = $this->conn->prepare("SELECT * FROM `categories`");
+        $query_search->execute();
+        $res = $query_search->get_result();
+        $row = $res->fetch_assoc();
+
+        if ($row > 0) {
+            do {
+                array_push(
+                    $categoryArr,
+                    (object) array(
+                        "category_id" => $row['category_id'],
+                        "tag" => $row['tag'],
+                    )
+                );
+            } while ($row = $res->fetch_assoc());
+        }
+
+        return (object) array("success" => true, "categories" => $categoryArr);
+    }
 
     public function generateTagID()
     {

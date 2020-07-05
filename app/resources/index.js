@@ -13,6 +13,7 @@ import App from "./components/App";
 import NotFound from "./components/NotFound";
 import AuthPage from "./components/HOC/AuthPage";
 import ContentPage from "./components/HOC/ContentPage";
+import AdminPage from "./components/HOC/AuthAdminPage";
 import Login from "./components/Auth/Login";
 import ForgetPasswordGroup from "./components/Auth/ForgetPassword/ForgetPasswordGroup";
 import RegisterGroup from "./components/Auth/Register/RegisterGroup.jsx";
@@ -23,6 +24,7 @@ import StoryUserGroup from "./components/Stories/StoryUserGroup";
 import EditGroup from "./components/Stories/EditGroup";
 import StoryEditor from "./components/Stories/StoryEditor";
 import StoryPublishGroup from "./components/Stories/StoryPublishGroup";
+import AdminGroup from "./components/Admin/AdminGroup";
 import myApp from "myApp";
 
 /* globals __webpack_public_path__ */
@@ -33,13 +35,14 @@ if (document.getElementById("app")) {
       <Router>
         <App history={useHistory}>
           <Switch>
-            <Route exact path="/" component={HomeGroup} />
+            <Route exact path="/" component={ContentPage(HomeGroup)} />
             <Route path="/story" component={ContentPage(StoryUserGroup)} />
             <Route path="/p" component={ContentPage(EditGroup)} />
             <Route path="/new-story" component={ContentPage(StoryEditor)} />
             <Route path="/@:email" component={ContentPage(StoryPublishGroup)} />
             <Route exact path="/login" component={AuthPage(Login)} />
             <Route exact path="/register" component={AuthPage(RegisterGroup)} />
+            <Route path="/admin" component={AdminPage(AdminGroup)} />
             <Route
               exact
               path="/forget"

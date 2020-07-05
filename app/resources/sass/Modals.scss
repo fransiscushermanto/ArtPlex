@@ -263,6 +263,22 @@
               }
             }
           }
+          .error-message {
+            color: white;
+            p {
+              border-radius: 10px;
+              padding: 5px 30px;
+              span {
+                span.send-message {
+                  color: rgba(255, 252, 100, 0.9);
+                  cursor: pointer;
+                  &:hover {
+                    text-decoration: underline;
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }

@@ -18,6 +18,7 @@ class RegisterController
 
     public function createUser()
     {
+        date_default_timezone_set('Asia/Bangkok');
         //check email
         $query_check_email = $this->conn->prepare("SELECT * FROM users WHERE email = ?");
         $query_check_email->bind_param("s", $this->email);
@@ -42,8 +43,9 @@ class RegisterController
             return ["success" => false, "error" => (object) array("email" => null, "username" => "Username already being used")];
         } else {
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
-            $current_date = date("Y-m-d H:i:s");
-            $query_insert_user = $this->conn->prepare("INSERT INTO users (`name`, `email`, `password`, `status`, `updated_at`, `levels`,`username`) VALUES (?, ?, ?, 'off', ?, 'reader', ?)");
+            $date = new DateTime();
+            $current_date = $date->format('Y-m-d H:i:s');
+            $query_insert_user = $this->conn->prepare("INSERT INTO users (`name`, `email`, `password`, `status`, `updated_at`, `level`,`username`) VALUES (?, ?, ?, 'off', ?, 'reader', ?)");
             $query_insert_user->bind_param("sssss", $this->name, $this->email, $this->password, $current_date, $this->username);
             $res = $query_insert_user->execute();
             if (!$res) {
@@ -54,7 +56,7 @@ class RegisterController
 
     public function composeMail()
     {
-
+        date_default_timezone_set('Asia/Bangkok');
         $query_check_email = $this->conn->prepare("SELECT user_id, name, status FROM users WHERE email = ?;");
         $query_check_email->bind_param("s", $this->email);
         $query_check_email->execute();
@@ -68,17 +70,9 @@ class RegisterController
                 $name = $row["name"];
 
                 //setting expiry date for key
-                $expiry_date_format = mktime(
-                    date("H"),
-                    date("i") + 30,
-                    date("s"),
-                    date("m"),
-                    date("d"),
-                    date("Y")
-                );
-                date_default_timezone_set("Europe/Kaliningrad");
-                $expiry_date = date("Y-m-d H:i:s", $expiry_date_format);
-
+                $date = new DateTime();
+                $date->add(new DateInterval('PT30M'));
+                $expiry_date = $date->format('Y-m-d H:i:s');
                 //generating key
                 $any =  (2418 * 2);
                 $key = md5(((string) $any . $this->email));
@@ -90,12 +84,12 @@ class RegisterController
                 $token_user_row = mysqli_fetch_assoc($query_check_user_token);
                 $res = null;
                 if ($token_user_row > 0) {
-                    $query_insert_token = $this->conn->prepare("UPDATE `verify_tokens_temp` SET v_key = '$key' WHERE user_id = ?");
-                    $query_insert_token->bind_param("i", $user_id);
+                    $query_insert_token = $this->conn->prepare("UPDATE `verify_tokens_temp` SET v_key = '$key', exp_date = ? WHERE user_id = ?");
+                    $query_insert_token->bind_param("ss", $expiry_date, $user_id);
                     $res = $query_insert_token->execute();
                 } else {
                     $query_insert_token = $this->conn->prepare("INSERT INTO `verify_tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES (?, ?, ?)");
-                    $query_insert_token->bind_param("sis", $key, $user_id, $expiry_date);
+                    $query_insert_token->bind_param("sss", $key, $user_id, $expiry_date);
                     $res = $query_insert_token->execute();
                 }
                 if ($res) {
@@ -171,13 +165,14 @@ class RegisterController
 
     public function verifyEmail($user_id)
     {
-        $current_date = date("Y-m-d H:i:s");
+        date_default_timezone_set('Asia/Bangkok');
+        $date = new DateTime();
+        $current_date = $date->format('Y-m-d H:i:s');
         $query_update_user = "UPDATE users SET status='on', email_verified_at = '$current_date', updated_at = '$current_date' where user_id = '$user_id';";
         if (mysqli_query($this->conn, $query_update_user)) { //if user status update success
             return (object) array(
                 "success" => true,
                 "error" => "",
-                "updated_at" => $current_date
             );
             //redirect to email_verified page
         } else { //if user status update fails

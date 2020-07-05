@@ -70,7 +70,7 @@ class StoriesController
         if ($query_continue->execute()) {
             return (object) array(
                 "success" => true,
-                "error" => "",
+                "error" => null,
             );
         } else {
             return (object) array(
@@ -87,14 +87,27 @@ class StoriesController
         $current_date = $date->format('Y-m-d H:i:s');
         $query_get_user = mysqli_query($this->conn, "SELECT * FROM users WHERE `user_id` = '$this->user_id';");
         $row = mysqli_fetch_assoc($query_get_user);
+        if ($row['status'] === "off") {
+            return [
+                "success" => false,
 
-        if ($row['levels'] === "reader") {
-            $query_update_user_level = "UPDATE users SET `levels`='author',`updated_at`='$current_date' WHERE `user_id` = '$this->user_id'; ";
+                "error" => (object) array(
+                    "email" => "Email is not registered. Please verify",
+                    "message" => null,
+                ),
+            ];
+        }
+
+        if ($row['level'] === "reader") {
+            $query_update_user_level = "UPDATE users SET `level`='author',`updated_at`='$current_date' WHERE `user_id` = '$this->user_id'; ";
             if (!mysqli_query($this->conn, $query_update_user_level)) {
-                return (object) array(
+                return [
                     "success" => false,
-                    "error" => "Failed to upgrade user level",
-                );
+                    "error" => (object) array(
+                        "email" => null,
+                        "message" => "Failed to upgrade user level",
+                    ),
+                ];
             }
         }
 
@@ -102,10 +115,13 @@ class StoriesController
         $query_publish->bind_param("ssss", $current_date, $this->title, $this->body, $this->story_id);
 
         if (!($query_publish->execute())) {
-            return (object) array(
+            return [
                 "success" => false,
-                "error" => "Failed to publish story",
-            );
+                "error" => (object) array(
+                    "email" => null,
+                    "message" => "Failed to publish story",
+                ),
+            ];
         }
 
         $query_add_stories_publish = "";
@@ -119,40 +135,45 @@ class StoriesController
 
 
         if (!$query_add_stories_publish->execute()) {
-            return (object) array(
+            return [
                 "success" => false,
-                "error" => "Failed to insert story publish - " . mysqli_error($this->conn),
-            );
+                "error" => (object) array(
+                    "email" => null,
+                    "message" => "Failed to insert story publish",
+                ),
+            ];
         }
 
         $this->deleteStoryCategoryLink();
         return ($this->hasCategory($categories));
     }
 
-    // public function unpublishStory()
-    // {
-    //     $date = new DateTime();
-    //     $current_date = $date->format('Y-m-d H:i:s');
+    public function unpublishStory()
+    {
+        $date = new DateTime();
+        $current_date = $date->format('Y-m-d H:i:s');
 
-    //     $query_publish = mysqli_query($this->conn, "UPDATE stories SET `status` = 'off', `last_update` = '$current_date', `publish_date` = '$current_date' WHERE `story_id` = '$this->story_id';");
-    //     if ($query_publish) {
-    //         return (object) array(
-    //             "success" => true,
-    //             "error" => "",
-    //         );
-    //     } else {
-    //         return (object) array(
-    //             "success" => false,
-    //             "error" => "Failed to unpublish story",
-    //         );
-    //     }
-    // }
+        $query_publish = mysqli_query($this->conn, "UPDATE stories SET `status` = 'off', `last_update` = '$current_date', `publish_date` = '$current_date' WHERE `story_id` = '$this->story_id';");
+        if ($query_publish) {
+            return (object) array(
+                "success" => true,
+                "error" => "",
+            );
+        } else {
+            return (object) array(
+                "success" => false,
+                "error" => "Failed to unpublish story",
+            );
+        }
+    }
 
     public function deleteStory()
     {
         $delete_query = "DELETE FROM `stories_categories` WHERE `story_id` = '$this->story_id';
                          DELETE FROM `stories_publish` WHERE `story_id` = '$this->story_id';
-                        DELETE FROM `stories` WHERE `story_id` = '$this->story_id';";
+                        DELETE FROM `stories` WHERE `story_id` = '$this->story_id';
+                        DELETE FROM `comments` WHERE `story_id` = '$this->story_id';
+                        DELETE FROM `stories_comments` WHERE `story_id` = '$this->story_id'";
         if ($this->conn->multi_query($delete_query)) {
             //echo json_encode((object) array("story_id" => $this->story_id, "user_id" => $this->user_id));
             while ($this->conn->next_result()) {;
@@ -178,21 +199,6 @@ class StoriesController
         mysqli_query($this->conn, $delete_query);
     }
 
-    // public function checkStoryPublished()
-    // {
-    //     $query_story_published = "SELECT * from `stories` WHERE `story_id` = '$this->story_id' AND `user_id` = '$this->user_id' AND `status` = 'on'";
-    //     $res = mysqli_query($this->conn, $query_story_published);
-    //     $row = mysqli_fetch_assoc($res);
-    //     if ($row > 0) {
-    //         return (object) array(
-    //             "success" => true,
-    //         );
-    //     } else {
-    //         return (object) array(
-    //             "success" => false,
-    //         );
-    //     }
-    // }
     public function countStory()
     {
         $query_count = "SELECT s.story_id FROM stories s JOIN stories_publish sp ON s.story_id = sp.story_id JOIN users u ON s.user_id = u.user_id WHERE s.status = 'on' ";
@@ -200,28 +206,41 @@ class StoriesController
         return $total_story = mysqli_num_rows($res);
     }
 
-    public function getListStory($type = "", $page = 0)
+    public function getListStory($page = 0, $category_id = "", $title = "")
     {
-        $arr_story = $this->getAllPublishedStories($type, $page);
+        $arr_story = $this->getAllPublishedStories($page, $category_id, $title);
         if (count($arr_story) > 0) {
-            return (object) array("success" => true, "stories" => $arr_story);
+            return (object) array("success" => true, "stories" => $arr_story, "page" => $page, "category_id" => $category_id, "title" => $title);
         } else {
-            return (object) array("success" => false);
+            return (object) array("success" => false, "stories" => $arr_story, "error" => mysqli_error($this->conn), "page" => $page, "category_id" => $category_id, "title" => $title);
         }
     }
 
-    public function getAllPublishedStories($page = 0)
+
+    public function getAllPublishedStories($page = 0, $category_id = "", $title = "")
     {
+        $story_title = $title;
         $arr_publish = array();
         $limit = 20;
-        $offset = ($page * 20);
+        $offset = ($page * $limit);
         $total_story = $this->countStory();
         $max_page = ceil($total_story / $limit);
 
         if ($page <= $max_page) {
-            $query_get_published_story_list = "SELECT s.story_id, s.title, s.body, s.total_word, s.last_update, sp.publish_date, s.status, sp.preview_image, u.user_id, u.name, u.username FROM `stories` s JOIN `stories_publish` sp ON s.story_id = sp.story_id JOIN users u ON s.user_id = u.user_id WHERE s.status = 'on'  ORDER BY sp.publish_date DESC LIMIT $limit OFFSET $offset";
-            $res = mysqli_query($this->conn, $query_get_published_story_list);
-            $row  = mysqli_fetch_assoc($res);
+            $query = "SELECT s.story_id, s.title, s.body, s.total_word, s.last_update, sp.publish_date, s.status, sp.preview_image, u.user_id, u.name, u.username FROM `stories` s JOIN `stories_publish` sp ON s.story_id = sp.story_id JOIN users u ON s.user_id = u.user_id";
+            if ($category_id !== "none" && $category_id !== "") $query .= " JOIN stories_categories sc ON s.story_id = sc.story_id ";
+            $query .= " WHERE s.status = 'on' ";
+            if ($category_id !== "none" && $category_id !== "")  $query .= " AND sc.category_id = '$category_id' ";
+            if ($story_title !== "") {
+                $story_title = '%' . $story_title . '%';
+                $query .= " AND s.title LIKE ?";
+            }
+            $query .= " ORDER BY sp.publish_date DESC LIMIT $limit OFFSET $offset";
+            $query_get = $this->conn->prepare($query);
+            if ($title != "") $query_get->bind_param("s", $story_title);
+            $query_get->execute();
+            $res = $query_get->get_result();
+            $row  = $res->fetch_assoc();
             if ($row > 0) {
                 do {
                     array_push(
@@ -237,10 +256,10 @@ class StoriesController
                             "image_preview" => $row["preview_image"],
                             "author" => ["user_id" => $row['user_id'], "name" => $row['name'], "username" => $row['username'],],
                             "error" => "",
-                            "categories" => $this->getStoryRelatedTag($row['story_id']),
+                            "categories" => $this->getPublishedStoryRelatedTag($row['story_id']),
                         )
                     );
-                } while ($row = mysqli_fetch_assoc($res));
+                } while ($row  = $res->fetch_assoc());
             }
         }
 
@@ -263,7 +282,7 @@ class StoriesController
                 "total_word" => $row['total_word'],
                 "last_update" => $row['last_update'],
                 "status" => $row["status"],
-                "tags" => $arr_tag,
+                "categories" => $arr_tag,
                 "error" => "",
             );
         } else {
@@ -277,7 +296,7 @@ class StoriesController
     {
         $query_view_story = "SELECT u.name, u.username, s.story_id, s.title, s.title_html, s.body, s.body_html, 
         s.total_word, s.last_update, s.status, sp.publish_date FROM stories s JOIN users u ON s.user_id = u.user_id 
-        JOIN stories_publish sp ON s.story_id = sp.story_id WHERE s.story_id = '$this->story_id' ";
+        JOIN stories_publish sp ON s.story_id = sp.story_id JOIN stories_categories sc ON s.story_id = sc.story_id WHERE s.story_id = '$this->story_id' ";
         $arr_tag = $this->getStoryRelatedTag();
         $arr_Comment = $this->getStoryRelatedComment();
         // if ($type === "public") $query_view_story .= " AND s.status = 'on'";
@@ -396,22 +415,44 @@ class StoriesController
                 $query_bulk_add->execute();
             }
             if (mysqli_error($this->conn) != "") {
-                return (object) array(
+                return [
                     "success" => false,
-                    "error" => mysqli_error($this->conn),
-                );
+                    "error" => (object) array(
+                        "email" => null,
+                        "message" => "Failed to link category to story",
+                    ),
+                ];
             } else {
-                return (object) array(
+                return [
                     "success" => true,
-                    "error" => "",
-                );
+                    "error" => null,
+                ];
             }
         } else {
-            return (object) array(
+            return [
                 "success" => true,
-                "error" => "No tag",
-            );
+                "error" => null,
+            ];
         }
+    }
+    public function getPublishedStoryRelatedTag($story_id = "")
+    {
+        $arr_tag = array();
+        $query_get = "";
+        if ($story_id !== "") {
+            $query_get = "SELECT * FROM `stories_categories` sc JOIN `categories` c ON sc.category_id = c.category_id WHERE sc.story_id = '$story_id'";
+        } else {
+            $query_get = "SELECT * FROM `stories_categories` sc JOIN `categories` c ON sc.category_id = c.category_id WHERE sc.story_id = '$this->story_id'";
+        }
+        $res = mysqli_query($this->conn, $query_get);
+        $row = mysqli_fetch_assoc($res);
+        if ($row > 0) {
+            do {
+                array_push($arr_tag, $row["tag"]);
+            } while ($row = mysqli_fetch_assoc($res));
+        }
+
+        return $arr_tag;
     }
 
     public function getStoryRelatedTag($story_id = "")
@@ -459,7 +500,7 @@ class StoriesController
         if (count($arr_Comment) > 0) {
             return (object) array("success" => true, "comments" => $arr_Comment);
         } else {
-            return (object) array("success" => false);
+            return (object) array("success" => false, "comments" => $arr_Comment);
         }
     }
 

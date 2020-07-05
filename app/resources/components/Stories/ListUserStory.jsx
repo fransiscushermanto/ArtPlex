@@ -9,6 +9,7 @@ const ListStory = ({ user, setModal, modal, setStoryId, storyId }) => {
   const [draftStories, setDraftStories] = useState([]);
   const [publishStories, setPublishStories] = useState([]);
   useEffect(() => {
+    document.getElementById("ftco-navbar").style.display = "flex";
     const getUserStory = async () => {
       const data = new FormData();
       data.append("type", "all");

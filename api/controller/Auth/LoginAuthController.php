@@ -11,9 +11,12 @@ class LoginController
         $this->remember_me = $remember_me;
     }
 
-    public function authenticateUser()
+    public function authenticateUser($level = "")
     {
-        $query_select = $this->conn->prepare("SELECT user_id AS id,  password, created_at FROM users WHERE `email` = ? OR `username` = ?");
+        $query = "SELECT user_id AS id,  password, created_at FROM users WHERE `email` = ? OR `username` = ? ";
+        if ($level === "admin") $query .= "AND `level` = 'admin'";
+        $query_select = $this->conn->prepare($query);
+
         $query_select->bind_param("ss", $this->email, $this->email);
         $query_select->execute();
         $res = $query_select->get_result();

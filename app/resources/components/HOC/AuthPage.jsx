@@ -9,6 +9,7 @@ export default (OriginalComponent) => {
     const { user } = myApp;
     const [keyStatus, setKeyStatus] = useState();
     const [email, setEmail] = useState();
+    console.log(location.pathname);
     useEffect(() => {
       const verifyToken = async (key, user_id, type) => {
         const data = new FormData();
@@ -17,16 +18,11 @@ export default (OriginalComponent) => {
         data.append("type", type);
         const res = await axios.post("/api/actions/verify_token.php", data);
         setKeyStatus(res.data.success);
-        console.log(res.data);
         if (res.data.email) {
           setEmail(res.data.email);
         }
       };
 
-      if (user !== null) {
-        history.push("/");
-        window.location.reload();
-      }
       if (location.pathname === "/verify") {
         let query = new URLSearchParams(location.search);
         if (query.get("key")) {
@@ -43,6 +39,9 @@ export default (OriginalComponent) => {
           history.push("/");
           window.location.reload();
         }
+      } else if (user !== null) {
+        history.push("/");
+        window.location.reload();
       }
     }, []);
     return (

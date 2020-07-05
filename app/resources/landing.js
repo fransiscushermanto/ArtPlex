@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import { Link } from "react-router-dom";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import ArticleComponent from "./components/Home/LandingComponent/ArticleComponent";
 

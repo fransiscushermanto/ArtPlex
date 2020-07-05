@@ -17,9 +17,17 @@ class CardsController
     {
         $query_create = $this->conn->prepare("INSERT INTO cards (`image`, `title`, `description`, `status`) VALUES (?, ?, ?, 'off')");
         $query_create->bind_param("sss", $this->image, $this->title, $this->description);
+        $this->card_id = mysqli_insert_id($this->conn);
         if ($query_create->execute()) {
             return (object) array(
                 "success" => true,
+                "card" => (object) array(
+                    "card_id" => $this->card_id,
+                    "image" => $this->image,
+                    "title" => $this->title,
+                    "description" => $this->description,
+                    "status" => "off",
+                )
             );
         } else {
             return (object) array(
