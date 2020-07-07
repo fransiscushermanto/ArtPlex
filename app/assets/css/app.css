@@ -9608,7 +9608,6 @@ button:focus {
         width: 100%; }
       .admin-wrapper .row .action-pane > .header-action-pane {
         flex: 0;
-        position: relative;
         padding: 15px 35px;
         background-color: #2f323e; }
         .admin-wrapper .row .action-pane > .header-action-pane > .header-wrapper {
@@ -9661,6 +9660,36 @@ button:focus {
         flex: 5;
         display: flex;
         flex-direction: column; }
+        .admin-wrapper .row .action-pane > .action-pane-wrapper > .edit-pane {
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+          background-color: rgba(0, 0, 0, 0.7); }
+          .admin-wrapper .row .action-pane > .action-pane-wrapper > .edit-pane .inner-edit-pane {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08); }
+            .admin-wrapper .row .action-pane > .action-pane-wrapper > .edit-pane .inner-edit-pane header {
+              padding: 15px 20px;
+              border-bottom: 1px solid rgba(120, 130, 140, 0.13);
+              display: flex;
+              align-items: center; }
+              .admin-wrapper .row .action-pane > .action-pane-wrapper > .edit-pane .inner-edit-pane header h1 {
+                font-size: 15px;
+                margin: 0; }
+              .admin-wrapper .row .action-pane > .action-pane-wrapper > .edit-pane .inner-edit-pane header .close-btn {
+                cursor: pointer; }
+            .admin-wrapper .row .action-pane > .action-pane-wrapper > .edit-pane .inner-edit-pane .form {
+              padding: 50px;
+              padding-top: 20px; }
+            .admin-wrapper .row .action-pane > .action-pane-wrapper > .edit-pane .inner-edit-pane .btn-action .btn {
+              border-radius: 50px; }
         .admin-wrapper .row .action-pane > .action-pane-wrapper > .header {
           flex: 0;
           background-color: transparent;
@@ -9697,9 +9726,12 @@ button:focus {
                   position: -webkit-sticky;
                   position: sticky;
                   top: 0;
+                  text-align: center;
                   background-color: white;
-                  white-space: !important; }
+                  white-space: nowrap !important;
+                  z-index: 100; }
             .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.user-pane .table td {
+              text-align: center;
               white-space: nowrap;
               overflow: hidden;
               text-overflow: ellipsis;

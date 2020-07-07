@@ -1,10 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { EditOutlined, DeleteOutline } from "@material-ui/icons";
+import { EditOutlined, DeleteOutline, Check, Clear } from "@material-ui/icons";
+import { red, green } from "@material-ui/core/colors";
+import { Switch } from "@material-ui/core";
 
 import axios from "axios";
 
 import DeleteModals from "../../Modals/DeleteModals";
-const UserList = ({ user, setStatusAction, statusAction }) => {
+
+const UserList = ({
+  user,
+  setStatusAction,
+  statusAction,
+  setOpenEditPane,
+  openEditPane,
+  setTempUserData,
+  tempUserData,
+  reload,
+  setReload,
+}) => {
   const [state, setState] = useState({
     columns: [
       { name: "#" },
@@ -25,12 +38,35 @@ const UserList = ({ user, setStatusAction, statusAction }) => {
 
   const [hasMore, setHasMore] = useState(true);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [tempUserData, setTempUserData] = useState();
 
   const renderTableColumn = () => {
     return state.columns.map((column) => {
       return <th key={column.name}>{column.name}</th>;
     });
+  };
+
+  const handleStatusChange = async (rowData) => {
+    const temp = [...state.datas];
+    const index = temp.indexOf(rowData);
+    const data = new FormData();
+    data.append("user_id", rowData.user_id);
+    data.append("status", !temp[index].status);
+    const res = await axios.post("/api/actions/update_user_status.php", data);
+    if (res.data.success) {
+      temp[index].status = !temp[index].status;
+      setState({ ...state, datas: temp });
+      setStatusAction({
+        open: true,
+        message: "Status Updated",
+        severity: "success",
+      });
+    } else {
+      setStatusAction({
+        open: true,
+        message: res.data.error,
+        severity: "error",
+      });
+    }
   };
 
   const renderTableRow = () => {
@@ -42,12 +78,34 @@ const UserList = ({ user, setStatusAction, statusAction }) => {
           <td>{data.email}</td>
           <td>{data.username}</td>
           <td>{data.password}</td>
-          <td>{data.verified}</td>
-          <td>{data.status}</td>
+          <td>
+            {data.verified ? (
+              <Check style={{ color: green[500] }} />
+            ) : (
+              <Clear style={{ color: red[500] }} />
+            )}
+          </td>
+          <td>
+            <Switch
+              disabled={user.id === data.user_id ? true : false}
+              checked={data.status}
+              onChange={() => handleStatusChange(data)}
+              name="status"
+              color="primary"
+              inputProps={{ "aria-label": "primary checkbox" }}
+            />
+          </td>
           <td>{data.level}</td>
           <td>{data.remember_token}</td>
           <td>
-            <span className="btn-action mr-2" title="Edit">
+            <span
+              className="btn-action mr-2"
+              title="Edit"
+              onClick={() => {
+                setOpenEditPane(!openEditPane);
+                setTempUserData(data);
+              }}
+            >
               <EditOutlined />
             </span>
             {user.id === data.user_id ? null : (
@@ -73,14 +131,16 @@ const UserList = ({ user, setStatusAction, statusAction }) => {
     data.append("user_id", user_id);
     const res = await axios.post("/api/actions/delete_user.php", data);
     if (res.data.success) {
-      setState({
-        ...state,
-        datas: state.datas.filter((data) => data.user_id !== user_id),
-      });
+      axios
+        .get("/api/actions/get_list_user.php")
+        .then((res) => setState({ ...state, datas: res.data.users }))
+        .catch((err) => {
+          console.log(err);
+        });
       setStatusAction({
         open: true,
         message: "Delete Success",
-        severity: "sucess",
+        severity: "success",
       });
     } else {
       setStatusAction({
@@ -101,12 +161,11 @@ const UserList = ({ user, setStatusAction, statusAction }) => {
       const currentpage = Math.round(state.datas.length / 10);
       if (hasMore) {
         const data = new FormData();
-        // data.append("name", name);
         data.append("page", currentpage);
 
         const res = await axios.post("/api/actions/get_list_user.php", data);
         if (res.data.success) {
-          if (res.data.users.length < 2) {
+          if (res.data.users.length < 10) {
             setHasMore(false);
           } else {
             setHasMore(true);
@@ -115,6 +174,7 @@ const UserList = ({ user, setStatusAction, statusAction }) => {
           res.data.users.map((user) => {
             tempUsers.push(user);
           });
+          console.log(tempUsers);
           setState({ ...state, datas: tempUsers });
         }
       }
@@ -135,6 +195,20 @@ const UserList = ({ user, setStatusAction, statusAction }) => {
         console.log(err);
       });
   }, []);
+
+  useEffect(() => {
+    if (reload) {
+      axios
+        .get("/api/actions/get_list_user.php")
+        .then((res) => {
+          setState({ ...state, datas: res.data.users });
+          setReload(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [reload]);
 
   return openDeleteModal ? (
     <DeleteModals

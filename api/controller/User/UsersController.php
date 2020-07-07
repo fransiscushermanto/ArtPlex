@@ -71,7 +71,8 @@ class UsersController
                     "email" => $row['email'],
                     "username" => $row['username'],
                     "password" => $row['password'],
-                    "status" => $row['status'],
+                    "verified" => $row['verified'] === 1 ? true : false,
+                    "status" => $row['status'] === "on" ? true : false,
                     "level" => $row['level'],
                     "email_verified_at" => $row['email_verified_at'],
                     "remember_token" => $row['remember_token'],
@@ -169,12 +170,11 @@ class UsersController
         $current_date = $date->format('Y-m-d H:i:s');
         $query_update = $this->conn->prepare("UPDATE `users` SET 
             `name`=?,
-            `status`=?,
             `level`=?,
             `updated_at`=? 
             WHERE `user_id` = ?");
 
-        $query_update->bind_param("s,s,s,s,s,s,s,s", $this->name, $this->status, $this->level, $current_date, $this->user_id);
+        $query_update->bind_param("ssss", $this->name,  $this->level, $current_date, $this->user_id);
         if ($query_update->execute()) {
             return (object) array(
                 "success" => true,
@@ -187,10 +187,10 @@ class UsersController
         }
     }
 
-    public function toggleUser()
+    public function updateUserStatus()
     {
-        $status = ($this->status === "on") ? "off" : "on";
-        $query_toggle = $this->conn->prepare("UPDATE `users` SET `status` ? WHERE `user_id` = ?");
+        $status = ($this->status) ?  "on" : "off";
+        $query_toggle = $this->conn->prepare("UPDATE `users` SET `status` = ? WHERE `user_id` = ?");
         $query_toggle->bind_param("ss", $status, $this->user_id);
         if ($query_toggle->execute()) {
             return (object) array(
@@ -199,7 +199,7 @@ class UsersController
             );
         } else {
             return (object) array(
-                "success" => true,
+                "success" => false,
                 "error" => "Failed to toggle user - " . mysqli_error($this->conn),
             );
         }
