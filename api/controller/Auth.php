@@ -14,8 +14,11 @@ class Auth
     {
         date_default_timezone_set('Asia/Bangkok');
         if (!empty($this->user_id)) {
-            $q = mysqli_query($this->conn, "SELECT user_id as id, username, name, email, email_verified_at, remember_token, last_activity, created_at, updated_at, level FROM users WHERE user_id = '$this->user_id'");
-            $row = mysqli_fetch_array($q);
+            $q = $this->conn->prepare("SELECT user_id as id, username, name, email, email_verified_at, remember_token, last_activity, created_at, updated_at, level FROM users WHERE `user_id` = ?");
+            $q->bind_param("s", $this->user_id);
+            $q->execute();
+            $res = $q->get_result();
+            $row = $res->fetch_assoc();
             return $row > 0 ? (object) array(
                 "id" => $row['id'],
                 "name" => $row['name'],
@@ -44,11 +47,11 @@ class Auth
         $query_check_token = null;
         //check if token exist or not
         if ($type === "verify") {
-            $query_check_token = $this->conn->prepare("SELECT * FROM `verify_tokens_temp` WHERE v_key = ? and  user_id = '$this->user_id';");
+            $query_check_token = $this->conn->prepare("SELECT * FROM `verify_tokens_temp` WHERE v_key = ? and  `user_id` = ?;");
         } else if ($type === "forget") {
-            $query_check_token = $this->conn->prepare("SELECT * FROM `reset_tokens_temp` WHERE v_key = ? and  user_id = '$this->user_id';");
+            $query_check_token = $this->conn->prepare("SELECT * FROM `reset_tokens_temp` WHERE v_key = ? and  `user_id` = ?;");
         }
-        $query_check_token->bind_param("s", $key);
+        $query_check_token->bind_param("ss", $key, $this->user_id);
         $query_check_token->execute();
         $res = $query_check_token->get_result();
         $row = $res->fetch_assoc();

@@ -312,6 +312,11 @@
               font-style: normal !important;
               font-weight: 500;
             }
+            h1,
+            h2,
+            p {
+              font-weight: 600;
+            }
             > h1 {
               font-size: 36px !important;
             }
@@ -339,10 +344,11 @@
         width: 100%;
         .body-editable {
           .ql-editor {
-            font-size: 21px;
+            font-size: 30px;
             font-weight: 500;
             font-family: Garamond, Georgia, serif;
             color: black;
+
             > h1 {
               font-size: 36px !important;
             }
@@ -402,14 +408,41 @@
   .col:nth-child(1) {
     max-width: 680px;
     .title {
-      font-size: 42px;
-      padding-bottom: 0px;
-      color: black;
       margin-top: 31px;
-      h1,
-      h2,
-      p {
-        font-weight: 600;
+      padding-bottom: 0px;
+      .ql-editor {
+        font-size: 42px;
+        font-weight: 500;
+        font-family: Garamond, Georgia, serif;
+        padding-bottom: 0px;
+        color: black;
+        &::before {
+          font-style: normal !important;
+          font-weight: 500;
+        }
+
+        h1,
+        h2,
+        p {
+          font-weight: 600;
+        }
+
+        > h1 {
+          font-size: 36px !important;
+        }
+        > h2 {
+          font-size: 30px !important;
+        }
+        .divider {
+          border: none;
+          color: #111;
+          letter-spacing: 1em;
+          text-align: center;
+          font-size: 16px !important;
+          &::before {
+            content: "...";
+          }
+        }
       }
     }
 
@@ -463,18 +496,43 @@
     }
 
     .body {
-      font-size: 30px;
-      font-weight: 500;
-      font-family: Garamond, Georgia, serif;
-      color: black;
-
       margin-top: 42px;
-      p {
-        width: 100%;
-      }
-      img {
-        width: 100%;
-        height: 100%;
+      .ql-editor {
+        font-size: 30px;
+        font-weight: 500;
+        font-family: Garamond, Georgia, serif;
+        color: black;
+        p {
+          width: 100%;
+        }
+        img {
+          width: 100%;
+          height: 100%;
+        }
+
+        pre.ql-syntax {
+          font-size: 20px;
+        }
+
+        > h1 {
+          font-size: 36px !important;
+        }
+        > h2 {
+          font-size: 30px !important;
+        }
+        &::before {
+          font-style: normal !important;
+          font-weight: 500;
+        }
+        .divider {
+          border: none;
+          color: #111;
+          letter-spacing: 1em;
+          text-align: center;
+          &::before {
+            content: "...";
+          }
+        }
       }
     }
   }

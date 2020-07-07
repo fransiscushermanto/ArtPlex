@@ -11,10 +11,11 @@ export default (OriginalComponent) => {
       if (user === null) {
         history.push("/");
         window.location.reload();
-      }
-      if (user.level !== "admin") {
+      } else if (user.level !== "admin") {
         history.push("/");
         window.location.reload();
+      } else {
+        history.push("/admin/users");
       }
     }, []);
     return <OriginalComponent user={user} />;

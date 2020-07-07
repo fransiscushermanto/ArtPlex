@@ -72,11 +72,14 @@ class ForgetPasswordController
             $key = $key . "." . $addKey;
 
             $query = null;
-            $query_check_user_token = mysqli_query($this->conn, "SELECT * FROM reset_tokens_temp WHERE user_id = '$user_id'");
-            $token_user_row = mysqli_fetch_assoc($query_check_user_token);
+            $query_check_user_token = $this->conn->prepare("SELECT * FROM reset_tokens_temp WHERE `user_id` = ?");
+            $query_check_user_token->bind_param("s", $user_id);
+            $query_check_user_token->execute();
+            $res = $query_check_user_token->get_result();
+            $token_user_row = $res->fetch_assoc();
             if ($token_user_row > 0) {
-                $query = $this->conn->prepare("UPDATE `reset_tokens_temp` SET v_key = ?, `expiry_date` = ? WHERE user_id = '$user_id'");
-                $query->bind_param("ss", $expiry_date, $key);
+                $query = $this->conn->prepare("UPDATE `reset_tokens_temp` SET v_key = ?, `expiry_date` = ? WHERE `user_id` = ?");
+                $query->bind_param("sss", $expiry_date, $key, $user_id);
             } else {
                 $query = $this->conn->prepare("INSERT INTO `reset_tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES (?,?,?)");
                 $query->bind_param("sss", $key, $user_id, $expiry_date);
@@ -150,9 +153,11 @@ class ForgetPasswordController
     function changePassword($user_id, $new_password)
     {
         date_default_timezone_set('Asia/Bangkok');
-        $query_check_old_password = "SELECT password FROM users WHERE user_id = '$user_id'";
-        if ($result = mysqli_query($this->conn, $query_check_old_password)) {
-            $row = mysqli_fetch_assoc($result);
+        $query_check_old_password = $this->conn->prepare("SELECT password FROM users WHERE `user_id` = ?");
+        $query_check_old_password->bind_param("s", $user_id);
+        if ($query_check_old_password->execute()) {
+            $res = $query_check_old_password->get_result();
+            $row = mysqli_fetch_assoc($res);
             $old_password = $row['password'];
             if (password_verify($new_password, $old_password)) { //if new password is the same as the old one
                 return (object) array(
@@ -163,8 +168,8 @@ class ForgetPasswordController
                 $new_password = password_hash($new_password, PASSWORD_BCRYPT);
                 $date = new DateTime();
                 $current_date = $date->format('Y-m-d H:i:s');
-                $query_change_password = $this->conn->prepare("UPDATE users SET `password`= ?, updated_at = '$current_date' WHERE user_id = '$user_id'");
-                $query_change_password->bind_param("s", $new_password);
+                $query_change_password = $this->conn->prepare("UPDATE users SET `password`= ?, updated_at = ? WHERE `user_id` = ?");
+                $query_change_password->bind_param("sss", $new_password, $current_date, $user_id);
 
                 if ($query_change_password->execute()) {
                     return (object) array(

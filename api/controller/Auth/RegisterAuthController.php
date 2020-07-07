@@ -45,8 +45,8 @@ class RegisterController
             $this->password = password_hash($this->password, PASSWORD_BCRYPT);
             $date = new DateTime();
             $current_date = $date->format('Y-m-d H:i:s');
-            $query_insert_user = $this->conn->prepare("INSERT INTO users (`name`, `email`, `password`, `status`, `updated_at`, `level`,`username`) VALUES (?, ?, ?, 'off', ?, 'reader', ?)");
-            $query_insert_user->bind_param("sssss", $this->name, $this->email, $this->password, $current_date, $this->username);
+            $query_insert_user = $this->conn->prepare("INSERT INTO `users`(`name`, `email`, `username`, `password`, `verified`, `status`, `level`, `updated_at`) VALUES (?, ?, ?, ?, false, 'on', 'reader',?)");
+            $query_insert_user->bind_param("sssss", $this->name, $this->email, $this->username, $this->password, $current_date);
             $res = $query_insert_user->execute();
             if (!$res) {
                 return ["success" => false, "error" => (object) array("email" => null, "username" => null, "other" => mysqli_error($this->conn))];
@@ -57,14 +57,14 @@ class RegisterController
     public function composeMail()
     {
         date_default_timezone_set('Asia/Bangkok');
-        $query_check_email = $this->conn->prepare("SELECT user_id, name, status FROM users WHERE email = ?;");
+        $query_check_email = $this->conn->prepare("SELECT user_id, name, verified FROM users WHERE email = ?;");
         $query_check_email->bind_param("s", $this->email);
         $query_check_email->execute();
         $res = $query_check_email->get_result();
         $row = $res->fetch_assoc();
 
         if ($row > 0) {
-            if ($row["status"] === "off") { //if user status is 'off'
+            if ($row["verified"] === 0) { //if user verified is false
                 //fetching data from query result
                 $user_id = $row["user_id"];
                 $name = $row["name"];
@@ -80,12 +80,15 @@ class RegisterController
                 $key = $key . "." . $addKey;
 
                 $query = '';
-                $query_check_user_token = mysqli_query($this->conn, "SELECT * FROM verify_tokens_temp WHERE user_id = '$user_id'");
-                $token_user_row = mysqli_fetch_assoc($query_check_user_token);
+                $query_check_user_token = $this->conn->prepare("SELECT * FROM verify_tokens_temp WHERE `user_id` = ?");
+                $query_check_user_token->bind_param("s", $user_id);
+                $query_check_user_token->execute();
+                $res = $query_check_user_token->get_result();
+                $token_user_row = $res->fetch_assoc();
                 $res = null;
                 if ($token_user_row > 0) {
-                    $query_insert_token = $this->conn->prepare("UPDATE `verify_tokens_temp` SET v_key = '$key', exp_date = ? WHERE user_id = ?");
-                    $query_insert_token->bind_param("ss", $expiry_date, $user_id);
+                    $query_insert_token = $this->conn->prepare("UPDATE `verify_tokens_temp` SET v_key = ?, exp_date = ? WHERE `user_id` = ?");
+                    $query_insert_token->bind_param("sss", $key, $expiry_date, $user_id);
                     $res = $query_insert_token->execute();
                 } else {
                     $query_insert_token = $this->conn->prepare("INSERT INTO `verify_tokens_temp`(`v_key`, `user_id`, `exp_date`) VALUES (?, ?, ?)");
@@ -152,7 +155,7 @@ class RegisterController
             } else {
                 return (object) array( //if user status is 'on'
                     "success" => false,
-                    "error" => "Email is already verified"
+                    "error" => "Email is already verified",
                 );
             }
         } else {
@@ -168,8 +171,9 @@ class RegisterController
         date_default_timezone_set('Asia/Bangkok');
         $date = new DateTime();
         $current_date = $date->format('Y-m-d H:i:s');
-        $query_update_user = "UPDATE users SET status='on', email_verified_at = '$current_date', updated_at = '$current_date' where user_id = '$user_id';";
-        if (mysqli_query($this->conn, $query_update_user)) { //if user status update success
+        $query_update_user = $this->conn->prepare("UPDATE users SET `verified` = true, `email_verified_at` = ?, `updated_at` = ? where `user_id` = ?;");
+        $query_update_user->bind_param("sss", $current_date, $current_date, $user_id);
+        if ($query_update_user->execute()) { //if user status update success
             return (object) array(
                 "success" => true,
                 "error" => "",

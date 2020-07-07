@@ -42,7 +42,7 @@ const HomeGroup = ({ user }) => {
 
   async function handleScroll() {
     if (
-      Math.ceil(window.innerHeight + document.documentElement.scrollTop) !==
+      window.innerHeight + Math.floor(document.documentElement.scrollTop) !==
       document.documentElement.offsetHeight
     ) {
       return;
@@ -57,7 +57,7 @@ const HomeGroup = ({ user }) => {
         data.append("page", currentpage);
 
         const res = await axios.post("/api/actions/get_list_story.php", data);
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.success) {
           setLoading(false);
           if (res.data.stories.length < 2) {
@@ -80,7 +80,7 @@ const HomeGroup = ({ user }) => {
       .get("/api/actions/get_all_tag.php")
       .then((res) => {
         let arrCategories = [...categories];
-        console.log(res.data);
+        // console.log(res.data);
         res.data.categories.map((category) => {
           arrCategories.push(category);
         });
@@ -104,18 +104,10 @@ const HomeGroup = ({ user }) => {
   }, [searchRef, openSearchBar]);
 
   useEffect(() => {
-    console.log(stories);
-  }, [stories]);
-
-  useEffect(() => {
     if (openSearchBar) {
       document.getElementById("search-bar").focus();
     }
   }, [openSearchBar]);
-
-  useEffect(() => {
-    console.log(categories);
-  }, [categories]);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -158,9 +150,11 @@ const HomeGroup = ({ user }) => {
               id=""
               onChange={handleSubmit(startSearch)}
             >
-              {categories.map((category) => {
+              {categories.map((category, index) => {
                 return (
-                  <option value={category.category_id}>{category.tag}</option>
+                  <option key={index} value={category.category_id}>
+                    {category.tag}
+                  </option>
                 );
               })}
             </select>
@@ -184,10 +178,10 @@ const HomeGroup = ({ user }) => {
               <div className="list-story">
                 {stories ? (
                   stories.length > 0 ? (
-                    stories.map((story) => {
+                    stories.map((story, index) => {
                       return (
                         <HomeStory
-                          key={story.story_id}
+                          key={index}
                           author_name={story.author.name}
                           body={story.body}
                           title={story.title}

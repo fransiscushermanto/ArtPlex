@@ -2,6 +2,8 @@
   min-height: 100vh;
   .row {
     min-height: 100vh;
+    flex-wrap: nowrap;
+
     .side-pane {
       flex: 1;
       background: #fff;
@@ -11,13 +13,33 @@
       flex-direction: column;
       align-items: center;
       min-width: 261px;
+
+      &.toggle-side-pane-enter {
+        transform: translateX(0%);
+      }
+
+      &.toggle-side-pane-enter-active {
+        transform: translateX(1%);
+        transition: transform 0.5s ease-in-out;
+      }
+
+      &.toggle-side-pane-exit {
+        transform: translateX(0%);
+      }
+      &.toggle-side-pane-exit-active {
+        transform: translateX(-100%);
+        transition: transform 0.5s ease-in-out;
+      }
+
       div {
         width: 100%;
       }
+
       .logo {
         padding: 10px 0px;
         h1 {
           text-align: center;
+          font-size: 30px;
         }
       }
       .list-menu {
@@ -25,13 +47,38 @@
         flex-direction: column;
         align-items: center;
         ul {
+          width: 100%;
           margin: 0px;
           padding: 0px;
+
           li {
+            cursor: pointer;
+
+            width: 100%;
             list-style: none;
             font-size: 18px;
             font-weight: 500;
             color: rgba(0, 0, 0, 0.7);
+            padding: 0;
+            &:hover {
+              background: rgba(0, 0, 0, 0.07);
+            }
+            > .no-animation {
+              padding: 10px 50px;
+              display: flex;
+              justify-content: flex-start;
+              align-items: center;
+              > svg {
+                width: 13px;
+              }
+              > span {
+                margin-left: 20px;
+              }
+            }
+
+            &.active {
+              background: rgba(0, 0, 0, 0.07);
+            }
           }
         }
       }
@@ -39,6 +86,178 @@
 
     .action-pane {
       flex: 5;
+      display: flex;
+      flex-direction: column;
+      max-height: 100vh;
+      .div {
+        width: 100%;
+      }
+      > .header-action-pane {
+        flex: 0;
+        position: relative;
+        padding: 15px 35px;
+
+        background-color: #2f323e;
+        > .header-wrapper {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          > #nav-icon {
+            width: 30px;
+            height: 25px;
+            position: relative;
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -o-transform: rotate(0deg);
+            transform: rotate(0deg);
+            -webkit-transition: 0.5s ease-in-out;
+            -moz-transition: 0.5s ease-in-out;
+            -o-transition: 0.5s ease-in-out;
+            transition: 0.5s ease-in-out;
+            cursor: pointer;
+            > span {
+              display: block;
+              position: absolute;
+              height: 4px;
+              width: 100%;
+              background: #d3531a;
+              border-radius: 9px;
+              opacity: 1;
+              left: 0;
+              -webkit-transform: rotate(0deg);
+              -moz-transform: rotate(0deg);
+              -o-transform: rotate(0deg);
+              transform: rotate(0deg);
+              -webkit-transition: 0.25s ease-in-out;
+              -moz-transition: 0.25s ease-in-out;
+              -o-transition: 0.25s ease-in-out;
+              transition: 0.25s ease-in-out;
+            }
+            > span:nth-child(1) {
+              top: 0px;
+            }
+
+            > span:nth-child(2),
+            > span:nth-child(3) {
+              top: 10px;
+            }
+
+            > span:nth-child(4) {
+              top: 20px;
+            }
+
+            &.open span:nth-child(1) {
+              top: 18px;
+              width: 0%;
+              left: 50%;
+            }
+
+            &.open span:nth-child(2) {
+              -webkit-transform: rotate(45deg);
+              -moz-transform: rotate(45deg);
+              -o-transform: rotate(45deg);
+              transform: rotate(45deg);
+            }
+
+            &.open span:nth-child(3) {
+              -webkit-transform: rotate(-45deg);
+              -moz-transform: rotate(-45deg);
+              -o-transform: rotate(-45deg);
+              transform: rotate(-45deg);
+            }
+
+            &.open span:nth-child(4) {
+              top: 18px;
+              width: 0%;
+              left: 50%;
+            }
+          }
+          > span.user-name {
+            color: white;
+            font-weight: bold;
+            font-size: 15px;
+            margin-left: 10px;
+          }
+        }
+      }
+
+      > .action-pane-wrapper {
+        // height: 100%;
+        flex: 5;
+        display: flex;
+        flex-direction: column;
+        > .header {
+          flex: 0;
+          background-color: transparent;
+          padding: 15px 25px;
+          box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
+          display: flex;
+          flex-direction: row;
+
+          > span {
+            font-size: 13px;
+            font-weight: 500;
+            color: black;
+          }
+        }
+        > .main-action-pane {
+          flex: 5;
+          display: flex;
+          padding: 20px 30px;
+          overflow: hidden;
+          height: 100%;
+          max-height: 592px;
+          .inner-action-pane {
+            overflow: auto;
+            display: flex;
+            justify-content: center;
+            flex: 1;
+            box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
+            background: white;
+            &.user-pane {
+              .table {
+                thead {
+                  background-color: white;
+                  tr {
+                    position: sticky;
+                    top: 0;
+                    background-color: white;
+                    th {
+                      position: sticky;
+                      top: 0;
+                      background-color: white;
+                      white-space: !important;
+                    }
+                  }
+                }
+                td {
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-overflow: ellipsis;
+                  max-width: 200px;
+                  .btn-action {
+                    cursor: pointer;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      > .footer {
+        flex: 0;
+        box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 13px;
+        span {
+          font-weight: lighter;
+          font-size: 15px;
+          // color: black;
+        }
+      }
     }
   }
 }

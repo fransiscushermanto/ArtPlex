@@ -31,9 +31,11 @@ class CommentsController
         $query_create->bind_param("sssss", $this->comment_id, $this->user_id, $this->body, $current_date, $current_date);
         if ($query_create->execute()) {
             if ($this->belongTo($story_id)) {
-                $query_get_user = "SELECT `username`, `name` FROM `users` WHERE `user_id` = '$this->user_id'";
-                $res = mysqli_query($this->conn, $query_get_user);
-                $row = mysqli_fetch_assoc($res);
+                $query_get_user = $this->conn->prepare("SELECT `username`, `name` FROM `users` WHERE `user_id` = ?");
+                $query_get_user->bind_param("s", $this->user_id);
+                $query_get_user->execute();
+                $res = $query_get_user->get_result();
+                $row = $res->fetch_assoc();
                 return (object) array(
                     "comment" => (object) array(
                         "comment_id" => $this->comment_id,
@@ -107,10 +109,11 @@ class CommentsController
         }
     }
 
-    public function nonActivateComment()
+    public function toggleComment()
     {
-        $query_nonactivate = $this->conn->prepare("UPDATE `comments` SET `status` = 'off' WHERE `comment_id` = ?");
-        $query_nonactivate->bind_param("s", $this->comment_id);
+        $status = ($this->status === "on") ? "off" : "on";
+        $query_nonactivate = $this->conn->prepare("UPDATE `comments` SET `status` = ? WHERE `comment_id` = ?");
+        $query_nonactivate->bind_param("ss", $status, $this->comment_id);
         if ($query_nonactivate->execute()) {
             return (object) array(
                 "success" => true,
@@ -119,32 +122,20 @@ class CommentsController
         } else {
             return (object) array(
                 "success" => false,
-                "error" => "Failed to nonactivate comment",
+                "error" => "Failed to toggle comment",
             );
         }
     }
 
-    public function activateComment()
-    {
-        $query_nonactivate = $this->conn->prepare("UPDATE `comments` SET `status` = 'on' WHERE `comment_id` = ?");
-        $query_nonactivate->bind_param("s", $this->comment_id);
-        if ($query_nonactivate->execute()) {
-            return (object) array(
-                "success" => true,
-                "error" => "",
-            );
-        } else {
-            return (object) array(
-                "success" => false,
-                "error" => "Failed to nonactivate comment",
-            );
-        }
-    }
 
-    public function getAllComment()
+    public function getListComment($page)
     {
         $arr_Comment = array();
-        $query_get = $this->conn->prepare("SELECT * FROM `comments`");
+        $limit = 20;
+        $offset = ($page * $limit);
+        $query_get = $this->conn->prepare("SELECT * FROM `comments` LIMIT ? OFFSET ?;");
+        $query_get->bind_param("ii", $limit, $offset);
+
         $query_get->execute();
 
         $res = $query_get->get_result();
@@ -162,7 +153,8 @@ class CommentsController
                     "comment_username" => $row["username"],
                 ));
             } while ($row = $res->fetch_assoc());
-
+        }
+        if (count($arr_Comment > 0)) {
             return (object) array("success" => true, "comments" => $arr_Comment);
         } else {
             return (object) array("success" => false, "comments" => $arr_Comment);

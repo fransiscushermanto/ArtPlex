@@ -109,20 +109,24 @@
   }
 
   &.publish-wrapper {
+    @include media-breakpoint-down(md) {
+      height: 100% !important;
+      overflow-y: scroll;
+    }
     opacity: 0.995;
     .publish-content {
       margin: auto;
       outline: 0;
-      overflow: hidden;
+      overflow-x: hidden;
       max-width: 1040px;
       padding: 100px 5px;
       width: 100%;
-      height: 100%;
+      height: auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      @include media-breakpoint-down(sm) {
+      @include media-breakpoint-down(md) {
         max-width: 580px;
         padding: 0px;
         margin: auto;
@@ -132,14 +136,14 @@
         width: 100%;
         height: 100%;
         align-items: center;
-        @include media-breakpoint-down(sm) {
-          flex-direction: column;
+        @include media-breakpoint-down(md) {
+          display: block;
           width: 80%;
         }
         .col {
           flex: 1;
           padding: 40px !important;
-          @include media-breakpoint-down(sm) {
+          @include media-breakpoint-down(md) {
             padding: 40px 0px !important;
           }
         }
@@ -172,13 +176,13 @@
               display: flex;
               align-items: center;
               justify-content: center;
-              @include media-breakpoint-down(sm) {
+              @include media-breakpoint-down(md) {
                 height: 200px !important;
               }
               .image-preview {
                 width: 100% !important;
                 height: 230px !important;
-                @include media-breakpoint-down(sm) {
+                @include media-breakpoint-down(md) {
                   height: 200px !important;
                 }
               }
@@ -243,7 +247,7 @@
               color: black;
               font-size: 13px;
               white-space: nowrap;
-              @include media-breakpoint-down(sm) {
+              @include media-breakpoint-down(md) {
                 white-space: pre-wrap;
               }
             }
@@ -285,7 +289,7 @@
     .close-button {
       top: 6%;
       right: 17%;
-      @include media-breakpoint-down(sm) {
+      @include media-breakpoint-down(md) {
         top: 2%;
         right: 4%;
       }

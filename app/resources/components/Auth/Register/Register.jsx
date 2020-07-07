@@ -249,7 +249,6 @@ const Register = ({
                           : null
                         : null
                     }
-                    onChange={(e) => setEmail(e.target.value)}
                   />
                   {errors.username
                     ? errors.username && (

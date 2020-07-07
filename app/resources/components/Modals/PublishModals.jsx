@@ -148,9 +148,9 @@ const PublishModals = ({
             </div>
             {errors ? (
               <div className="error-message mt-5">
-                <p className="bg-danger">
+                <p className="bg-danger" style={{ textAlign: "center" }}>
                   {errors.email ? (
-                    <span>
+                    <span style={{ whiteSpace: "nowrap" }}>
                       {errors.email}
                       <span
                         className="send-message"
@@ -159,6 +159,7 @@ const PublishModals = ({
                           sendEmailVerification();
                         }}
                       >
+                        {" "}
                         here.
                       </span>
                     </span>

@@ -7,4 +7,4 @@ include_once("../helper.php");
 include_once("../database.php");
 include_once("../controller/Story/StoriesController.php");
 $get_list_page = new StoriesController($conn, "", "", "", "", "", "", "");
-echo json_encode($get_list_page->getListStory($page, $category_id, $story_title));
+echo json_encode($get_list_page->getListPublishedStories($page, $category_id, $story_title));

@@ -1,19 +1,47 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import Avatar from "react-avatar";
 import Moment from "react-moment";
 import styled from "styled-components";
+import hljs from "highlight.js";
+import ReactQuill, { Quill } from "react-quill";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 import CommentGroup from "../Comment/CommentGroup";
 import { calculateSpeed } from "../Function/Factories";
+
+hljs.configure({
+  languages: [
+    "javascript",
+    "ruby",
+    "python",
+    "rust",
+    "php",
+    "html",
+    "c#",
+    "c",
+    "css",
+    "scss",
+    "kotlin",
+    "c++",
+    "java",
+    "typescript",
+    "go",
+    "nginx config",
+    "swift",
+    "Arduino",
+    "Django",
+  ],
+});
 const StoryView = ({ user }) => {
   const { storyId } = useParams();
 
   const [loading, setLoading] = useState(false);
   const [authorData, setAuthorData] = useState(null);
   const [hasMore, setHasMore] = useState(true);
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const [storyInfo, setStoryInfo] = useState({
     publish_date: "",
     total_word: "0",
@@ -43,7 +71,9 @@ const StoryView = ({ user }) => {
           categories: res.data.categories,
           comments: res.data.comments,
         });
-        loadToDOM(res.data.title_html, res.data.body_html);
+        // loadToDOM(res.data.title_html, res.data.body_html);
+        setTitle(res.data.title_html);
+        setBody(res.data.body_html);
       }
     };
     getStory();
@@ -51,7 +81,7 @@ const StoryView = ({ user }) => {
 
   async function handleScroll() {
     if (
-      Math.ceil(window.innerHeight + document.documentElement.scrollTop) !==
+      window.innerHeight + Math.floor(document.documentElement.scrollTop) !==
       document.documentElement.offsetHeight
     ) {
       return;
@@ -101,7 +131,14 @@ const StoryView = ({ user }) => {
   return authorData ? (
     <div className="story-public container d-flex flex-column align-items-center mb-5 ">
       <div className="col d-flex flex-column align-items-center width-100">
-        <div className="title width-100" id="title"></div>
+        <ReactQuill
+          className="title width-100"
+          id="title"
+          theme={"bubble"}
+          value={title}
+          modules={StoryView.titleModules}
+          readOnly={true}
+        />
         <div className="author-info d-flex justify-content-center width-100">
           <div className="row d-flex align-items-center">
             <Avatar
@@ -136,10 +173,14 @@ const StoryView = ({ user }) => {
             </div>
           </div>
         </div>
-        <div
+        <ReactQuill
           className="body width-100 d-flex flex-column align-items-center"
           id="body"
-        ></div>
+          theme={"bubble"}
+          value={body}
+          modules={StoryView.modules}
+          readOnly={true}
+        />
       </div>
       <div className="col d-flex flex-column align-items-center">
         <div className="tags d-flex width-100">
@@ -238,5 +279,16 @@ const Tag = styled(({ label, onDelete, ...props }) => (
     cursor: pointer;
   }
 `;
+
+StoryView.modules = {
+  syntax: {
+    highlight: (text) => hljs.highlightAuto(text).value,
+  },
+  toolbar: false,
+};
+
+StoryView.titleModules = {
+  toolbar: false,
+};
 
 export default StoryView;

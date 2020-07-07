@@ -1,14 +1,12 @@
 import React from "react";
 
-const DeleteModals = ({ setModal, onClick, param }) => {
+const DeleteModals = ({ text, setModal, onClick, param }) => {
   return (
     <div className="modals-wrapper" style={{ overflow: "hidden" }}>
       <div className="content-modals">
         <div className="header">
           <div className="title">Delete</div>
-          <div className="subtitle">
-            Deleted stories are gone forever. Are you sure?
-          </div>
+          <div className="subtitle">{text}</div>
         </div>
         <div className="btn-action">
           <button

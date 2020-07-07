@@ -92,6 +92,7 @@ const ListStory = ({ user, setModal, modal, setStoryId, storyId }) => {
           setModal={setModal}
           onClick={deleteStory}
           param={storyId}
+          text={"Deleted stories are gone forever. Are you sure?"}
         />
       ) : null}
       <div className="row">
