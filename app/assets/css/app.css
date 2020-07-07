@@ -9533,6 +9533,11 @@ button:focus {
               background-size: cover;
               width: 100% !important;
               height: 100% !important; }
+              .home-wrapper .container > .list-story-wrapper > .list-story > .story > .col:nth-child(2) > .image-story div {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center; }
 
 .admin-wrapper {
   min-height: 100vh; }

@@ -60,12 +60,20 @@ const HomeStory = ({
         <Link
           to={`/@${author_username}/${story_id}`}
           className="image-story no-animation"
-          style={{
-            backgroundImage: `url(
+          style={
+            image_url !== "null"
+              ? {
+                  backgroundImage: `url(
                       "${image_url}"
                     )`,
-          }}
-        ></Link>
+                }
+              : { backgroundColor: "gray" }
+          }
+        >
+          {image_url !== "null" ? null : (
+            <div className="width-100">No Image</div>
+          )}
+        </Link>
       </div>
     </div>
   );

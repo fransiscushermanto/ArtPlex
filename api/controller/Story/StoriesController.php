@@ -243,6 +243,7 @@ class StoriesController
                 $story_title = '%' . $story_title . '%';
                 $query .= " AND s.title LIKE ?";
             }
+
             $query .= " ORDER BY sp.publish_date DESC LIMIT $limit OFFSET $offset";
             $query_get = $this->conn->prepare($query);
             if ($title != "") $query_get->bind_param("s", $story_title);
@@ -462,13 +463,12 @@ class StoriesController
     {
         $arr_tag = array();
         $query_get = "";
-        if ($story_id !== "") {
-            $query = "SELECT * FROM `stories_categories` sc JOIN `categories` c ON sc.category_id = c.category_id WHERE sc.story_id = ?";
-        } else {
-            $query = "SELECT * FROM `stories_categories` sc JOIN `categories` c ON sc.category_id = c.category_id WHERE sc.story_id = ?";
-        }
+
+        $query = "SELECT * FROM `stories_categories` sc JOIN `categories` c ON sc.category_id = c.category_id WHERE sc.story_id = ?";
+
         $query_get = $this->conn->prepare($query);
-        $query_get->bind_param("s", $this->story_id);
+        if ($story_id !== "") $query_get->bind_param("s", $story_id);
+        else $query_get->bind_param("s", $this->story_id);
         $query_get->execute();
         $res = $query_get->get_result();
         $row = $res->fetch_assoc();
@@ -484,14 +484,10 @@ class StoriesController
     public function getStoryRelatedTag($story_id = "")
     {
         $arr_tag = array();
-        $query = "";
-        if ($story_id !== "") {
-            $query = "SELECT * FROM `stories_categories` sc JOIN `categories` c ON sc.category_id = c.category_id WHERE sc.story_id = ?";
-        } else {
-            $query = "SELECT * FROM `stories_categories` sc JOIN `categories` c ON sc.category_id = c.category_id WHERE sc.story_id = ?";
-        }
+        $query = "SELECT * FROM `stories_categories` sc JOIN `categories` c ON sc.category_id = c.category_id WHERE sc.story_id = ?";
         $query_get = $this->conn->prepare($query);
-        $query_get->bind_param("s", $story_id);
+        if ($story_id !== "") $query_get->bind_param("s", $story_id);
+        else $query_get->bind_param("s", $this->story_id);
         $query_get->execute();
         $res = $query_get->get_result();
         $row = $res->fetch_assoc();
