@@ -46,12 +46,12 @@ class RegisterController
             $date = new DateTime();
             $current_date = $date->format('Y-m-d H:i:s');
             $query_insert_user = $this->conn->prepare("INSERT INTO `users`(`name`, `email`, `username`, `password`, `verified`, `status`, `level`, `updated_at`) VALUES (?, ?, ?, ?, false, 'on', 'reader',?)");
-            return ["success" => false, "error" => (object) array("email" => null, "username" => null, "other" => mysqli_error($this->conn))];
-            // $query_insert_user->bind_param("sssss", $this->name, $this->email, $this->username, $this->password, $current_date);
-            // $res = $query_insert_user->execute();
-            // if (!$res) {
-            //     return ["success" => false, "error" => (object) array("email" => null, "username" => null, "other" => mysqli_error($this->conn))];
-            // } else return ["success" => true, "error" => (object) array("email" => null, "username" => null)];
+            // return ["success" => false, "error" => (object) array("email" => null, "username" => null, "other" => mysqli_error($this->conn))];
+            $query_insert_user->bind_param("sssss", $this->name, $this->email, $this->username, $this->password, $current_date);
+            $res = $query_insert_user->execute();
+            if (!$res) {
+                return ["success" => false, "error" => (object) array("email" => null, "username" => null, "other" => mysqli_error($this->conn))];
+            } else return ["success" => true, "error" => (object) array("email" => null, "username" => null)];
         }
     }
 
