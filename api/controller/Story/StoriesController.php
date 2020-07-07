@@ -113,7 +113,7 @@ class StoriesController
                     "success" => false,
                     "error" => (object) array(
                         "email" => null,
-                        "message" => "Failed to upgrade user level",
+                        "message" => "Failed to upgrade user level - " . mysqli_error($this->conn),
                     ),
                 ];
             }
@@ -127,7 +127,7 @@ class StoriesController
                 "success" => false,
                 "error" => (object) array(
                     "email" => null,
-                    "message" => "Failed to publish story",
+                    "message" => "Failed to publish story - " . mysqli_error($this->conn),
                 ),
             ];
         }
@@ -147,7 +147,7 @@ class StoriesController
                 "success" => false,
                 "error" => (object) array(
                     "email" => null,
-                    "message" => "Failed to insert story publish",
+                    "message" => "Failed to insert story publish - " . mysqli_error($this->conn),
                 ),
             ];
         }
@@ -314,7 +314,7 @@ class StoriesController
 
         $query_view_story = $this->conn->prepare("SELECT u.name, u.username, s.story_id, s.title, s.title_html, s.body, s.body_html, 
         s.total_word, s.last_update, s.status, sp.publish_date FROM stories s JOIN users u ON s.user_id = u.user_id 
-        JOIN stories_publish sp ON s.story_id = sp.story_id JOIN stories_categories sc ON s.story_id = sc.story_id WHERE s.story_id = ? ");
+        JOIN stories_publish sp ON s.story_id = sp.story_id  WHERE s.story_id = ? ");
 
 
         $query_view_story->bind_param("s", $this->story_id);
@@ -421,7 +421,7 @@ class StoriesController
         } else {
             return (object) array(
                 "success" => false,
-                "error" => "Failed to add link between story and category",
+                "error" => "Failed to add link between story and category - " . mysqli_error($this->conn),
             );
         }
     }
@@ -442,7 +442,7 @@ class StoriesController
                     "success" => false,
                     "error" => (object) array(
                         "email" => null,
-                        "message" => "Failed to link category to story",
+                        "message" => "Failed to link category to story - " . mysqli_error($this->conn),
                     ),
                 ];
             } else {

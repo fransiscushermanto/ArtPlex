@@ -21,7 +21,11 @@ const RegisterGroup = () => {
       .string()
       .required("This field is required")
       .min(4, "Username too short")
-      .max(30, "Username too long"),
+      .max(30, "Username too long")
+      .matches(
+        /^[a-zA-Z0-9_.-]*$/,
+        "Only allow dot , underscores , hyphen in username."
+      ),
     email: yup
       .string()
       .required("This field is required")
