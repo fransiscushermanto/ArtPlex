@@ -8,5 +8,5 @@ include_once("../helper.php");
 include_once("../database.php");
 include_once("../controller/Comment/CommentsController.php");
 
-$create_card = new CommentsController($conn, $body, $user_id, "");
-echo json_encode($create_card->belongTo($story_id));
+$create_comment = new CommentsController($conn, $body, $user_id, "");
+echo json_encode($create_comment->createComment($story_id));
