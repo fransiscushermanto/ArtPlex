@@ -9,7 +9,6 @@ export default (OriginalComponent) => {
     const { user } = myApp;
     const [keyStatus, setKeyStatus] = useState();
     const [email, setEmail] = useState();
-    console.log(location.pathname);
     useEffect(() => {
       const verifyToken = async (key, user_id, type) => {
         const data = new FormData();

@@ -20,13 +20,15 @@ const HomeStory = ({
   return (
     <div className="story">
       <div className="col">
-        <div className="tag">{handleTag()}</div>
+        <div className="tag">
+          <span>{handleTag()}</span>
+        </div>
         <div className="title">
           <Link
             to={`/@${author_username}/${story_id}`}
             className="no-animation"
           >
-            {title}
+            <span>{title}</span>
           </Link>
         </div>
         <div className="description">
@@ -34,7 +36,7 @@ const HomeStory = ({
             to={`/@${author_username}/${story_id}`}
             className="no-animation"
           >
-            {body}
+            <span>{body}</span>
           </Link>
         </div>
         <div className="information-pane mt-auto">

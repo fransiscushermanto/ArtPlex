@@ -111,7 +111,7 @@ class CommentsController
 
     public function toggleComment()
     {
-        $status = ($this->status === "on") ? "off" : "on";
+        $status = ($this->status) ? "on" : "off";
         $query_nonactivate = $this->conn->prepare("UPDATE `comments` SET `status` = ? WHERE `comment_id` = ?");
         $query_nonactivate->bind_param("ss", $status, $this->comment_id);
         if ($query_nonactivate->execute()) {
@@ -128,7 +128,7 @@ class CommentsController
     }
 
 
-    public function getListComment($page)
+    public function getListComment($page = 0)
     {
         $arr_Comment = array();
         $limit = 20;

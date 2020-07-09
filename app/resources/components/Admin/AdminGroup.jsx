@@ -5,7 +5,7 @@ import { Alert as MuiAlert } from "@material-ui/lab";
 
 import SidePane from "./SidePane";
 import ActionPane from "./ActionPane";
-const AdminGroup = ({ user }) => {
+const AdminGroup = ({ user, type }) => {
   const [openSidePane, setOpenSidePane] = useState(true);
   const [statusAction, setStatusAction] = useState({
     open: false,
@@ -23,11 +23,10 @@ const AdminGroup = ({ user }) => {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
-
   return (
     <div className="admin-wrapper">
       <div className="row">
-        <SidePane openSidePane={openSidePane} />
+        <SidePane openSidePane={openSidePane} type={type} />
         <ActionPane
           user={user}
           openSidePane={openSidePane}

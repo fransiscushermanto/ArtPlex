@@ -43,7 +43,6 @@ $stories =  [
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="/app/assets/css/open-iconic-bootstrap.min.css" />
     <link rel="stylesheet" href="/app/assets/css/animate.css" />
-    <link rel="stylesheet" href="/app/assets/css/owl.carousel.min.css" />
     <link rel="stylesheet" href="/app/assets/css/owl.theme.default.min.css" />
     <link rel="stylesheet" href="/app/assets/css/magnific-popup.css" />
     <link rel="stylesheet" href="/app/assets/css/aos.css" />
@@ -83,8 +82,6 @@ $stories =  [
     <script src="/app/resources/js/jquery.easing.1.3.js"></script>
     <script src="/app/resources/js/jquery.waypoints.min.js"></script>
     <script src="/app/resources/js/jquery.stellar.min.js"></script>
-    <script src="/app/resources/js/owl.carousel.min.js"></script>
-    <script src="/app/resources/js/jquery.magnific-popup.min.js"></script>
     <script src="/app/resources/js/aos.js"></script>
     <script src="/app/resources/js/jquery.animateNumber.min.js"></script>
     <script src="/app/resources/js/scrollax.min.js"></script>

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useRouteMatch } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
-const SidePane = ({ openSidePane }) => {
+const SidePane = ({ openSidePane, type }) => {
   let { url } = useRouteMatch();
   const [listMenu, setListMenu] = useState([
     {
@@ -24,7 +24,7 @@ const SidePane = ({ openSidePane }) => {
         </svg>
       ),
       text: "Users",
-      active: true,
+      active: false,
     },
     {
       class: "stories",
@@ -129,6 +129,21 @@ const SidePane = ({ openSidePane }) => {
       );
     });
   };
+
+  const setActiveByType = () => {
+    const tempMenu = [...listMenu];
+    tempMenu.map((menu) => {
+      if (menu.class === type) {
+        menu.active = true;
+      }
+    });
+
+    setListMenu(tempMenu);
+  };
+
+  useEffect(() => {
+    setActiveByType();
+  }, [type]);
 
   return (
     <CSSTransition

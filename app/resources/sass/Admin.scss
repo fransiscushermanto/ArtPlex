@@ -1,5 +1,8 @@
 .admin-wrapper {
   min-height: 100vh;
+  @include media-breakpoint-down(md) {
+    overflow-x: auto;
+  }
   .row {
     min-height: 100vh;
     flex-wrap: nowrap;
@@ -228,15 +231,49 @@
         > .header {
           flex: 0;
           background-color: transparent;
-          padding: 15px 25px;
+          padding: 8px 25px;
           box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
           display: flex;
           flex-direction: row;
-
+          align-items: center;
           > span {
             font-size: 13px;
             font-weight: 500;
             color: black;
+          }
+
+          .search-bar {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            border: 1px solid black;
+            border-radius: 30px;
+            padding: 3px 5px;
+            .form-control {
+              height: 30px !important;
+              border: none !important;
+            }
+          }
+
+          .refresh-icon {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            margin-right: 10px;
+            margin-left: auto;
+            border-radius: 30px;
+            padding: 5px 10px;
+
+            cursor: pointer;
+            span {
+              @include media-breakpoint-down(md) {
+                display: none;
+              }
+              pointer-events: none;
+              color: white;
+              font-size: 15px;
+              margin-left: 5px;
+            }
           }
         }
         > .main-action-pane {
@@ -244,16 +281,16 @@
           display: flex;
           padding: 20px 30px;
           overflow: hidden;
-          height: 100%;
           max-height: 592px;
           .inner-action-pane {
             overflow: auto;
             display: flex;
-            justify-content: center;
             flex: 1;
             box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08);
             background: white;
+            min-width: 670px;
             &.user-pane {
+              justify-content: center;
               .table {
                 thead {
                   background-color: white;
@@ -276,9 +313,99 @@
                   white-space: nowrap;
                   overflow: hidden;
                   text-overflow: ellipsis;
-                  max-width: 200px;
+                  max-width: 170px;
                   .btn-action {
                     cursor: pointer;
+                  }
+                }
+              }
+            }
+
+            &.story-pane {
+              flex-direction: column;
+              align-items: center;
+              height: auto;
+              position: relative;
+              header {
+                position: sticky;
+                top: 0;
+                height: auto;
+                flex: 0;
+                padding: 10px 20px;
+                background-color: white;
+                z-index: 100;
+                .form-group {
+                  margin: 0;
+                  display: flex;
+                  align-items: center;
+                  label {
+                    margin: 0;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                  }
+                }
+              }
+              .story-admin-wrapper {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                flex-wrap: wrap;
+                flex: 5;
+                &.list-story {
+                  padding-top: 20px;
+                  > .inner-story-admin-wrapper {
+                    margin-bottom: 20px;
+                    margin-right: 20px;
+
+                    &.disable {
+                      .story {
+                        cursor: none;
+                        pointer-events: none;
+                      }
+                    }
+                    .story {
+                      margin: 0;
+                      min-width: 500px;
+                      .row {
+                        min-height: 0vh;
+                      }
+                    }
+                    .action-btn {
+                      display: flex;
+                      align-items: center;
+                      .btn-action {
+                        cursor: pointer;
+                      }
+                      span {
+                        font-size: 13px;
+                      }
+                    }
+                  }
+                }
+              }
+              .confirmation {
+                position: sticky;
+                width: 100%;
+                bottom: 0%;
+                padding: 15px 50px;
+                z-index: 200;
+                display: flex;
+                align-items: center;
+                span {
+                  color: white;
+                  margin-left: 20px;
+                }
+                > .action-btn {
+                  display: flex;
+                  margin-left: auto;
+                  span {
+                    cursor: pointer;
+                    color: white;
+                    margin: 0px 5px;
+                    padding: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                   }
                 }
               }

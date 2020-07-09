@@ -47,8 +47,9 @@ const HomeGroup = ({ user }) => {
     ) {
       return;
     }
-    if (stories.length >= 20 && stories) {
-      const currentpage = Math.round(stories.length / 20);
+    const limit = 20;
+    if (stories.length >= limit && stories) {
+      const currentpage = Math.round(stories.length / limit);
       if (hasMore) {
         setLoading(true);
         const data = new FormData();
@@ -60,7 +61,7 @@ const HomeGroup = ({ user }) => {
         // console.log(res.data);
         if (res.data.success) {
           setLoading(false);
-          if (res.data.stories.length < 2) {
+          if (res.data.stories.length < limit) {
             setHasMore(false);
           } else {
             setHasMore(true);

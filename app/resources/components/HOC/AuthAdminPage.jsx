@@ -5,8 +5,9 @@ import myApp from "myApp";
 export default (OriginalComponent) => {
   const MixedComponent = () => {
     const history = useHistory();
+    const location = useLocation();
     const { user } = myApp;
-
+    let arrLocation = location.pathname.split("/");
     useEffect(() => {
       if (user === null) {
         history.push("/");
@@ -15,10 +16,12 @@ export default (OriginalComponent) => {
         history.push("/");
         window.location.reload();
       } else {
-        history.push("/admin/users");
+        if (arrLocation[2] === undefined) {
+          history.push("/admin/users");
+        }
       }
     }, []);
-    return <OriginalComponent user={user} />;
+    return <OriginalComponent user={user} type={arrLocation[2]} />;
   };
 
   return MixedComponent;

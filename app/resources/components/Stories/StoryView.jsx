@@ -49,13 +49,6 @@ const StoryView = ({ user }) => {
     comments: [],
   });
 
-  const loadToDOM = (title, body) => {
-    var titleDOM = document.getElementById("title");
-    var bodyDOM = document.getElementById("body");
-    titleDOM.innerHTML = title;
-    bodyDOM.innerHTML = body;
-  };
-
   useEffect(() => {
     const getStory = async () => {
       const data = new FormData();
@@ -86,8 +79,9 @@ const StoryView = ({ user }) => {
     ) {
       return;
     }
-    if (storyInfo.comments.length >= 10) {
-      const currentpage = Math.round(storyInfo.comments.length / 10);
+    const limit = 10;
+    if (storyInfo.comments.length >= limit) {
+      const currentpage = Math.round(storyInfo.comments.length / limit);
       if (hasMore) {
         setLoading(true);
         const data = new FormData();
@@ -98,7 +92,7 @@ const StoryView = ({ user }) => {
         // console.log(res.data);
         if (res.data.success) {
           setLoading(false);
-          if (res.data.comments.length < 10) {
+          if (res.data.comments.length < limit) {
             setHasMore(false);
           } else {
             setHasMore(true);

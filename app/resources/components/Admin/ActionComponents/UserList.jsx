@@ -17,36 +17,36 @@ const UserList = ({
   tempUserData,
   reload,
   setReload,
+  searchUser,
+  listUserData,
+  setListUserData,
 }) => {
-  const [state, setState] = useState({
-    columns: [
-      { name: "#" },
-      { name: "Name" },
-      { name: "Email" },
-      { name: "Username" },
-      { name: "Password" },
-      { name: "Verified" },
-      { name: "Status" },
-      {
-        name: "Level",
-      },
-      { name: "Remember Token" },
-      { name: "" },
-    ],
-    datas: [],
-  });
+  const [columns] = useState([
+    { name: "#" },
+    { name: "Name" },
+    { name: "Email" },
+    { name: "Username" },
+    { name: "Password" },
+    { name: "Verified" },
+    { name: "Status" },
+    {
+      name: "Level",
+    },
+    { name: "Remember Token" },
+    { name: "" },
+  ]);
 
   const [hasMore, setHasMore] = useState(true);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
 
   const renderTableColumn = () => {
-    return state.columns.map((column) => {
+    return columns.map((column) => {
       return <th key={column.name}>{column.name}</th>;
     });
   };
 
   const handleStatusChange = async (rowData) => {
-    const temp = [...state.datas];
+    const temp = [...listUserData];
     const index = temp.indexOf(rowData);
     const data = new FormData();
     data.append("user_id", rowData.user_id);
@@ -54,7 +54,7 @@ const UserList = ({
     const res = await axios.post("/api/actions/update_user_status.php", data);
     if (res.data.success) {
       temp[index].status = !temp[index].status;
-      setState({ ...state, datas: temp });
+      setListUserData({ users: temp });
       setStatusAction({
         open: true,
         message: "Status Updated",
@@ -70,7 +70,7 @@ const UserList = ({
   };
 
   const renderTableRow = () => {
-    return state.datas.map((data, index) => {
+    return listUserData.map((data, index) => {
       return (
         <tr key={index}>
           <td>{data.user_id}</td>
@@ -103,6 +103,7 @@ const UserList = ({
               title="Edit"
               onClick={() => {
                 setOpenEditPane(!openEditPane);
+                data["index"] = index;
                 setTempUserData(data);
               }}
             >
@@ -131,12 +132,10 @@ const UserList = ({
     data.append("user_id", user_id);
     const res = await axios.post("/api/actions/delete_user.php", data);
     if (res.data.success) {
-      axios
-        .get("/api/actions/get_list_user.php")
-        .then((res) => setState({ ...state, datas: res.data.users }))
-        .catch((err) => {
-          console.log(err);
-        });
+      setListUserData({
+        users: listUserData.filter((data) => data.user_id !== user_id),
+      });
+      setHasMore(true);
       setStatusAction({
         open: true,
         message: "Delete Success",
@@ -157,10 +156,13 @@ const UserList = ({
       return;
     }
 
-    if (state.datas.length >= 10 && state.datas) {
-      const currentpage = Math.round(state.datas.length / 10);
+    if (listUserData.length >= 10 && listUserData) {
+      const currentpage = Math.round(listUserData.length / 10);
       if (hasMore) {
         const data = new FormData();
+        if (searchUser !== "") {
+          data.append("name", searchUser);
+        }
         data.append("page", currentpage);
 
         const res = await axios.post("/api/actions/get_list_user.php", data);
@@ -170,12 +172,11 @@ const UserList = ({
           } else {
             setHasMore(true);
           }
-          let tempUsers = [...state.datas];
+          let tempUsers = [...listUserData];
           res.data.users.map((user) => {
             tempUsers.push(user);
           });
-          console.log(tempUsers);
-          setState({ ...state, datas: tempUsers });
+          setListUserData({ users: tempUsers });
         }
       }
     }
@@ -185,12 +186,12 @@ const UserList = ({
     const ele = document.getElementById("tabular-scroll");
     ele.addEventListener("scroll", handleScroll);
     return () => ele.removeEventListener("scroll", handleScroll);
-  }, [state.datas, hasMore]);
+  }, [listUserData, hasMore]);
 
   useEffect(() => {
     axios
       .get("/api/actions/get_list_user.php")
-      .then((res) => setState({ ...state, datas: res.data.users }))
+      .then((res) => setListUserData({ users: res.data.users }))
       .catch((err) => {
         console.log(err);
       });
@@ -198,10 +199,12 @@ const UserList = ({
 
   useEffect(() => {
     if (reload) {
+      setHasMore(true);
       axios
         .get("/api/actions/get_list_user.php")
         .then((res) => {
-          setState({ ...state, datas: res.data.users });
+          // console.log(res.data);
+          setListUserData({ users: res.data.users });
           setReload(false);
         })
         .catch((err) => {
@@ -209,6 +212,19 @@ const UserList = ({
         });
     }
   }, [reload]);
+
+  useEffect(() => {
+    if (searchUser !== "") {
+      setHasMore(true);
+      const data = new FormData();
+      data.append("name", searchUser);
+      axios
+        .post("/api/actions/get_list_user.php", data)
+        .then((res) => setListUserData({ users: res.data.users }));
+    } else {
+      setReload(true);
+    }
+  }, [searchUser]);
 
   return openDeleteModal ? (
     <DeleteModals
@@ -224,7 +240,7 @@ const UserList = ({
           <tr>{renderTableColumn()}</tr>
         </thead>
 
-        <tbody>{renderTableRow()}</tbody>
+        <tbody>{listUserData !== undefined ? renderTableRow() : null}</tbody>
       </table>
     </div>
   );
