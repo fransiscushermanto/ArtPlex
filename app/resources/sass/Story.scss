@@ -585,12 +585,26 @@
               pointer-events: none;
             }
             .comment-editable {
-              padding-bottom: 3px;
-              outline: none;
-              border-bottom: 1px solid rgba(230, 230, 230, 1);
-              transition: border-bottom ease-in 0.1s;
-              &:focus {
-                border-bottom: 2px solid black;
+              .ql-editor {
+                font-weight: 500;
+                font-family: "Poppins", Arial, sans-serif !important;
+                font-style: normal;
+                padding-bottom: 0px;
+                color: black;
+                font-size: 15px;
+                &::before {
+                  font-style: normal !important;
+                  font-weight: 500;
+                  left: 0;
+                }
+                padding: 0;
+                padding-bottom: 3px;
+                outline: none;
+                border-bottom: 1px solid rgba(230, 230, 230, 1);
+                transition: border-bottom ease-in 0.1s;
+                &:focus {
+                  border-bottom: 2px solid black;
+                }
               }
             }
           }
@@ -633,9 +647,20 @@
                   font-size: 14px;
                 }
               }
-              .body-comment {
+              .body-wrapper {
                 padding-top: 3px;
-                font-size: 15px;
+                .body-comment {
+                  .ql-editor {
+                    font-family: "Poppins", Arial, sans-serif !important;
+                    font-style: normal;
+                    padding-bottom: 0px;
+                    color: black;
+                    font-size: 15px !important;
+                    padding: 0;
+                    cursor: none;
+                    pointer-events: none;
+                  }
+                }
               }
             }
           }

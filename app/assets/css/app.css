@@ -9033,12 +9033,23 @@ textarea.form-control {
             position: absolute;
             cursor: none;
             pointer-events: none; }
-          .story-public .col:nth-child(2) .comment .comment-editor-wrapper .col .wrapper-editable .comment-editable {
+          .story-public .col:nth-child(2) .comment .comment-editor-wrapper .col .wrapper-editable .comment-editable .ql-editor {
+            font-weight: 500;
+            font-family: "Poppins", Arial, sans-serif !important;
+            font-style: normal;
+            padding-bottom: 0px;
+            color: black;
+            font-size: 15px;
+            padding: 0;
             padding-bottom: 3px;
             outline: none;
             border-bottom: 1px solid #e6e6e6;
             transition: border-bottom ease-in 0.1s; }
-            .story-public .col:nth-child(2) .comment .comment-editor-wrapper .col .wrapper-editable .comment-editable:focus {
+            .story-public .col:nth-child(2) .comment .comment-editor-wrapper .col .wrapper-editable .comment-editable .ql-editor::before {
+              font-style: normal !important;
+              font-weight: 500;
+              left: 0; }
+            .story-public .col:nth-child(2) .comment .comment-editor-wrapper .col .wrapper-editable .comment-editable .ql-editor:focus {
               border-bottom: 2px solid black; }
         .story-public .col:nth-child(2) .comment .comment-editor-wrapper .col .row {
           margin: 0; }
@@ -9066,9 +9077,17 @@ textarea.form-control {
               font-size: 17px; }
             .story-public .col:nth-child(2) .comment .comment-list .comment-wrapper .col .wrapper-editable .head .comment-date {
               font-size: 14px; }
-          .story-public .col:nth-child(2) .comment .comment-list .comment-wrapper .col .wrapper-editable .body-comment {
-            padding-top: 3px;
-            font-size: 15px; }
+          .story-public .col:nth-child(2) .comment .comment-list .comment-wrapper .col .wrapper-editable .body-wrapper {
+            padding-top: 3px; }
+            .story-public .col:nth-child(2) .comment .comment-list .comment-wrapper .col .wrapper-editable .body-wrapper .body-comment .ql-editor {
+              font-family: "Poppins", Arial, sans-serif !important;
+              font-style: normal;
+              padding-bottom: 0px;
+              color: black;
+              font-size: 15px !important;
+              padding: 0;
+              cursor: none;
+              pointer-events: none; }
 
 .ql-editor[contenteditable] {
   overflow: visible !important; }

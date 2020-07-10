@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import ContentEditable from "react-contenteditable";
+import ReactQuill from "react-quill";
 import Avatar from "react-avatar";
 import axios from "axios";
 
@@ -18,14 +18,7 @@ const CommentGroup = ({
   const [showLabel, setShowLabel] = useState(true);
 
   const handleChange = (e) => {
-    setBodyComment(e.target.value);
-  };
-
-  //HANDLE PASTE TEXT ON DIV CONTENTEDITABLE
-  const pastePlainText = (e) => {
-    e.preventDefault();
-    const text = e.clipboardData.getData("text/plain");
-    document.execCommand("inserttext", false, text);
+    setBodyComment(e);
   };
 
   const sendComment = async () => {
@@ -71,14 +64,13 @@ const CommentGroup = ({
           />
           <div className="col">
             <div className="wrapper-editable width-100">
-              {showLabel ? (
-                <div className="label-editable">Type a comment...</div>
-              ) : null}
-              <ContentEditable
+              <ReactQuill
                 className="comment-editable"
-                html={bodyComment}
-                onPaste={pastePlainText}
+                value={bodyComment}
                 onChange={handleChange}
+                placeholder="Type a comment"
+                modules={{ toolbar: false }}
+                theme="bubble"
               />
             </div>
             <div className="row d-flex flex-row justify-content-end width-100">

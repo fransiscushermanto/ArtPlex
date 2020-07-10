@@ -1,29 +1,33 @@
 import React, { useEffect } from "react";
-import ContentEditable from "react-contenteditable";
+import ReactQuill from "react-quill";
 import Moment from "react-moment";
 import Avatar from "react-avatar";
 const Comment = ({ commenter, comment_publish_time, comment_body }) => {
+  // useEffect(() => {
+  //   const cutLongText = () => {
+  //     var limitChar = 400;
+  //     var ellipsestext = "...";
+  //     var body = document.getElementById("comment-body");
+  //     var content = body.innerHTML;
+  //     if (content.length > limitChar) {
+  //       var c = content.substr(0, limitChar);
+  //       var h = content;
+  //       var html =
+  //         '<div class="truncate-text" style="display:block">' +
+  //         c +
+  //         '<span class="moreellipses">' +
+  //         ellipsestext +
+  //         '&nbsp;&nbsp;<button class="moreless more">more</button></span></span></div><div class="truncate-text" style="display:none">' +
+  //         h +
+  //         '<button href="" class="moreless less">Less</button></span></div>';
+  //       body.innerHTML = html;
+  //     }
+  //   };
+  //   cutLongText();
+  // }, []);
+
   useEffect(() => {
-    const cutLongText = () => {
-      var limitChar = 400;
-      var ellipsestext = "...";
-      var body = document.getElementById("comment-body");
-      var content = body.innerHTML;
-      if (content.length > limitChar) {
-        var c = content.substr(0, limitChar);
-        var h = content;
-        var html =
-          '<div class="truncate-text" style="display:block">' +
-          c +
-          '<span class="moreellipses">' +
-          ellipsestext +
-          '&nbsp;&nbsp;<button class="moreless more">more</button></span></span></div><div class="truncate-text" style="display:none">' +
-          h +
-          '<button href="" class="moreless less">Less</button></span></div>';
-        body.innerHTML = html;
-      }
-    };
-    cutLongText();
+    console.log(`<div className='body-item'>${comment_body}</div>`);
   }, []);
 
   return (
@@ -45,12 +49,15 @@ const Comment = ({ commenter, comment_publish_time, comment_body }) => {
               </span>
             </div>
           </div>
-          <ContentEditable
-            disabled={true}
-            className="body-comment"
-            id="comment-body"
-            html={comment_body}
-          />
+          <div className="body-wrapper">
+            <ReactQuill
+              className="body-comment"
+              id="comment-body"
+              value={comment_body}
+              modules={{ toolbar: false }}
+              theme="bubble"
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Link, useRouteMatch } from "react-router-dom";
+import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import { CSSTransition } from "react-transition-group";
 const SidePane = ({ openSidePane, type }) => {
   let { url } = useRouteMatch();
+  const history = useHistory();
   const [listMenu, setListMenu] = useState([
     {
       class: "users",
@@ -145,6 +146,11 @@ const SidePane = ({ openSidePane, type }) => {
     setActiveByType();
   }, [type]);
 
+  const onClickLogo = () => {
+    history.push("/");
+    window.location.reload();
+  };
+
   return (
     <CSSTransition
       in={openSidePane}
@@ -155,9 +161,9 @@ const SidePane = ({ openSidePane, type }) => {
       <div className="side-pane">
         <div className="logo">
           <h1>
-            <Link className="no-animation" to={`${window.location.pathname}`}>
+            <span className="no-animation" onClick={onClickLogo}>
               <b>ArtPlex</b>
-            </Link>
+            </span>
           </h1>
         </div>
         <div className="list-menu">
