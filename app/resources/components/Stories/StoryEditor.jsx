@@ -77,7 +77,6 @@ const StoryEditor = ({ user }) => {
       data.append("user_id", user.id);
       data.append("type", type);
       axios.post("/api/actions/get_story.php", data).then((res) => {
-        console.log(res.data);
         setCategories(res.data.categories);
         setStatus(res.data.status);
         setTitle(res.data.title_html);
@@ -372,9 +371,7 @@ const StoryEditor = ({ user }) => {
           <div
             className={
               (saved && type === "edit") || type === "edit"
-                ? setTimeout(() => {
-                    "action-btn ";
-                  }, 2000)
+                ? "action-btn "
                 : "action-btn disabled"
             }
             onClick={() => {

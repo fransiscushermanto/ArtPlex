@@ -181,18 +181,22 @@ const ToolBarEditor = ({ quillRef }) => {
           const res = await axios.post("/api/actions/store_image.php", data, {
             headers: { "Content-Type": "multipart/form-data" },
           });
-          quill.insertText(range.index, "\n", "user");
-          quill.insertEmbed(
-            range.index + 1,
-            "image",
-            {
-              url: res.data.url,
-              alt: img.files[0].name,
-              class: "artplex-image",
-            },
-            "user"
-          );
-          quill.setSelection(range.index + 2, "silent");
+          if (res.data.success) {
+            quill.insertText(range.index, "\n", "user");
+            quill.insertEmbed(
+              range.index + 1,
+              "image",
+              {
+                url: res.data.url,
+                alt: img.files[0].name,
+                class: "artplex-image",
+              },
+              "user"
+            );
+            quill.setSelection(range.index + 2, "silent");
+          } else {
+            console.log(res.data.error);
+          }
         });
 
         FR.readAsDataURL(img.files[0]);
