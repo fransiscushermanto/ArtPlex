@@ -51,6 +51,13 @@ class StoriesController
                 "success" => true,
                 "error" => "",
                 "story_id" => $this->story_id,
+                "story_id" => $this->story_id,
+                "title" => $this->title,
+                "title_html" => $this->title_html,
+                "body" => $this->body,
+                "body_html" => $this->body_html,
+                "total_word" => $this->total_word,
+                "last_update" => $current_date,
             );
         } else {
             return (object) array(
@@ -74,11 +81,19 @@ class StoriesController
             return (object) array(
                 "success" => true,
                 "error" => null,
+                "story_id" => $this->story_id,
+                "title" => $this->title,
+                "title_html" => $this->title_html,
+                "body" => $this->body,
+                "body_html" => $this->body_html,
+                "total_word" => $this->total_word,
+                "last_update" => $current_date,
             );
         } else {
             return (object) array(
                 "success" => false,
                 "error" => "Failed to update story - " . mysqli_error($this->conn),
+
             );
         }
     }

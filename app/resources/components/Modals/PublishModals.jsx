@@ -37,6 +37,7 @@ const PublishModals = ({
   useEffect(() => {
     setTitle(titleParams);
     setBody(status === "on" ? bodyParams : "");
+    console.log(typeof body, titleParams, bodyParams);
   }, [titleParams, bodyParams]);
 
   useEffect(() => {
@@ -48,10 +49,6 @@ const PublishModals = ({
     };
     searchCategory();
   }, [searchTag]);
-
-  useEffect(() => {
-    console.log(selectedTag);
-  }, [selectedTag]);
 
   const Publish = async () => {
     const data = new FormData();

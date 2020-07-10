@@ -66,8 +66,6 @@ const StoryEditor = ({ user }) => {
     timeoutVal = 10000;
 
   useEffect(() => {
-    // window.location.lasthash.Push(window.location.hash);
-
     if (document.getElementById("body-editable")) {
       document.getElementById("body-editable").focus();
     }
@@ -197,11 +195,19 @@ const StoryEditor = ({ user }) => {
     data.append("title", titleQuill.getText());
     data.append("total_word", total_word);
     const res = await axios.post("/api/actions/story_write.php", data);
-    console.log(res.data);
     if (storyId) {
       if (res.data.success) {
+        setTitle(res.data.title_html);
+        setBody(res.data.body_html);
+
+        setShown({
+          title:
+            res.data.title === "\n" || res.data.title === ""
+              ? shown.title
+              : res.data.title,
+          body: res.data.body,
+        });
         setSaved(true);
-        console.log("SAVEd");
       }
     } else {
       if (res.data.success) {

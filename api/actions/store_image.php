@@ -9,7 +9,8 @@ if (isset($_FILES["file"])) {
     $user_id = (isset($_POST["user_id"])) ? $_POST["user_id"] : null;
     $file_name = (isset($_POST["file_name"])) ? $_POST["file_name"] : null;
     $file_extension =  explode(".", $_FILES['file']['name'])[1];
-    if ($file_extension === "jpg" || $file_extension === "png" || $file_extension === "bmp") {
+    $extension = ["jpg" => true, "png" => true, "bmp" => true];
+    if ($extension[$file_extension]) {
         $final_name = md5($file_name) . "." . explode(".", $_FILES['file']['name'])[1];
         if (getenv('APP_ENV') === 'development') {
             move_uploaded_file($_FILES["file"]["tmp_name"], "../../app/assets/temp-img/" . $final_name);
