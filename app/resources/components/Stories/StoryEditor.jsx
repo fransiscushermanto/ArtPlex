@@ -372,7 +372,9 @@ const StoryEditor = ({ user }) => {
           <div
             className={
               (saved && type === "edit") || type === "edit"
-                ? "action-btn "
+                ? setTimeout(() => {
+                    "action-btn ";
+                  }, 2000)
                 : "action-btn disabled"
             }
             onClick={() => {
