@@ -37,7 +37,7 @@ const PublishModals = ({
   useEffect(() => {
     setTitle(titleParams);
     setBody(status === "on" ? bodyParams : "");
-  }, []);
+  }, [titleParams, bodyParams]);
 
   useEffect(() => {
     const searchCategory = async () => {
