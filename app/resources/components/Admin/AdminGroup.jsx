@@ -23,6 +23,12 @@ const AdminGroup = ({ user, type }) => {
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
   }
+
+  useEffect(() => {
+    if (document.getElementById("ftco-navbar")) {
+      document.getElementById("ftco-navbar").style.display = "none";
+    }
+  }, []);
   return (
     <div className="admin-wrapper">
       <div className="row">

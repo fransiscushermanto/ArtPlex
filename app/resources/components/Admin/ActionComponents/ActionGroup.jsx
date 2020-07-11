@@ -19,6 +19,7 @@ const ActionGroup = ({ user, setStatusAction, statusAction }) => {
     comments: [],
     categories: [],
   });
+
   const [searchByType, setSearchByType] = useState({
     users: "",
     stories: "",
@@ -123,9 +124,10 @@ const ActionGroup = ({ user, setStatusAction, statusAction }) => {
             setTempCommentData={setTempData}
             reload={reload}
             setReload={setReload}
-            searchStory={searchByType.comments}
+            searchComments={searchByType.comments}
             listCommentData={listData.comments}
-            setListCommentData={setListData}
+            listStoryData={listData.stories}
+            setListData={setListData}
           />
         );
       default:

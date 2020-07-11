@@ -9855,11 +9855,112 @@ button:focus {
                 align-items: center; }
                 .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.story-pane .confirmation span {
                   color: white;
-                  margin-left: 20px; }
+                  margin-left: 20px;
+                  display: flex; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.story-pane .confirmation span > div {
+                    max-width: 300px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap; }
+                    .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.story-pane .confirmation span > div > span {
+                      margin: 0px; }
                 .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.story-pane .confirmation > .action-btn {
                   display: flex;
                   margin-left: auto; }
                   .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.story-pane .confirmation > .action-btn span {
+                    cursor: pointer;
+                    color: white;
+                    margin: 0px 5px;
+                    padding: 10px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center; }
+            .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane {
+              flex-direction: column;
+              align-items: center;
+              height: auto;
+              position: relative; }
+              .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane header {
+                position: -webkit-sticky;
+                position: sticky;
+                top: 0;
+                height: auto;
+                flex: 0;
+                padding: 10px 20px;
+                background-color: white;
+                z-index: 100; }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane header .form-group {
+                  margin: 0;
+                  display: flex;
+                  align-items: center; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane header .form-group label {
+                    flex: 1;
+                    margin: 0;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    margin-right: 10px; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane header .form-group select {
+                    flex: 5;
+                    padding: 0px 10px !important;
+                    height: 30px !important; }
+              .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper {
+                padding-top: 20px;
+                width: 1000px; }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper {
+                  position: relative;
+                  margin-bottom: 20px; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper .comment-wrapper {
+                    max-width: 1000px;
+                    margin: 15px 0px; }
+                    .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper .comment-wrapper .col .wrapper-editable .head {
+                      line-height: 20px; }
+                      .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper .comment-wrapper .col .wrapper-editable .head .commenter-name {
+                        color: black;
+                        font-weight: 500;
+                        font-size: 17px; }
+                      .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper .comment-wrapper .col .wrapper-editable .head .comment-date {
+                        font-size: 14px; }
+                    .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper .comment-wrapper .col .wrapper-editable .body-wrapper {
+                      padding-top: 3px; }
+                      .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper .comment-wrapper .col .wrapper-editable .body-wrapper .body-comment .ql-editor {
+                        font-family: "Poppins", Arial, sans-serif !important;
+                        font-style: normal;
+                        padding-bottom: 0px;
+                        color: black;
+                        font-size: 15px !important;
+                        padding: 0;
+                        cursor: none;
+                        pointer-events: none; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper .action-btn {
+                    position: absolute;
+                    top: -5px;
+                    right: 30px; }
+                    .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .comment-list-wrapper .inner-comment-list-wrapper .action-btn span {
+                      cursor: pointer; }
+              .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .confirmation {
+                position: -webkit-sticky;
+                position: sticky;
+                width: 100%;
+                bottom: 0%;
+                padding: 15px 50px;
+                z-index: 200;
+                display: flex;
+                align-items: center; }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .confirmation span {
+                  color: white;
+                  margin-left: 20px;
+                  display: flex; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .confirmation span > div {
+                    max-width: 300px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap; }
+                    .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .confirmation span > div > span {
+                      margin: 0; }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .confirmation > .action-btn {
+                  display: flex;
+                  margin-left: auto; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.comment-pane .confirmation > .action-btn span {
                     cursor: pointer;
                     color: white;
                     margin: 0px 5px;

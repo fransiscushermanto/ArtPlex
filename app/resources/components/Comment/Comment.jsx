@@ -26,10 +26,6 @@ const Comment = ({ commenter, comment_publish_time, comment_body }) => {
   //   cutLongText();
   // }, []);
 
-  useEffect(() => {
-    console.log(`<div className='body-item'>${comment_body}</div>`);
-  }, []);
-
   return (
     <div className="comment-wrapper d-flex flex-row">
       <Avatar
@@ -45,7 +41,9 @@ const Comment = ({ commenter, comment_publish_time, comment_body }) => {
             <div className="commenter-name">{commenter}</div>
             <div className="comment-date ml-2">
               <span>
-                <Moment fromNow>{comment_publish_time}</Moment>
+                <Moment interval={0} fromNow>
+                  {comment_publish_time}
+                </Moment>
               </span>
             </div>
           </div>

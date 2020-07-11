@@ -419,11 +419,13 @@ class StoriesController
             );
         }
     }
-    public function getPublishedStory()
+    public function getPublishedStory($access_time)
     {
         $arr_tag = $this->getStoryRelatedTag();
-        $arr_Comment = $this->getStoryRelatedComment();
-
+        $dt = DateTime::createFromFormat("D M d Y H:i:s e+", $access_time);
+        $access_time = $dt->format("Y-m-d H:i:s");
+        $arr_comment = $this->getStoryRelatedComment(0, "", $access_time);
+        $total_comment = $this->getTotalComment();
         $query_view_story = $this->conn->prepare("SELECT u.name, u.username, s.story_id, s.title, s.title_html, s.body, s.body_html, 
         s.total_word, s.last_update, s.status, sp.publish_date FROM stories s JOIN users u ON s.user_id = u.user_id 
         JOIN stories_publish sp ON s.story_id = sp.story_id  WHERE s.story_id = ? ");
@@ -447,7 +449,8 @@ class StoriesController
                 "status" => $row["status"],
                 "author" => ["name" => $row['name'], "username" => $row['username'],],
                 "categories" => $arr_tag,
-                "comments" => $arr_Comment,
+                "comments" => $arr_comment,
+                "total_comment" => $total_comment,
                 "error" => "",
             );
         } else {
@@ -632,33 +635,57 @@ class StoriesController
         }
     }
 
-    public function getMoreComment($page = 0)
+    public function getMoreComment($page = 0, $search = "", $access_time)
     {
-        $arr_Comment = $this->getStoryRelatedComment($page);
+        // if ($access_time !== "") {
+        try {
+            $dt = DateTime::createFromFormat("D M d Y H:i:s e+", $access_time);
+            $access_time = $dt->format("Y-m-d H:i:s");
+        } catch (Exception $eh) {
+            return (object) array("success" => false, "comments" => [], "error" => "Failed to parse time", "page" => $page, "access_time" => $access_time);
+        }
+
+        // }
+
+        $arr_Comment = $this->getStoryRelatedComment($page, $search, $access_time);
         if (count($arr_Comment) > 0) {
-            return (object) array("success" => true, "comments" => $arr_Comment);
+            return (object) array("success" => true, "comments" => $arr_Comment, "story_id" => $this->story_id, "keyword" => $search);
         } else {
-            return (object) array("success" => false, "comments" => $arr_Comment);
+            return (object) array("success" => false, "comments" => $arr_Comment, "error" => mysqli_error($this->conn), "story_id" => $this->story_id, "keyword" => $search);
         }
     }
 
-    public function getStoryRelatedComment($page = 0)
+    public function getStoryRelatedComment($page = 0, $search = "", $access_time = "")
     {
-        $arr_Comment = array();
+        $arr_comment = array();
         $limit = 10;
-        $offset = ($page * 10);
-        $total_comment = $this->countStoryRelatedComment();
-        $max_page = ceil($total_comment / $limit);
+        $offset = ($page * $limit);
 
-        if ($page <= $max_page) {
-            $query_get = $this->conn->prepare("SELECT c.comment_id, c.body, c.status, c.publish_date, c.last_updated, u.user_id, u.name, u.username FROM stories_comments sc JOIN comments c ON sc.comment_id = c.comment_id JOIN stories s ON sc.story_id = s.story_id JOIN users u ON c.user_id = u.user_id WHERE sc.story_id = ? ORDER BY c.publish_date DESC LIMIT ? OFFSET ?;");
-            $query_get->bind_param("sii", $this->story_id, $limit, $offset);
+
+        if ($this->story_id !== "none") {
+            $query = "SELECT c.comment_id, c.body, c.status, c.publish_date, c.last_updated, u.user_id, u.name, u.username 
+            FROM stories_comments sc 
+            JOIN comments c ON sc.comment_id = c.comment_id 
+            JOIN stories s ON sc.story_id = s.story_id 
+            JOIN users u ON c.user_id = u.user_id 
+            WHERE sc.story_id = ? ";
+
+            if ($access_time !== "") $query .= " AND c.publish_date < ? ";
+            if ($search !== "") {
+                $search = '%' . $search . '%';
+                $query .= " AND u.name LIKE ? OR c.body LIKE ? ";
+            }
+            $query .= " ORDER BY c.publish_date DESC LIMIT ? OFFSET ?;";
+            $query_get = $this->conn->prepare($query);
+            if ($search !== "") $query_get->bind_param("ssssii", $this->story_id, $access_time, $search, $search, $limit, $offset);
+            else $query_get->bind_param("ssii", $this->story_id, $access_time, $limit, $offset);
+            // $query_get->bind_param("sii", $this->story_id, $limit, $offset);
             $query_get->execute();
             $res = $query_get->get_result();
             $row = $res->fetch_assoc();
             if ($row > 0) {
                 do {
-                    array_push($arr_Comment, (object) array(
+                    array_push($arr_comment, (object) array(
                         "comment_id" => $row["comment_id"],
                         "comment_body" => $row["body"],
                         "status" => $row["status"],
@@ -672,15 +699,22 @@ class StoriesController
             }
         }
 
-        return $arr_Comment;
+
+        return $arr_comment;
     }
 
-    public function countStoryRelatedComment()
+    public function getTotalComment()
     {
-        $query_check = $this->conn->prepare("SELECT c.comment_id FROM stories_comments sc JOIN comments c ON sc.comment_id = c.comment_id JOIN stories s ON sc.story_id = s.story_id JOIN users u ON c.user_id = u.user_id WHERE sc.story_id = ?");
-        $query_check->bind_param("s", $this->story_id);
-        $query_check->execute();
-        $res = $query_check->get_result();
-        return $total_comment = $res->num_rows;
+        $total_Comment = 0;
+
+        $query_get = $this->conn->prepare("SELECT COUNT(*) comment_count FROM comments c JOIN stories_comments sc ON sc.comment_id = c.comment_id JOIN stories s ON sc.story_id = s.story_id JOIN users u ON c.user_id = u.user_id WHERE sc.story_id = ?;");
+        $query_get->bind_param("s", $this->story_id);
+        $query_get->execute();
+        $res = $query_get->get_result();
+        $row = $res->fetch_assoc();
+        if ($row > 0) {
+            $total_comment = (int) $row['comment_count'];
+        }
+        return $total_comment;
     }
 }

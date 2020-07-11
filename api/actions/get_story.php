@@ -2,7 +2,7 @@
 $user_id = (isset($_POST['user_id'])) ? $_POST['user_id'] : null;
 $story_id = (isset($_POST['story_id'])) ? $_POST['story_id'] : null;
 $type = (isset($_POST['type'])) ? $_POST['type'] : null;
-
+$access_time = (isset($_POST['access_time'])) ? $_POST['access_time'] : null;
 include_once("../../vendor/autoload.php");
 include_once("../helper.php");
 include_once("../database.php");
@@ -13,7 +13,7 @@ $get_story = new StoriesController($conn, $user_id, "", "", "", "", "", $story_i
 if (isset($story_id) && $type !== "public") {
     echo json_encode($get_story->getStory());
 } else if ($type === "public") {
-    echo json_encode($get_story->getPublishedStory());
+    echo json_encode($get_story->getPublishedStory($access_time));
 } else {
     echo json_encode($get_story->getUserStory());
 }

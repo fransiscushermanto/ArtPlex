@@ -48,14 +48,31 @@ const StoryView = ({ user }) => {
     categories: [],
     comments: [],
   });
+  const commentLength = useRef(0);
+  const accessTime = useRef("");
 
   useEffect(() => {
     const getStory = async () => {
+      const proxyurl = "https://cors-anywhere.herokuapp.com/";
+      const url = "http://timeapi.herokuapp.com/utc/now";
+
       const data = new FormData();
       data.append("story_id", storyId);
       data.append("type", "public");
+
+      const time = await axios.get(proxyurl + url, {
+        headers: {
+          "x-apikey": "59a7ad19f5a9fa0808f11931",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        },
+      });
+
+      var date = new Date(time.data.dateString);
+      data.append("access_time", date);
+      accessTime.current = date;
       const res = await axios.post("/api/actions/get_story.php", data);
-      console.log(res.data);
+      // console.log(res.data);
       if (res.data.success) {
         setAuthorData(res.data.author);
         setStoryInfo({
@@ -64,6 +81,7 @@ const StoryView = ({ user }) => {
           categories: res.data.categories,
           comments: res.data.comments,
         });
+        commentLength.current = res.data.comments.length;
         // loadToDOM(res.data.title_html, res.data.body_html);
         setTitle(res.data.title_html);
         setBody(res.data.body_html);
@@ -74,20 +92,20 @@ const StoryView = ({ user }) => {
 
   async function handleScroll() {
     if (
-      window.innerHeight + Math.floor(document.documentElement.scrollTop) !==
+      window.innerHeight + Math.ceil(window.pageYOffset) <
       document.documentElement.offsetHeight
     ) {
       return;
     }
     const limit = 10;
-    if (storyInfo.comments.length >= limit) {
-      const currentpage = Math.round(storyInfo.comments.length / limit);
+    if (commentLength.current >= limit) {
+      const currentpage = Math.round(commentLength.current / limit);
       if (hasMore) {
         setLoading(true);
         const data = new FormData();
         data.append("story_id", storyId);
         data.append("page", currentpage);
-
+        data.append("access_time", accessTime.current);
         const res = await axios.post("/api/actions/get_more_comment.php", data);
         // console.log(res.data);
         if (res.data.success) {
@@ -97,6 +115,7 @@ const StoryView = ({ user }) => {
           } else {
             setHasMore(true);
           }
+          commentLength.current += res.data.comments.length;
           let tempComment = [...storyInfo.comments];
           res.data.comments.map((comment) => {
             tempComment.push(comment);
@@ -106,13 +125,15 @@ const StoryView = ({ user }) => {
             ...storyInfo,
             comments: tempComment,
           });
+        } else {
+          setLoading(false);
+          setHasMore(false);
         }
       }
     }
   }
 
   useEffect(() => {
-    console.log(storyInfo.comments);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [
@@ -224,6 +245,7 @@ const StoryView = ({ user }) => {
             user={user}
             story_id={storyId}
             comments={storyInfo.comments}
+            setHasMore={setHasMore}
           />
           {loading ? (
             <div className="loader widht-100 d-flex justify-content-center">

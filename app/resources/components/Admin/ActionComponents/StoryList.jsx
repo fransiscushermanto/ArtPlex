@@ -244,8 +244,11 @@ const StoryList = ({
         <div className="confirmation" style={{ backgroundColor: red[800] }}>
           <WarningOutlined style={{ color: grey[50], fontSize: "30px" }} />
           <span>
-            Are you sure wish to delete the story "{tempStoryData.title}" by{" "}
-            {tempStoryData.author.name} ?
+            Are you sure wish to delete the story "
+            <div>
+              <span>{tempStoryData.title}</span>
+            </div>
+            " by {tempStoryData.author.name} ?
           </span>
           <div className="action-btn ">
             <span

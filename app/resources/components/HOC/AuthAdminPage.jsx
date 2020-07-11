@@ -18,6 +18,7 @@ export default (OriginalComponent) => {
       } else {
         if (arrLocation[2] === undefined) {
           history.push("/admin/users");
+          window.location.reload();
         }
       }
     }, []);

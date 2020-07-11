@@ -8,4 +8,4 @@ include_once("../database.php");
 include_once("../controller/Comment/CommentsController.php");
 
 $comment = new CommentsController($conn, "", "", $comment_id);
-echo json_encode($commnet->deleteComment());
+echo json_encode($comment->deleteComment());
