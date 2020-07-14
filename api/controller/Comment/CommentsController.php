@@ -128,11 +128,12 @@ class CommentsController
     }
 
 
-    public function getListComment($page = 0)
+
+    public function getListComment($page = 0, $delete)
     {
         $arr_Comment = array();
-        $limit = 20;
-        $offset = ($page * $limit);
+        $limit = 10;
+        $offset = ($page * $limit) - $delete;
         $query_get = $this->conn->prepare("SELECT * FROM `comments` LIMIT ? OFFSET ?;");
         $query_get->bind_param("ii", $limit, $offset);
 

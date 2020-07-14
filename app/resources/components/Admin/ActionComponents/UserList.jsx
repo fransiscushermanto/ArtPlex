@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { EditOutlined, DeleteOutline, Check, Clear } from "@material-ui/icons";
 import { red, green } from "@material-ui/core/colors";
 import { Switch } from "@material-ui/core";
@@ -17,7 +17,7 @@ const UserList = ({
   tempUserData,
   reload,
   setReload,
-  searchUser,
+  searchUsers,
   listUserData,
   setListUserData,
 }) => {
@@ -38,7 +38,9 @@ const UserList = ({
 
   const [hasMore, setHasMore] = useState(true);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
-
+  const accessTime = useRef("");
+  const userLength = useRef(0);
+  const deletedNumber = useRef(0);
   const renderTableColumn = () => {
     return columns.map((column) => {
       return <th key={column.name}>{column.name}</th>;
@@ -135,6 +137,7 @@ const UserList = ({
       setListUserData({
         users: listUserData.filter((data) => data.user_id !== user_id),
       });
+      deletedNumber.current++;
       setHasMore(true);
       setStatusAction({
         open: true,
@@ -155,23 +158,25 @@ const UserList = ({
     if (ele.offsetHeight + Math.floor(ele.scrollTop) !== ele.scrollHeight) {
       return;
     }
-
-    if (listUserData.length >= 10 && listUserData) {
-      const currentpage = Math.round(listUserData.length / 10);
+    const limit = 10;
+    if (userLength.current >= limit && listUserData) {
+      const currentpage = Math.round(userLength.current / limit);
       if (hasMore) {
         const data = new FormData();
-        if (searchUser !== "") {
-          data.append("name", searchUser);
+        if (searchUsers !== "") {
+          data.append("name", searchUsers);
         }
         data.append("page", currentpage);
-
+        data.append("access_time", accessTime.current);
+        data.append("deleted_number", deletedNumber.current);
         const res = await axios.post("/api/actions/get_list_user.php", data);
         if (res.data.success) {
-          if (res.data.users.length < 10) {
+          if (res.data.users.length < limit) {
             setHasMore(false);
           } else {
             setHasMore(true);
           }
+          userLength.current += res.data.users.length;
           let tempUsers = [...listUserData];
           res.data.users.map((user) => {
             tempUsers.push(user);
@@ -189,9 +194,23 @@ const UserList = ({
   }, [listUserData, hasMore]);
 
   useEffect(() => {
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const url = "http://timeapi.herokuapp.com/utc/now";
+    axios
+      .get(proxyurl + url, {
+        headers: {
+          "x-apikey": "59a7ad19f5a9fa0808f11931",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        },
+      })
+      .then((time) => (accessTime.current = new Date(time.data.dateString)));
     axios
       .get("/api/actions/get_list_user.php")
-      .then((res) => setListUserData({ users: res.data.users }))
+      .then((res) => {
+        userLength.current = res.data.users.length;
+        setListUserData({ users: res.data.users });
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -199,11 +218,13 @@ const UserList = ({
 
   useEffect(() => {
     if (reload) {
-      setHasMore(true);
+      document.getElementById("tabular-scroll").scrollTop = 0;
       axios
         .get("/api/actions/get_list_user.php")
         .then((res) => {
           // console.log(res.data);
+          setHasMore(true);
+          userLength.current = res.data.users.length;
           setListUserData({ users: res.data.users });
           setReload(false);
         })
@@ -214,17 +235,18 @@ const UserList = ({
   }, [reload]);
 
   useEffect(() => {
-    if (searchUser !== "") {
+    if (searchUsers !== "") {
       setHasMore(true);
       const data = new FormData();
-      data.append("name", searchUser);
-      axios
-        .post("/api/actions/get_list_user.php", data)
-        .then((res) => setListUserData({ users: res.data.users }));
+      data.append("name", searchUsers);
+      axios.post("/api/actions/get_list_user.php", data).then((res) => {
+        userLength.current = res.data.users.length;
+        setListUserData({ users: res.data.users });
+      });
     } else {
       setReload(true);
     }
-  }, [searchUser]);
+  }, [searchUsers]);
 
   return openDeleteModal ? (
     <DeleteModals

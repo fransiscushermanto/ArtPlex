@@ -10,4 +10,4 @@ include_once("../controller/User/UsersController.php");
 
 
 $user = new UsersController($conn, $user_id, $name, "", "", "", "", $level, "", "", "", "", "");
-echo json_encode($user->editUser());
+echo json_encode($user->updateUser());

@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import ReactQuill from "react-quill";
 import Moment from "react-moment";
 import Avatar from "react-avatar";
-const Comment = ({ commenter, comment_publish_time, comment_body }) => {
+const Comment = ({ commenter, comment_publish_time, comment_body, style }) => {
   // useEffect(() => {
   //   const cutLongText = () => {
   //     var limitChar = 400;
@@ -54,6 +54,7 @@ const Comment = ({ commenter, comment_publish_time, comment_body }) => {
               value={comment_body}
               modules={{ toolbar: false }}
               theme="bubble"
+              style={style}
             />
           </div>
         </div>

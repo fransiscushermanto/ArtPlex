@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import {
   AccessTime,
@@ -18,7 +18,7 @@ const StoryList = ({
   tempStoryData,
   reload,
   setReload,
-  searchStory,
+  searchStories,
   listStoryData,
   setListStoryData,
 }) => {
@@ -57,14 +57,30 @@ const StoryList = ({
       },
     },
   ]);
+  const storyLength = useRef(0);
+  const accessTime = useRef("");
+  const deletedNumber = useRef(0);
 
   useEffect(() => {
+    const proxyurl = "https://cors-anywhere.herokuapp.com/";
+    const url = "http://timeapi.herokuapp.com/utc/now";
+    axios
+      .get(proxyurl + url, {
+        headers: {
+          "x-apikey": "59a7ad19f5a9fa0808f11931",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET,PUT,POST,DELETE,PATCH,OPTIONS",
+        },
+      })
+      .then((time) => (accessTime.current = new Date(time.data.dateString)));
+
     const data = new FormData();
     data.append("type", radioPage.checked);
     axios
       .post("/api/actions/admin_get_list_story.php", data)
       .then((res) => {
         document.getElementById("tabular-scroll").scrollTop = 0;
+        storyLength.current = res.data.stories.length;
         setListStoryData({ stories: res.data.stories });
         setHasMore(true);
       })
@@ -73,13 +89,16 @@ const StoryList = ({
 
   useEffect(() => {
     if (reload) {
+      document.getElementById("tabular-scroll").scrollTop = 0;
       const data = new FormData();
       data.append("type", radioPage.checked);
       axios
         .post("/api/actions/admin_get_list_story.php", data)
         .then((res) => {
-          setListStoryData({ stories: res.data.stories });
+          storyLength.current = res.data.stories.length;
+          setHasMore(true);
           setReload(false);
+          setListStoryData({ stories: res.data.stories });
         })
         .catch((err) => console.log(err));
     }
@@ -87,20 +106,22 @@ const StoryList = ({
 
   async function handleScroll() {
     const ele = document.getElementById("tabular-scroll");
+
     if (ele.offsetHeight + Math.ceil(ele.scrollTop) !== ele.scrollHeight) {
       return;
     }
     const limit = 4;
-    if (listStoryData.length >= limit && listStoryData) {
-      const currentpage = Math.round(listStoryData.length / limit);
+    if (storyLength.current >= limit && listStoryData) {
+      const currentpage = Math.round(storyLength.current / limit);
       if (hasMore) {
         const data = new FormData();
-        if (searchStory !== "") {
-          data.append("title", searchStory);
+        if (searchStories !== "") {
+          data.append("title", searchStories);
         }
         data.append("type", radioPage.checked);
         data.append("page", currentpage);
-
+        data.append("access_time", accessTime.current);
+        data.append("deleted_number", deletedNumber.current);
         const res = await axios.post(
           "/api/actions/admin_get_list_story.php",
           data
@@ -111,6 +132,7 @@ const StoryList = ({
           } else {
             setHasMore(true);
           }
+          storyLength.current += res.data.stories.legnth;
           let tempStories = [...listStoryData];
           res.data.stories.map((story) => {
             tempStories.push(story);
@@ -126,10 +148,11 @@ const StoryList = ({
     data.append("story_id", story_id);
     const res = await axios.post("/api/actions/delete_story.php", data);
     if (res.data.success) {
+      setHasMore(true);
       setListStoryData({
         stories: listStoryData.filter((data) => data.story_id !== story_id),
       });
-      setHasMore(true);
+      deletedNumber.current++;
       setStatusAction({
         open: true,
         message: "Delete Success",
@@ -151,18 +174,19 @@ const StoryList = ({
   }, [listStoryData, hasMore]);
 
   useEffect(() => {
-    if (searchStory !== "") {
+    if (searchStories !== "") {
       setHasMore(true);
       const data = new FormData();
       data.append("type", radioPage.checked);
-      data.append("title", searchStory);
+      data.append("title", searchStories);
       axios.post("/api/actions/admin_get_list_story.php", data).then((res) => {
+        storyLength.current = res.data.stories.length;
         setListStoryData({ stories: res.data.stories });
       });
     } else {
       setReload(true);
     }
-  }, [searchStory]);
+  }, [searchStories]);
   return (
     <div className="inner-action-pane story-pane" id="tabular-scroll">
       <header className="d-flex flex-row align-items-center width-100">
@@ -184,8 +208,9 @@ const StoryList = ({
         })}
       </header>
       <div className="story-admin-wrapper list-story">
-        {listStoryData
-          ? listStoryData.map((story, index) => {
+        {listStoryData ? (
+          listStoryData.length > 0 ? (
+            listStoryData.map((story, index) => {
               return (
                 <div
                   key={index}
@@ -238,7 +263,12 @@ const StoryList = ({
                 </div>
               );
             })
-          : null}
+          ) : (
+            <div>
+              <h1 className="font-weight-bold">No Stories Found</h1>
+            </div>
+          )
+        ) : null}
       </div>
       {openDeleteModal ? (
         <div className="confirmation" style={{ backgroundColor: red[800] }}>

@@ -7,6 +7,7 @@ import axios from "axios";
 import UserList from "./UserList";
 import StoryList from "./StoryList";
 import CommentList from "./CommentList";
+import CategoryList from "./CategoryList";
 import EditPane from "../EditPane";
 const ActionGroup = ({ user, setStatusAction, statusAction }) => {
   let { type } = useParams();
@@ -19,6 +20,14 @@ const ActionGroup = ({ user, setStatusAction, statusAction }) => {
     comments: [],
     categories: [],
   });
+
+  useEffect(() => {
+    console.log(tempData);
+  }, [tempData]);
+
+  useEffect(() => {
+    setListData({ users: [], stories: [], comments: [], categories: [] });
+  }, [type]);
 
   const [searchByType, setSearchByType] = useState({
     users: "",
@@ -92,7 +101,7 @@ const ActionGroup = ({ user, setStatusAction, statusAction }) => {
             setTempUserData={setTempData}
             reload={reload}
             setReload={setReload}
-            searchUser={searchByType.users}
+            searchUsers={searchByType.users}
             listUserData={listData.users}
             setListUserData={setListData}
           />
@@ -109,7 +118,7 @@ const ActionGroup = ({ user, setStatusAction, statusAction }) => {
             setTempStoryData={setTempData}
             reload={reload}
             setReload={setReload}
-            searchStory={searchByType.stories}
+            searchStories={searchByType.stories}
             listStoryData={listData.stories}
             setListStoryData={setListData}
           />
@@ -128,6 +137,24 @@ const ActionGroup = ({ user, setStatusAction, statusAction }) => {
             listCommentData={listData.comments}
             listStoryData={listData.stories}
             setListData={setListData}
+          />
+        );
+
+      case "categories":
+        return (
+          <CategoryList
+            user={user}
+            statusAction={statusAction}
+            setStatusAction={setStatusAction}
+            tempCategoryData={tempData}
+            setTempCategoryData={setTempData}
+            reload={reload}
+            setReload={setReload}
+            searchCategories={searchByType.categories}
+            listCategoryData={listData.categories}
+            setListCategoryData={setListData}
+            setOpenEditPane={setOpenEditPane}
+            openEditPane={openEditPane}
           />
         );
       default:

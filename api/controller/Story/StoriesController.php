@@ -227,31 +227,52 @@ class StoriesController
         return $total_story = $res->num_rows;
     }
 
-    public function getListAllStories($page = 0, $category_id = "", $title = "")
+    public function getListAllStories($page = 0, $category_id = "", $title = "", $access_time = "", $deleted_number = 0)
     {
         $arr_story = array();
-        $limit = 10;
-        $offset = ($page * $limit);
-        $whereState = false;
+        $limit = 20;
+        $offset = ($page * $limit) - $deleted_number;
+        $where_state = false;
+        if ($access_time !== "") {
+            $access_time = $this->parseTime($access_time);
+        }
         //get  list story
         $query = "SELECT s.story_id, s.title, s.body, s.total_word, s.last_update, sp.publish_date, s.status, sp.preview_image, u.user_id, u.name, u.username FROM `stories` s LEFT JOIN `stories_publish` sp ON s.story_id = sp.story_id JOIN users u ON s.user_id = u.user_id";
+
         if ($category_id !== "none" && $category_id !== "") {
             $query .= " LEFT JOIN stories_categories sc ON s.story_id = sc.story_id ";
             $query .= " WHERE sc.category_id = ? ";
-            $whereState = true;
+            $where_state = true;
         }
-
+        if ($access_time !== "") {
+            if ($where_state) $query  .= " AND s.last_update < ?";
+            else {
+                $query .= " WHERE s.last_update < ?";
+                $where_state = true;
+            }
+        }
         if ($title !== "") {
             $title = '%' . $title . '%';
-            if ($whereState) $query .= " AND (s.title LIKE ?) OR (u.name LIKE ?) ";
+            if ($where_state) $query .= " AND (s.title LIKE ?) OR (u.name LIKE ?) ";
             else $query .= " WHERE (s.title LIKE ?) OR (u.name LIKE ?) ";
         }
 
         $query .= " ORDER BY s.last_update DESC LIMIT ? OFFSET ? ;";
         $query_get = $this->conn->prepare($query);
-        if ($category_id !== "none" && $category_id !== "" && $title !== "") $query_get->bind_param("sssii", $category_id, $title, $title, $limit, $offset);
-        else if ($category_id != "")  $query_get->bind_param("sii", $category_id, $limit, $offset);
-        else if ($title != "") $query_get->bind_param("ssii", $title, $title, $limit, $offset);
+        if ($category_id !== "none" && $category_id !== "" && $title !== "" && $access_time !== "") $query_get->bind_param("ssssii", $category_id, $access_time, $title, $title, $limit, $offset);
+
+        else if ($access_time !== "" && $category_id !== "" && $category_id !== "none") $query_get->bind_param("ssii", $category_id, $access_time, $limit, $offset);
+
+        else if ($access_time !== "" && $title !== "") $query_get->bind_param("sssii", $access_time, $title, $title, $limit, $offset);
+
+        else if ($title !== "" && $category_id !== "" && $category_id !== "none") $query_get->bind_param("sssii", $category_id, $title, $title, $limit, $offset);
+
+        else if ($access_time !== "") $query_get->bind_param("sii", $access_time, $limit, $offset);
+
+        else if ($category_id !== "" && $category_id !== "none")  $query_get->bind_param("sii", $category_id, $limit, $offset);
+
+        else if ($title !== "") $query_get->bind_param("ssii", $title, $title, $limit, $offset);
+
         else $query_get->bind_param("ii", $limit, $offset);
         $query_get->execute();
         $res = $query_get->get_result();
@@ -286,61 +307,62 @@ class StoriesController
 
 
 
-    public function getListUnpublishedStories($page = 0, $title = "")
+    public function getListUnpublishedStories($page = 0, $title = "", $access_time = "", $deleted_number = 0)
     {
         $arr_unpublish = array();
-        $limit = 10;
+        $limit = 20;
         $offset = ($page * $limit);
-        $total_story = $this->countStory();
-        $max_page = ceil($total_story / $limit);
-
-        if ($page <= $max_page) {
-            $query = "SELECT s.story_id, s.title, s.body, s.total_word, s.last_update, s.status, u.user_id, u.name, u.username FROM `stories` s  JOIN users u ON s.user_id = u.user_id WHERE s.status = 'off' ";
-            if ($title !== "") {
-                $title = '%' . $title . '%';
-                $query .= " AND s.title LIKE ? OR u.name = ? ";
-            }
-            $query .= " ORDER BY s.last_update ASC LIMIT ? OFFSET ? ";
-            $query_get = $this->conn->prepare($query);
-            if ($title != "") $query_get->bind_param("ssii", $title, $title, $limit, $offset);
-            else $query_get->bind_param("ii", $limit, $offset);
-            $query_get->execute();
-            $res = $query_get->get_result();
-            $row  = $res->fetch_assoc();
-            if ($row > 0) {
-                do {
-                    array_push(
-                        $arr_unpublish,
-                        (object) array(
-                            "story_id" => $row['story_id'],
-                            "title" => $row['title'],
-                            "body" => $row['body'],
-                            "total_word" => $row['total_word'],
-                            "last_update" => $row['last_update'],
-                            "status" => $row["status"],
-                            "author" => ["user_id" => $row['user_id'], "name" => $row['name'], "username" => $row['username'],],
-                            "categories" => [],
-                            "image_preview" => "null",
-                        )
-                    );
-                } while ($row  = $res->fetch_assoc());
-            }
-            if (count($arr_unpublish) > 0) {
-                return (object) array("success" => true, "stories" => $arr_unpublish,);
-            } else {
-                return (object) array("success" => false, "stories" => $arr_unpublish, "error" => mysqli_error($this->conn),);
-            }
+        $access_time = "";
+        if ($access_time !== "") {
+            $access_time = $this->parseTime($access_time);
         }
+        $query = "SELECT s.story_id, s.title, s.body, s.total_word, s.last_update, s.status, u.user_id, u.name, u.username FROM `stories` s  JOIN users u ON s.user_id = u.user_id WHERE s.status = 'off' ";
+        if ($access_time !== "") {
+            $query  .= " AND s.last_update < ?";
+        }
+        if ($title !== "") {
+            $title = '%' . $title . '%';
+            $query .= " AND (s.title LIKE ?) OR (u.name LIKE ?) ";
+        }
+        $query .= " ORDER BY s.last_update ASC LIMIT ? OFFSET ? ";
+        $query_get = $this->conn->prepare($query);
+        if ($title !== "" && $access_time !== "") $query_get->bind_param("sssii", $access_time, $title, $title, $limit, $offset);
+        else if ($title != "") $query_get->bind_param("ssii", $title, $title, $limit, $offset);
+        else $query_get->bind_param("ii", $limit, $offset);
+        $query_get->execute();
+        $res = $query_get->get_result();
+        $row  = $res->fetch_assoc();
+        if ($row > 0) {
+            do {
+                array_push(
+                    $arr_unpublish,
+                    (object) array(
+                        "story_id" => $row['story_id'],
+                        "title" => $row['title'],
+                        "body" => $row['body'],
+                        "total_word" => $row['total_word'],
+                        "last_update" => $row['last_update'],
+                        "status" => $row["status"],
+                        "author" => ["user_id" => $row['user_id'], "name" => $row['name'], "username" => $row['username'],],
+                        "categories" => [],
+                        "image_preview" => "null",
+                    )
+                );
+            } while ($row  = $res->fetch_assoc());
+        }
+        return (object) array("success" => (count($arr_unpublish) > 0), "stories" => $arr_unpublish,);
     }
 
 
-    public function getListPublishedStories($page = 0, $category_id = "", $title = "", $type = "")
+    public function getListPublishedStories($page = 0, $category_id = "", $title = "", $type = "", $access_time = "", $deleted_number = 0)
     {
         $story_title = $title;
         $arr_publish = array();
-        $limit = ($type !== "") ? 10 : 20; // admin : homepage
-        $offset = ($page * $limit);
-
+        $limit = ($type !== "") ? 20 : 20; // admin : homepage
+        $offset = ($page * $limit) - $deleted_number;
+        if ($access_time !== "") {
+            $access_time = $this->parseTime($access_time);
+        }
         $query = "SELECT s.story_id, s.title, s.body, s.total_word, s.last_update, sp.publish_date, s.status, sp.preview_image, u.user_id, u.name, u.username FROM `stories` s JOIN `stories_publish` sp ON s.story_id = sp.story_id JOIN users u ON s.user_id = u.user_id";
         if ($category_id !== "none" && $category_id !== "") {
             $query .= " JOIN stories_categories sc ON s.story_id = sc.story_id ";
@@ -349,7 +371,10 @@ class StoriesController
         $query .= " WHERE s.status = 'on' ";
 
         if ($category_id !== "none" && $category_id !== "") {
-            $query .= " AND sc.category_id = '$category_id' ";
+            $query .= " AND sc.category_id = ? ";
+        }
+        if ($access_time !== "") {
+            $query .= " AND s.last_update < ? ";
         }
         if ($title !== "") {
             $title = '%' . $title . '%';
@@ -357,11 +382,29 @@ class StoriesController
         }
 
         $query .= " ORDER BY sp.publish_date ";
+
         if ($type !== "") $query .= " ASC ";
         else $query .= " DESC ";
-        $query .= " LIMIT $limit OFFSET $offset";
+
+        $query .= " LIMIT ? OFFSET ? ";
         $query_get = $this->conn->prepare($query);
-        if ($title != "") $query_get->bind_param("ss", $title, $title);
+
+        if ($category_id !== "none" && $category_id !== "" && $title !== "" && $access_time !== "") $query_get->bind_param("ssssii", $category_id, $access_time, $title, $title, $limit, $offset);
+
+        else if ($access_time !== "" && $category_id !== "" && $category_id !== "none") $query_get->bind_param("ssii", $category_id, $access_time, $limit, $offset);
+
+        else if ($access_time !== "" && $title !== "") $query_get->bind_param("sssii", $access_time, $title, $title, $limit, $offset);
+
+        else if ($title !== "" && $category_id !== "" && $category_id !== "none") $query_get->bind_param("sssii", $category_id, $title, $title, $limit, $offset);
+
+        else if ($access_time !== "") $query_get->bind_param("sii", $access_time, $limit, $offset);
+
+        else if ($category_id !== "" && $category_id !== "none")  $query_get->bind_param("sii", $category_id, $limit, $offset);
+
+        else if ($title !== "") $query_get->bind_param("ssii", $title, $title, $limit, $offset);
+
+        else $query_get->bind_param("ii", $limit, $offset);
+
         $query_get->execute();
         $res = $query_get->get_result();
         $row  = $res->fetch_assoc();
@@ -635,7 +678,7 @@ class StoriesController
         }
     }
 
-    public function getMoreComment($page = 0, $search = "", $access_time)
+    public function getMoreComment($page = 0, $search = "", $access_time, $deleted_number = 0)
     {
         // if ($access_time !== "") {
         try {
@@ -647,19 +690,19 @@ class StoriesController
 
         // }
 
-        $arr_Comment = $this->getStoryRelatedComment($page, $search, $access_time);
-        if (count($arr_Comment) > 0) {
-            return (object) array("success" => true, "comments" => $arr_Comment, "story_id" => $this->story_id, "keyword" => $search);
+        $arr_comment = $this->getStoryRelatedComment($page, $search, $access_time, $deleted_number);
+        if (count($arr_comment) > 0) {
+            return (object) array("success" => true, "comments" => $arr_comment, "story_id" => $this->story_id, "keyword" => $search);
         } else {
-            return (object) array("success" => false, "comments" => $arr_Comment, "error" => mysqli_error($this->conn), "story_id" => $this->story_id, "keyword" => $search);
+            return (object) array("success" => false, "comments" => $arr_comment, "error" => mysqli_error($this->conn), "story_id" => $this->story_id, "keyword" => $search);
         }
     }
 
-    public function getStoryRelatedComment($page = 0, $search = "", $access_time = "")
+    public function getStoryRelatedComment($page = 0, $search = "", $access_time = "", $deleted_number = 0)
     {
         $arr_comment = array();
         $limit = 10;
-        $offset = ($page * $limit);
+        $offset = ($page * $limit) - $deleted_number;
 
 
         if ($this->story_id !== "none") {
@@ -716,5 +759,12 @@ class StoriesController
             $total_comment = (int) $row['comment_count'];
         }
         return $total_comment;
+    }
+
+    function parseTime($access_time)
+    {
+        $dt = DateTime::createFromFormat("D M d Y H:i:s e+", $access_time);
+        $access_time = $dt->format("Y-m-d H:i:s");
+        return $access_time;
     }
 }

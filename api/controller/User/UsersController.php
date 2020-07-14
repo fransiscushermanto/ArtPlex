@@ -47,19 +47,33 @@ class UsersController
     }
 
 
-    public function getListUser($page = 0, $name = "")
+    public function getListUser($page = 0, $name = "", $access_time = "", $deleted_number = 0)
     {
+        if ($access_time !== "") {
+            try {
+                $dt = DateTime::createFromFormat("D M d Y H:i:s e+", $access_time);
+                $access_time = $dt->format("Y-m-d H:i:s");
+            } catch (Exception $eh) {
+                return (object) array("success" => false, "comments" => [], "error" => "Failed to parse time", "page" => $page, "access_time" => $access_time);
+            }
+        }
         $arr_user = array();
         $limit = 10;
-        $offset = ($page * $limit);
+        $offset = ($page * $limit) - $deleted_number;
         $query = "SELECT * FROM `users` ";
+        if ($access_time !== "") {
+            $query .= " WHERE created_at < ? ";
+        }
         if ($name != "") {
             $name = '%' . $name . '%';
-            $query .= " WHERE `name` LIKE ? ";
+            if ($access_time !== "") $query .= " AND `name` LIKE ? ";
+            else     $query .= " WHERE `name` LIKE ? ";
         }
         $query .= " LIMIT $limit OFFSET $offset;";
         $query_get_list = $this->conn->prepare($query);
-        if ($name != "") $query_get_list->bind_param("s", $name);
+        if ($name !== "" && $access_time !== "") $query_get_list->bind_param("ss", $access_time, $name);
+        else if ($name !== "") $query_get_list->bind_param("s", $name);
+        else if ($access_time !== "") $query_get_list->bind_param("s", $access_time);
         $query_get_list->execute();
         $res = $query_get_list->get_result();
         $row = $res->fetch_assoc();
@@ -85,7 +99,7 @@ class UsersController
         if (count($arr_user) > 0) {
             return (object) array("success" => true, "users" => $arr_user);
         } else {
-            return (object) array("success" => false, "users" => $arr_user, "error" => mysqli_error($this->conn));
+            return (object) array("success" => false, "users" => $arr_user, "error" => mysqli_error($this->conn), "access_time" => $access_time);
         }
     }
 
@@ -163,7 +177,7 @@ class UsersController
         );
     }
 
-    public function editUser()
+    public function updateUser()
     {
         date_default_timezone_set('Asia/Bangkok');
         $date = new DateTime();

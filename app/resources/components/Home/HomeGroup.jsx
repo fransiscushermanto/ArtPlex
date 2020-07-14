@@ -175,7 +175,10 @@ const HomeGroup = ({ user }) => {
               <CircularProgress size="40px" color="inherit" />
             </div>
           ) : (
-            <div className="list-story-wrapper">
+            <div
+              className="list-story-wrapper"
+              style={{ marginBottom: "70px" }}
+            >
               <div className="list-story">
                 {stories ? (
                   stories.length > 0 ? (

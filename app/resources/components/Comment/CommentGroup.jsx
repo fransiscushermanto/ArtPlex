@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import Avatar from "react-avatar";
 import axios from "axios";
+import { MoreVert } from "@material-ui/icons";
 
 import Comment from "./Comment";
 import { escapeHtml } from "../Function/Factories";
@@ -15,7 +16,7 @@ const CommentGroup = ({
 }) => {
   const [bodyComment, setBodyComment] = useState("");
   const [allowSubmit, setAllowSubmit] = useState(false);
-  const [showLabel, setShowLabel] = useState(true);
+  const [showCommentMenu, setShowCommentMenu] = useState(true);
 
   const handleChange = (e) => {
     setBodyComment(e);
@@ -35,21 +36,6 @@ const CommentGroup = ({
       setStoryInfo({ ...storyInfo, comments: temp });
     }
   };
-
-  useEffect(() => {
-    if (escapeHtml(bodyComment).length > 0) {
-      if (escapeHtml(bodyComment) === "\n") {
-        setShowLabel(true);
-        setAllowSubmit(false);
-      } else {
-        setShowLabel(false);
-        setAllowSubmit(true);
-      }
-    } else {
-      setAllowSubmit(false);
-      setShowLabel(true);
-    }
-  }, [bodyComment]);
 
   return (
     <div className="comment-editor-wrapper">
@@ -92,15 +78,47 @@ const CommentGroup = ({
         {comments.length > 0 ? (
           comments.map((comment) => {
             return (
-              <Comment
-                key={comment.comment_id}
-                comment_body={comment.comment_body}
-                comment_id={comment.comment_id}
-                comment_publish_time={comment.publish_date}
-                commenter={comment.comment_name}
-                comment_status={comment.status}
-                comment_user_id={comment.user_id}
-              />
+              <div
+                className="inner-comment-list-wrapper"
+                style={{ position: "relative" }}
+              >
+                <div
+                  className="action-btn"
+                  style={{
+                    position: "absolute",
+                    right: "0",
+                    lineHeight: "1%",
+                    zIndex: "1000",
+                  }}
+                >
+                  <MoreVert
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setShowCommentMenu(!showCommentMenu)}
+                  />
+                  <div
+                    className="dropdown"
+                    //  ref={dropdownRef}
+                  >
+                    <div className="dropdown-wrapper">
+                      <ul>
+                        <li>HEHE</li>
+                        <li>DELETE</li>
+                      </ul>
+                    </div>
+                    <div className="s gz hz hb ia hc hd he hf ht ib ic pinpoint"></div>
+                  </div>
+                </div>
+                <Comment
+                  key={comment.comment_id}
+                  comment_body={comment.comment_body}
+                  comment_id={comment.comment_id}
+                  comment_publish_time={comment.publish_date}
+                  commenter={comment.comment_name}
+                  comment_status={comment.status}
+                  comment_user_id={comment.user_id}
+                  style={{ cursor: "none", pointerEvents: "none" }}
+                />
+              </div>
             );
           })
         ) : (

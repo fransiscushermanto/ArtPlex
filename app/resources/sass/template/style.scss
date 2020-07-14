@@ -94,6 +94,10 @@ h5,
   color: $primary !important;
 }
 
+#ftco-navbar {
+  z-index: 3000;
+}
+
 .ftco-navbar-light {
   position: absolute;
   top: 20px;
