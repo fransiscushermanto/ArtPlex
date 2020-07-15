@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { Close } from "@material-ui/icons";
 import { Snackbar, IconButton } from "@material-ui/core";
 import { Alert as MuiAlert } from "@material-ui/lab";
@@ -12,7 +13,7 @@ const AdminGroup = ({ user, type }) => {
     severity: "",
     message: "",
   });
-
+  const history = useHistory();
   const handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -29,6 +30,7 @@ const AdminGroup = ({ user, type }) => {
       document.getElementById("ftco-navbar").style.display = "none";
     }
   }, []);
+
   return (
     <div className="admin-wrapper">
       <div className="row">

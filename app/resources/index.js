@@ -13,7 +13,7 @@ import App from "./components/App";
 import NotFound from "./components/NotFound";
 import AuthPage from "./components/HOC/AuthPage";
 import ContentPage from "./components/HOC/ContentPage";
-import AdminPage from "./components/HOC/AuthAdminPage";
+import AuthAdminPage from "./components/HOC/AuthAdminPage";
 import Login from "./components/Auth/Login";
 import ForgetPasswordGroup from "./components/Auth/ForgetPassword/ForgetPasswordGroup";
 import RegisterGroup from "./components/Auth/Register/RegisterGroup.jsx";
@@ -42,7 +42,7 @@ if (document.getElementById("app")) {
             <Route path="/@:email" component={ContentPage(StoryPublishGroup)} />
             <Route exact path="/login" component={AuthPage(Login)} />
             <Route exact path="/register" component={AuthPage(RegisterGroup)} />
-            <Route path="/admin" component={AdminPage(AdminGroup)} />
+            <Route path="/admin" component={AuthAdminPage(AdminGroup)} />
             <Route
               exact
               path="/forget"

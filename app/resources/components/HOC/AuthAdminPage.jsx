@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import axios from "axios";
 import myApp from "myApp";
 export default (OriginalComponent) => {
   const MixedComponent = () => {
@@ -8,21 +7,30 @@ export default (OriginalComponent) => {
     const location = useLocation();
     const { user } = myApp;
     let arrLocation = location.pathname.split("/");
+    console.log(user);
     useEffect(() => {
       if (user === null) {
-        history.push("/");
-        window.location.reload();
-      } else if (user.level !== "admin") {
+        console.log(history);
         history.push("/");
         window.location.reload();
       } else {
-        if (arrLocation[2] === undefined) {
-          history.push("/admin/users");
+        if (user.level !== "admin") {
+          history.push("/");
           window.location.reload();
+        } else {
+          if (arrLocation[2] === undefined) {
+            history.push("/admin/users");
+            window.location.reload();
+          }
         }
       }
     }, []);
-    return <OriginalComponent user={user} type={arrLocation[2]} />;
+    if (user !== null) {
+      return <OriginalComponent user={user} type={arrLocation[2]} />;
+    } else {
+      history.push("/");
+      window.location.reload();
+    }
   };
 
   return MixedComponent;

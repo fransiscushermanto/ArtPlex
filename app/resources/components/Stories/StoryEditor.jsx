@@ -330,7 +330,11 @@ const StoryEditor = ({ user }) => {
           loaded_categories={categories}
         />
       ) : null}
-      <div id="new-story" className="container new-story-wrapper height-100">
+      <div
+        id="new-story"
+        style={{ marginBottom: "100px" }}
+        className="container new-story-wrapper height-100"
+      >
         <Prompt
           when={bodyChange.length() > 0 || titleChange.length() > 0}
           message={"There are unsaved changes. Are you sure you want to leave?"}

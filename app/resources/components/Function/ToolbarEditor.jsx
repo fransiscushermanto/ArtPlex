@@ -274,7 +274,7 @@ const ToolBarEditor = ({ quillRef }) => {
               </svg>
             </span>
           </button>
-          <button id="video-button" onClick={videoText}>
+          {/* <button id="video-button" onClick={videoText}>
             <span className="svgIcon svgIcon--addMediaVideo svgIcon--25px">
               <svg className="svgIcon-use" width="25" height="25">
                 <path
@@ -283,7 +283,7 @@ const ToolBarEditor = ({ quillRef }) => {
                 ></path>
               </svg>
             </span>
-          </button>
+          </button> */}
           <button id="divider-button" onClick={dividerText}>
             <span className="svgIcon svgIcon--addMediaPart svgIcon--25px">
               <svg className="svgIcon-use" width="25" height="25">
