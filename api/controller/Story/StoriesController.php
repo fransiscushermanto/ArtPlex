@@ -230,7 +230,7 @@ class StoriesController
     public function getListAllStories($page = 0, $category_id = "", $title = "", $access_time = "", $deleted_number = 0)
     {
         $arr_story = array();
-        $limit = 20;
+        $limit = 10;
         $offset = ($page * $limit) - $deleted_number;
         $where_state = false;
         if ($access_time !== "") {
@@ -310,7 +310,7 @@ class StoriesController
     public function getListUnpublishedStories($page = 0, $title = "", $access_time = "", $deleted_number = 0)
     {
         $arr_unpublish = array();
-        $limit = 20;
+        $limit = 10;
         $offset = ($page * $limit);
         $access_time = "";
         if ($access_time !== "") {
@@ -358,7 +358,7 @@ class StoriesController
     {
         $story_title = $title;
         $arr_publish = array();
-        $limit = ($type !== "") ? 20 : 20; // admin : homepage
+        $limit = ($type !== "") ? 10 : 20; // admin : homepage
         $offset = ($page * $limit) - $deleted_number;
         if ($access_time !== "") {
             $access_time = $this->parseTime($access_time);

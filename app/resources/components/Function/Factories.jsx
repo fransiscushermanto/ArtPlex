@@ -430,7 +430,7 @@ export const CategoryDetail = ({
     if (ele.offsetHeight + Math.ceil(ele.scrollTop) < ele.scrollHeight) {
       return;
     }
-    const limit = 5;
+    const limit = 6;
     if (stories.length >= limit && stories) {
       const currentpage = Math.round(stories.length / limit);
       if (hasMore) {

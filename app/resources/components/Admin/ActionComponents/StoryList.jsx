@@ -110,7 +110,7 @@ const StoryList = ({
     if (ele.offsetHeight + Math.ceil(ele.scrollTop) !== ele.scrollHeight) {
       return;
     }
-    const limit = 4;
+    const limit = 10;
     if (storyLength.current >= limit && listStoryData) {
       const currentpage = Math.round(storyLength.current / limit);
       if (hasMore) {
