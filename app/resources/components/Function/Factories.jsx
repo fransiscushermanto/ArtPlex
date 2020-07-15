@@ -143,25 +143,25 @@ export const CommentDetail = ({
 );
 
 export const CategoryCard = ({
-  totalStory,
-  totalUsedStory,
-  tag,
-  editState,
-  deleteState,
   addState,
+  category,
+  deleteState,
+  editState,
   openEditPane,
   openDeletePane,
   onCancelAddCard,
-  category,
   saveEdit,
   saveDelete,
   saveNewCard,
+  setTempCategoryData,
+  tag,
+  totalStory,
+  totalUsedStory,
   tempSaveNewCard,
-  searchCategories,
 }) => {
   const [number, setNumber] = useState(0);
   const [tagName, setTagName] = useState("");
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm();
   let timer;
   const counter = (start, end, duration) => {
     let current = Math.floor(start),
@@ -219,30 +219,44 @@ export const CategoryCard = ({
             <div className="title">
               <span>Insert Tag</span>
             </div>
-            <input
-              type="text"
-              className="form-control add-category"
-              value={tagName}
-              name="tag"
-              ref={register({ required: true })}
-              autoFocus
-              onChange={(e) => {
-                onChange(e.target.value);
-                tempSaveNewCard(category, e.target.value);
-              }}
-            />
-            <div className="action-btn d-flex justify-content-end align-items-center">
-              <Clear
-                style={{ color: red[500], cursor: "pointer" }}
-                onClick={() => onCancelAddCard(category)}
-              />
-              <Check
-                style={{ color: green[500], cursor: "pointer" }}
-                onClick={() => {
-                  handleSubmit(saveNewCard(category));
+            <form onSubmit={handleSubmit(saveNewCard)}>
+              <input
+                type="text"
+                className="form-control add-category"
+                // value={tagName}
+                name="tag"
+                ref={register({ required: true })}
+                autoFocus
+                onChange={(e) => {
+                  // onChange(e.target.value);
+                  tempSaveNewCard(category, e.target.value);
                 }}
               />
-            </div>
+              {errors.tag && (
+                <p
+                  style={{
+                    color: "red",
+                    fontSize: "10px",
+                    textAlign: "center",
+                  }}
+                >
+                  This field is required
+                </p>
+              )}
+              <div className="action-btn d-flex justify-content-end align-items-center">
+                <Clear
+                  style={{ color: red[500], cursor: "pointer" }}
+                  onClick={() => onCancelAddCard(category)}
+                />
+                <button
+                  type="submit"
+                  style={{ border: "none", background: "transparent" }}
+                  onClick={() => setTempCategoryData(category)}
+                >
+                  <Check style={{ color: green[500], cursor: "pointer" }} />
+                </button>
+              </div>
+            </form>
           </>
         ) : (
           <>

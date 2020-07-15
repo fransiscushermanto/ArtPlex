@@ -130,7 +130,7 @@ class CategoriesController
         return (object) array("success" => (count($arr_category) > 0), "categories" => $arr_category);
     }
 
-    public function getListTag($page = 0, $deleted_number = 0, $arr_reject)
+    public function getListTag($page = 0, $deleted_number = 0, $arr_added)
     {
         $arr_category = array();
         $limit = 12;
@@ -143,19 +143,19 @@ class CategoriesController
             $query .= "  WHERE `tag` LIKE ? ";
             $whereState = true;
         }
-        if (count($arr_reject) > 0) {
+        // if (count($arr_added) > 0) {
 
-            foreach ($arr_reject as $key) {
-                if (!$whereState) {
-                    $query .= " WHERE ";
-                    $query .= " category_id <> '$key' ";
-                    $whereState = true;
-                } else {
-                    $query .= " AND ";
-                    $query .= " category_id <> '$key' ";
-                }
-            }
-        }
+        //     foreach ($arr_added as $key) {
+        //         if (!$whereState) {
+        //             $query .= " WHERE ";
+        //             $query .= " category_id <> '$key' ";
+        //             $whereState = true;
+        //         } else {
+        //             $query .= " AND ";
+        //             $query .= " category_id <> '$key' ";
+        //         }
+        //     }
+        // }
         $query .= " LIMIT ? OFFSET ? ";
         $query_search = $this->conn->prepare($query);
         if ($tag !== "") $query_search->bind_param("sii", $tag, $limit, $offset);
@@ -166,17 +166,19 @@ class CategoriesController
         $total_story = $this->countStory();
         if ($row > 0) {
             do {
-                array_push(
-                    $arr_category,
-                    (object) array(
-                        "category_id" => $row['category_id'],
-                        "tag" => $row['tag'],
-                        "total_used_story" => $this->getUsedCount($row['category_id']),
-                        "edit" => false,
-                        "delete" => false,
-                        "total_story" => $total_story,
-                    )
-                );
+                if (!(in_array($row['category_id'], $arr_added))) {
+                    array_push(
+                        $arr_category,
+                        (object) array(
+                            "category_id" => $row['category_id'],
+                            "tag" => $row['tag'],
+                            "total_used_story" => $this->getUsedCount($row['category_id']),
+                            "edit" => false,
+                            "delete" => false,
+                            "total_story" => $total_story,
+                        )
+                    );
+                }
             } while ($row = $res->fetch_assoc());
         }
 

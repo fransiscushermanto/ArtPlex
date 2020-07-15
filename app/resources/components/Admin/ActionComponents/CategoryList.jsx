@@ -17,6 +17,7 @@ const CategoryList = ({
   setListCategoryData,
 }) => {
   const [hasMore, setHasMore] = useState(true);
+  const [openDetailPane, setOpenDetailPane] = useState(false);
   const categoryLength = useRef(0);
   const deletedNumber = useRef(0);
   const arrayOfCategoryIdAdded = useRef([]);
@@ -66,7 +67,7 @@ const CategoryList = ({
           tempNewCategories.map((newCategory) => {
             tempCategories.push(newCategory);
           });
-          console.log(tempCategories);
+          // console.log(tempCategories);
           setListCategoryData({ categories: tempCategories });
         }
       }
@@ -180,13 +181,15 @@ const CategoryList = ({
     setListCategoryData({ categories: temp });
   };
 
-  const saveNewCard = async (target) => {
+  const saveNewCard = async (formData) => {
     const temp = [...listCategoryData];
-    const index = temp.indexOf(target);
+    const index = temp.indexOf(tempCategoryData);
     const data = new FormData();
-    data.append("tag", target.tag);
+    data.append("tag", formData.tag);
     const res = await axios.post("/api/actions/create_tag.php", data);
     if (res.data.success) {
+      document.getElementById("category-list-wrapper").style.marginBottom =
+        "0px";
       arrayOfCategoryIdAdded.current.push(res.data.categories.category_id);
       temp[index] = res.data.categories;
       setListCategoryData({ categories: temp });
@@ -255,46 +258,48 @@ const CategoryList = ({
   }, [searchCategories]);
 
   return (
-    <div className="inner-action-pane category-pane" id="tabular-scroll">
-      <div className="floating-btn" onClick={() => onAddCard()}>
-        <Add style={{ color: grey[50] }} />
-        <span>Add Tag</span>
-      </div>
-      <div className="category-list width-100">
-        <div className="category-list-wrapper" id="category-list-wrapper">
-          {listCategoryData
-            ? listCategoryData.length > 0
-              ? listCategoryData.map((category, index) => {
-                  return (
-                    // console.log(category),
-                    <CategoryCard
-                      key={index}
-                      tag={category.tag}
-                      totalStory={category.total_story}
-                      totalUsedStory={category.total_used_story}
-                      category={category}
-                      editState={category.edit}
-                      deleteState={category.delete}
-                      addState={category.add}
-                      openEditPane={openEditPane}
-                      openDeletePane={openDeletePane}
-                      onCancelAddCard={onCancelAddCard}
-                      tempCategoryData={category}
-                      tempSaveNewCard={tempSaveNewCard}
-                      setTempCategoryData={setTempCategoryData}
-                      saveEdit={saveEdit}
-                      saveDelete={saveDelete}
-                      saveNewCard={saveNewCard}
-                      searchCategories={searchCategories}
-                    />
-                  );
-                })
-              : null
-            : null}
-          <AddCategoryCard onAddCard={onAddCard} />
+    <>
+      <div className="inner-action-pane category-pane" id="tabular-scroll">
+        <div className="floating-btn" onClick={() => onAddCard()}>
+          <Add style={{ color: grey[50] }} />
+          <span>Add Tag</span>
+        </div>
+        <div className="category-list width-100">
+          <div className="category-list-wrapper" id="category-list-wrapper">
+            {listCategoryData
+              ? listCategoryData.length > 0
+                ? listCategoryData.map((category, index) => {
+                    return (
+                      // console.log(category),
+                      <CategoryCard
+                        key={index}
+                        tag={category.tag}
+                        totalStory={category.total_story}
+                        totalUsedStory={category.total_used_story}
+                        category={category}
+                        editState={category.edit}
+                        deleteState={category.delete}
+                        addState={category.add}
+                        openEditPane={openEditPane}
+                        openDeletePane={openDeletePane}
+                        onCancelAddCard={onCancelAddCard}
+                        tempCategoryData={tempCategoryData}
+                        tempSaveNewCard={tempSaveNewCard}
+                        setTempCategoryData={setTempCategoryData}
+                        saveEdit={saveEdit}
+                        saveDelete={saveDelete}
+                        saveNewCard={saveNewCard}
+                        searchCategories={searchCategories}
+                      />
+                    );
+                  })
+                : null
+              : null}
+            <AddCategoryCard onAddCard={onAddCard} />
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
