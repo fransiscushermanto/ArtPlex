@@ -188,8 +188,6 @@ const CategoryList = ({
     data.append("tag", formData.tag);
     const res = await axios.post("/api/actions/create_tag.php", data);
     if (res.data.success) {
-      document.getElementById("category-list-wrapper").style.marginBottom =
-        "0px";
       arrayOfCategoryIdAdded.current.push(res.data.categories.category_id);
       temp[index] = res.data.categories;
       setListCategoryData({ categories: temp });
@@ -259,6 +257,7 @@ const CategoryList = ({
 
   return (
     <>
+      <div className="detail-categories-pane"></div>
       <div className="inner-action-pane category-pane" id="tabular-scroll">
         <div className="floating-btn" onClick={() => onAddCard()}>
           <Add style={{ color: grey[50] }} />
