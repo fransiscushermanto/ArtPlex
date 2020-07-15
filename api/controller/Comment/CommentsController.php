@@ -58,12 +58,12 @@ class CommentsController
         }
     }
 
-    public function editComment()
+    public function updateComment()
     {
         date_default_timezone_set('Asia/Bangkok');
         $date = new DateTime();
         $current_date = $date->format('Y-m-d H:i:s');
-        $query_edit = $this->conn->prepare("UPDATE `comments` UPDATE `comments` SET `body`= ?, `last_updated`= ? WHERE `comment_id` = ?;");
+        $query_edit = $this->conn->prepare("UPDATE `comments` SET `body`= ?, `last_updated`= ? WHERE `comment_id` = ?;");
         $query_edit->bind_param("sss", $this->body, $current_date, $this->comment_id);
         if ($query_edit->execute()) {
             return (object) array(
@@ -155,10 +155,7 @@ class CommentsController
                 ));
             } while ($row = $res->fetch_assoc());
         }
-        if (count($arr_Comment > 0)) {
-            return (object) array("success" => true, "comments" => $arr_Comment);
-        } else {
-            return (object) array("success" => false, "comments" => $arr_Comment);
-        }
+
+        return (object) array("success" => (count($arr_Comment > 0)), "comments" => $arr_Comment);
     }
 }

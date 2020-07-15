@@ -22,10 +22,6 @@ const ActionGroup = ({ user, setStatusAction, statusAction }) => {
   });
 
   useEffect(() => {
-    console.log(tempData);
-  }, [tempData]);
-
-  useEffect(() => {
     setListData({ users: [], stories: [], comments: [], categories: [] });
   }, [type]);
 

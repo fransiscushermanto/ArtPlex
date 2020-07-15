@@ -150,6 +150,8 @@ export const CategoryCard = ({
   openEditPane,
   openDeletePane,
   onCancelAddCard,
+  openDetailPane,
+  setOpenDetailPane,
   saveEdit,
   saveDelete,
   saveNewCard,
@@ -228,7 +230,6 @@ export const CategoryCard = ({
                 ref={register({ required: true })}
                 autoFocus
                 onChange={(e) => {
-                  // onChange(e.target.value);
                   tempSaveNewCard(category, e.target.value);
                 }}
               />
@@ -312,7 +313,13 @@ export const CategoryCard = ({
               >
                 <Delete style={{ fontSize: "15px" }} />
               </span>
-              <span className="see-detail d-flex flex-row align-items-center ml-auto">
+              <span
+                onClick={() => {
+                  setOpenDetailPane(!openDetailPane);
+                  setTempCategoryData(category);
+                }}
+                className="see-detail d-flex flex-row align-items-center ml-auto"
+              >
                 <span style={{ fontSize: "10px" }}>See Details</span>{" "}
                 <ArrowRightAlt style={{ fontSize: "15px" }} />
               </span>
@@ -369,6 +376,145 @@ export const AddCategoryCard = ({ onAddCard }) => {
           onClick={onAddCard}
           style={{ fontSize: "30px", cursor: "pointer" }}
         />
+      </div>
+    </div>
+  );
+};
+
+export const CategoryDetail = ({
+  category,
+  setOpenDetailPane,
+  loadCategoryStoryList,
+  loadMoreCategoryStoryList,
+  stories,
+  setStories,
+}) => {
+  const { category_id, tag, total_story, total_used_story } = category;
+  const [number, setNumber] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  let no = 0;
+  let timer;
+  const counter = (start, end, duration) => {
+    let current = Math.floor(start),
+      range = end - start,
+      increment = end > start ? 1 : 0,
+      step = Math.abs(Math.floor(duration / range));
+
+    timer = setInterval(() => {
+      current += increment;
+      if (current == Math.floor(end)) {
+        clearInterval(timer);
+      }
+      setNumber(current);
+    }, step);
+  };
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    let mount = true;
+    if (mount) {
+      clearInterval(timer);
+      if (category_id !== null) {
+        counter(0, calculateUsedTags(total_used_story, total_story), 10);
+      }
+      loadCategoryStoryList(category_id);
+    }
+    return () => {
+      abortController.abort();
+      mount = false;
+    };
+  }, [category]);
+
+  async function handleScroll() {
+    const ele = document.getElementById("listStory-scroll");
+    if (ele.offsetHeight + Math.ceil(ele.scrollTop) < ele.scrollHeight) {
+      return;
+    }
+    const limit = 5;
+    if (stories.length >= limit && stories) {
+      const currentpage = Math.round(stories.length / limit);
+      if (hasMore) {
+        const res = await loadMoreCategoryStoryList(category_id, currentpage);
+        if (res.data.success) {
+          if (res.data.stories.length < limit) {
+            setHasMore(false);
+          } else {
+            setHasMore(true);
+          }
+          let tempStories = [...stories];
+          res.data.stories.map((story) => {
+            tempStories.push(story);
+          });
+          setStories(tempStories);
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    const ele = document.getElementById("listStory-scroll");
+    ele.addEventListener("scroll", handleScroll);
+    return () => ele.removeEventListener("scroll", handleScroll);
+  }, [stories, hasMore]);
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    if (calculateUsedTags(total_story, total_used_story) < number) {
+      counter(0, calculateUsedTags(total_story, total_used_story), 10);
+    }
+    return () => abortController.abort();
+  }, [number]);
+  return (
+    <div className="detail-category-pane">
+      <div className="inner-detail-category-pane">
+        <span
+          style={{
+            position: "absolute",
+            top: "3%",
+            right: "5%",
+            cursor: "pointer",
+          }}
+          onClick={() => setOpenDetailPane(false)}
+        >
+          <Clear />
+        </span>
+        <div className="id">#{category_id}</div>
+        <div className="title">{tag}</div>
+        <div className="used-num">
+          <span>Used : </span> {total_used_story} / {total_story}
+        </div>
+        <ProgressBar animated now={number} label={`${number}%`} />
+        <div
+          className="listStory"
+          id="listStory-scroll"
+          style={{ height: "1000px" }}
+        >
+          <table className="table">
+            <thead>
+              <tr>
+                <th>No.</th>
+                <th>Title</th>
+                <th>By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {stories.map((story, index) => {
+                {
+                  no++;
+                }
+                return (
+                  <tr key={index}>
+                    <td>{no}</td>
+                    <td className="title-story" title={story.title}>
+                      {story.title}
+                    </td>
+                    <td title={story.name}>{story.name}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

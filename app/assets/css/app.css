@@ -8921,31 +8921,34 @@ textarea.form-control {
     .story-public .col:nth-child(1) .title {
       margin-top: 31px;
       padding-bottom: 0px; }
-      .story-public .col:nth-child(1) .title .ql-editor {
-        font-size: 42px;
-        font-weight: 500;
-        font-family: Garamond, Georgia, serif;
-        padding-bottom: 0px;
-        color: black; }
-        .story-public .col:nth-child(1) .title .ql-editor::before {
-          font-style: normal !important;
-          font-weight: 500; }
-        .story-public .col:nth-child(1) .title .ql-editor h1,
-        .story-public .col:nth-child(1) .title .ql-editor h2,
-        .story-public .col:nth-child(1) .title .ql-editor p {
-          font-weight: 600; }
-        .story-public .col:nth-child(1) .title .ql-editor > h1 {
-          font-size: 36px !important; }
-        .story-public .col:nth-child(1) .title .ql-editor > h2 {
-          font-size: 30px !important; }
-        .story-public .col:nth-child(1) .title .ql-editor .divider {
-          border: none;
-          color: #111;
-          letter-spacing: 1em;
-          text-align: center;
-          font-size: 16px !important; }
-          .story-public .col:nth-child(1) .title .ql-editor .divider::before {
-            content: "..."; }
+      .story-public .col:nth-child(1) .title .ql-container {
+        width: 100%; }
+        .story-public .col:nth-child(1) .title .ql-container .ql-editor {
+          width: 100%;
+          font-size: 42px;
+          font-weight: 500;
+          font-family: Garamond, Georgia, serif;
+          padding-bottom: 0px;
+          color: black; }
+          .story-public .col:nth-child(1) .title .ql-container .ql-editor::before {
+            font-style: normal !important;
+            font-weight: 500; }
+          .story-public .col:nth-child(1) .title .ql-container .ql-editor h1,
+          .story-public .col:nth-child(1) .title .ql-container .ql-editor h2,
+          .story-public .col:nth-child(1) .title .ql-container .ql-editor p {
+            font-weight: 600; }
+          .story-public .col:nth-child(1) .title .ql-container .ql-editor > h1 {
+            font-size: 36px !important; }
+          .story-public .col:nth-child(1) .title .ql-container .ql-editor > h2 {
+            font-size: 30px !important; }
+          .story-public .col:nth-child(1) .title .ql-container .ql-editor .divider {
+            border: none;
+            color: #111;
+            letter-spacing: 1em;
+            text-align: center;
+            font-size: 16px !important; }
+            .story-public .col:nth-child(1) .title .ql-container .ql-editor .divider::before {
+              content: "..."; }
     .story-public .col:nth-child(1) .title,
     .story-public .col:nth-child(1) .body {
       font-family: Garamond, Georgia, serif; }
@@ -8977,32 +8980,35 @@ textarea.form-control {
         font-weight: 400; }
     .story-public .col:nth-child(1) .body {
       margin-top: 42px; }
-      .story-public .col:nth-child(1) .body .ql-editor {
-        font-size: 30px;
-        font-weight: 500;
-        font-family: Garamond, Georgia, serif;
-        color: black; }
-        .story-public .col:nth-child(1) .body .ql-editor p {
-          width: 100%; }
-        .story-public .col:nth-child(1) .body .ql-editor img {
+      .story-public .col:nth-child(1) .body .ql-container {
+        width: 100%; }
+        .story-public .col:nth-child(1) .body .ql-container .ql-editor {
           width: 100%;
-          height: 100%; }
-        .story-public .col:nth-child(1) .body .ql-editor pre.ql-syntax {
-          font-size: 20px; }
-        .story-public .col:nth-child(1) .body .ql-editor > h1 {
-          font-size: 36px !important; }
-        .story-public .col:nth-child(1) .body .ql-editor > h2 {
-          font-size: 30px !important; }
-        .story-public .col:nth-child(1) .body .ql-editor::before {
-          font-style: normal !important;
-          font-weight: 500; }
-        .story-public .col:nth-child(1) .body .ql-editor .divider {
-          border: none;
-          color: #111;
-          letter-spacing: 1em;
-          text-align: center; }
-          .story-public .col:nth-child(1) .body .ql-editor .divider::before {
-            content: "..."; }
+          font-size: 30px;
+          font-weight: 500;
+          font-family: Garamond, Georgia, serif;
+          color: black; }
+          .story-public .col:nth-child(1) .body .ql-container .ql-editor p {
+            width: 100%; }
+          .story-public .col:nth-child(1) .body .ql-container .ql-editor img {
+            width: 100%;
+            height: 100%; }
+          .story-public .col:nth-child(1) .body .ql-container .ql-editor pre.ql-syntax {
+            font-size: 20px; }
+          .story-public .col:nth-child(1) .body .ql-container .ql-editor > h1 {
+            font-size: 36px !important; }
+          .story-public .col:nth-child(1) .body .ql-container .ql-editor > h2 {
+            font-size: 30px !important; }
+          .story-public .col:nth-child(1) .body .ql-container .ql-editor::before {
+            font-style: normal !important;
+            font-weight: 500; }
+          .story-public .col:nth-child(1) .body .ql-container .ql-editor .divider {
+            border: none;
+            color: #111;
+            letter-spacing: 1em;
+            text-align: center; }
+            .story-public .col:nth-child(1) .body .ql-container .ql-editor .divider::before {
+              content: "..."; }
   .story-public .col:nth-child(2) {
     margin-top: 50px; }
     .story-public .col:nth-child(2) .written-by {
@@ -9023,7 +9029,8 @@ textarea.form-control {
     .story-public .col:nth-child(2) .comment {
       margin-top: 25px;
       padding-top: 32px;
-      border-top: 1px solid #e6e6e6; }
+      border-top: 1px solid #e6e6e6;
+      margin-bottom: 100px; }
       .story-public .col:nth-child(2) .comment .profile-avatar span {
         font-size: 25px; }
       .story-public .col:nth-child(2) .comment .comment-editor-wrapper .col {
@@ -9070,6 +9077,66 @@ textarea.form-control {
           padding: 50px 0px; }
           .story-public .col:nth-child(2) .comment .comment-list .no-comment p {
             text-align: center; }
+        .story-public .col:nth-child(2) .comment .comment-list .action-btn {
+          z-index: 500;
+          position: relative; }
+        .story-public .col:nth-child(2) .comment .comment-list .dropdown {
+          position: absolute;
+          will-change: transform;
+          z-index: 700;
+          top: 25px;
+          right: -30px;
+          box-shadow: #e6e6e6 0px 1px 4px;
+          border-width: 1px;
+          border-style: solid;
+          border-color: #e6e6e6;
+          -o-border-image: initial;
+             border-image: initial;
+          border-radius: 4px;
+          margin-top: 5px; }
+          .story-public .col:nth-child(2) .comment .comment-list .dropdown .dropdown-wrapper ul {
+            margin: 0;
+            padding: 8px 0px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            background-color: white; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .dropdown-wrapper ul li {
+              font-size: 14px;
+              padding: 8px 20px;
+              margin: 0;
+              list-style-type: none;
+              white-space: nowrap; }
+              .story-public .col:nth-child(2) .comment .comment-list .dropdown .dropdown-wrapper ul li .btn {
+                color: #757575 !important; }
+                .story-public .col:nth-child(2) .comment .comment-list .dropdown .dropdown-wrapper ul li .btn:hover {
+                  color: black !important; }
+          .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint {
+            z-index: 800; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint.ia {
+              clip: rect(0px, 18px, 14px, -4px); }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint.hz {
+              top: -14px; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint.hb {
+              left: 44%; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint.gz {
+              pointer-events: none; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint.s {
+              position: absolute; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint::after {
+              box-shadow: #757575 -1px -1px 1px -1px; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint::after {
+              transform: rotate(45deg) translate(6px, 6px); }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint::after {
+              background: white; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint::after {
+              height: 14px; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint::after {
+              width: 14px; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint::after {
+              display: block; }
+            .story-public .col:nth-child(2) .comment .comment-list .dropdown .pinpoint::after {
+              content: ""; }
         .story-public .col:nth-child(2) .comment .comment-list .comment-wrapper {
           margin: 15px 0px; }
           .story-public .col:nth-child(2) .comment .comment-list .comment-wrapper .col .wrapper-editable .head {
@@ -9765,6 +9832,74 @@ button:focus {
           padding: 20px 30px;
           overflow: hidden;
           max-height: 592px; }
+          .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(120, 130, 140, 0.13);
+            z-index: 3000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; }
+            .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane {
+              position: relative;
+              overflow: hidden;
+              border-radius: 30px;
+              width: 500px;
+              min-height: 300px;
+              max-height: 500px;
+              background: white;
+              padding: 20px 30px;
+              box-shadow: 1px 0px 20px rgba(0, 0, 0, 0.08); }
+              .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .title {
+                line-height: 40px;
+                font-size: 40px;
+                font-weight: bold;
+                color: black; }
+              .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .used-num {
+                margin: 5px 0px;
+                padding-left: 5px; }
+              .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory {
+                margin-top: 10px;
+                max-height: 355px;
+                overflow: auto; }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory::-webkit-scrollbar {
+                  width: 5px; }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory::-webkit-scrollbar-track {
+                  border-radius: 10px;
+                  padding: 10px 0px; }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory::-webkit-scrollbar-thumb {
+                  height: 5%;
+                  border-radius: 5px;
+                  background-color: rgba(0, 0, 0, 0.3); }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory .table thead {
+                  background-color: white; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory .table thead tr {
+                    position: -webkit-sticky;
+                    position: sticky;
+                    top: 0;
+                    background-color: white; }
+                    .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory .table thead tr th {
+                      position: -webkit-sticky;
+                      position: sticky;
+                      top: 0;
+                      text-align: center;
+                      background-color: white;
+                      white-space: nowrap !important;
+                      z-index: 100; }
+                .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory .table tbody tr > td {
+                  padding: 10px 15px;
+                  max-width: 20px;
+                  text-overflow: ellipsis;
+                  white-space: nowrap;
+                  overflow: hidden;
+                  text-align: center; }
+                  .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .detail-category-pane .inner-detail-category-pane .listStory .table tbody tr > td.title-story {
+                    max-width: 100px !important;
+                    font-size: inherit; }
           .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane {
             overflow: auto;
             display: flex;
@@ -9972,7 +10107,9 @@ button:focus {
             .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.category-pane {
               position: relative;
               width: 100%;
-              height: 100%; }
+              height: 100%;
+              display: flex;
+              flex-direction: column; }
               .admin-wrapper .row .action-pane > .action-pane-wrapper > .main-action-pane .inner-action-pane.category-pane .floating-btn {
                 position: fixed;
                 bottom: 11%;

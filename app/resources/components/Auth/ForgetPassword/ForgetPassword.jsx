@@ -107,7 +107,7 @@ const ForgetPassword = ({
                       className="text-danger font-weight-bold"
                     >
                       {auth}{" "}
-                      {verifiedStatus === "off" ? (
+                      {!verifiedStatus ? (
                         <span>
                           Click here to verify your email.{" "}
                           <span className="text-link" onClick={verifyEmail}>

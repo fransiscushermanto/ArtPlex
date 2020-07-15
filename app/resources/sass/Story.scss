@@ -410,37 +410,41 @@
     .title {
       margin-top: 31px;
       padding-bottom: 0px;
-      .ql-editor {
-        font-size: 42px;
-        font-weight: 500;
-        font-family: Garamond, Georgia, serif;
-        padding-bottom: 0px;
-        color: black;
-        &::before {
-          font-style: normal !important;
+      .ql-container {
+        width: 100%;
+        .ql-editor {
+          width: 100%;
+          font-size: 42px;
           font-weight: 500;
-        }
-
-        h1,
-        h2,
-        p {
-          font-weight: 600;
-        }
-
-        > h1 {
-          font-size: 36px !important;
-        }
-        > h2 {
-          font-size: 30px !important;
-        }
-        .divider {
-          border: none;
-          color: #111;
-          letter-spacing: 1em;
-          text-align: center;
-          font-size: 16px !important;
+          font-family: Garamond, Georgia, serif;
+          padding-bottom: 0px;
+          color: black;
           &::before {
-            content: "...";
+            font-style: normal !important;
+            font-weight: 500;
+          }
+
+          h1,
+          h2,
+          p {
+            font-weight: 600;
+          }
+
+          > h1 {
+            font-size: 36px !important;
+          }
+          > h2 {
+            font-size: 30px !important;
+          }
+          .divider {
+            border: none;
+            color: #111;
+            letter-spacing: 1em;
+            text-align: center;
+            font-size: 16px !important;
+            &::before {
+              content: "...";
+            }
           }
         }
       }
@@ -497,40 +501,44 @@
 
     .body {
       margin-top: 42px;
-      .ql-editor {
-        font-size: 30px;
-        font-weight: 500;
-        font-family: Garamond, Georgia, serif;
-        color: black;
-        p {
+      .ql-container {
+        width: 100%;
+        .ql-editor {
           width: 100%;
-        }
-        img {
-          width: 100%;
-          height: 100%;
-        }
-
-        pre.ql-syntax {
-          font-size: 20px;
-        }
-
-        > h1 {
-          font-size: 36px !important;
-        }
-        > h2 {
-          font-size: 30px !important;
-        }
-        &::before {
-          font-style: normal !important;
+          font-size: 30px;
           font-weight: 500;
-        }
-        .divider {
-          border: none;
-          color: #111;
-          letter-spacing: 1em;
-          text-align: center;
+          font-family: Garamond, Georgia, serif;
+          color: black;
+          p {
+            width: 100%;
+          }
+          img {
+            width: 100%;
+            height: 100%;
+          }
+
+          pre.ql-syntax {
+            font-size: 20px;
+          }
+
+          > h1 {
+            font-size: 36px !important;
+          }
+          > h2 {
+            font-size: 30px !important;
+          }
           &::before {
-            content: "...";
+            font-style: normal !important;
+            font-weight: 500;
+          }
+          .divider {
+            border: none;
+            color: #111;
+            letter-spacing: 1em;
+            text-align: center;
+            &::before {
+              content: "...";
+            }
           }
         }
       }
@@ -567,6 +575,7 @@
       margin-top: 25px;
       padding-top: 32px;
       border-top: 1px solid rgba(230, 230, 230, 1);
+      margin-bottom: 100px;
       .profile-avatar {
         span {
           font-size: 25px;
@@ -626,14 +635,97 @@
 
       .comment-list {
         margin-top: 30px;
+
         .no-comment {
           padding: 50px 0px;
           p {
             text-align: center;
           }
         }
+        .action-btn {
+          z-index: 500;
+          position: relative;
+        }
+        .dropdown {
+          position: absolute;
+          will-change: transform;
+
+          z-index: 700;
+          top: 25px;
+          right: -30px;
+          box-shadow: rgb(230, 230, 230) 0px 1px 4px;
+          border-width: 1px;
+          border-style: solid;
+          border-color: rgb(230, 230, 230);
+          border-image: initial;
+          border-radius: 4px;
+          margin-top: 5px;
+          .dropdown-wrapper {
+            ul {
+              margin: 0;
+              padding: 8px 0px;
+              display: flex;
+              flex-direction: column;
+              align-items: stretch;
+              background-color: white;
+              li {
+                font-size: 14px;
+                padding: 8px 20px;
+                margin: 0;
+                list-style-type: none;
+                white-space: nowrap;
+                .btn {
+                  color: rgba(117, 117, 117, 1) !important;
+                  &:hover {
+                    color: black !important;
+                  }
+                }
+              }
+            }
+          }
+          .pinpoint {
+            z-index: 800;
+            &.ia {
+              clip: rect(0px, 18px, 14px, -4px);
+            }
+            &.hz {
+              top: -14px;
+            }
+            &.hb {
+              left: 44%;
+            }
+            &.gz {
+              pointer-events: none;
+            }
+            &.s {
+              position: absolute;
+            }
+            &::after {
+              box-shadow: rgb(117, 117, 117) -1px -1px 1px -1px;
+            }
+            &::after {
+              transform: rotate(45deg) translate(6px, 6px);
+            }
+            &::after {
+              background: rgb(255, 255, 255);
+            }
+            &::after {
+              height: 14px;
+            }
+            &::after {
+              width: 14px;
+            }
+            &::after {
+              display: block;
+            }
+            &::after {
+              content: "";
+            }
+          }
+        }
         .comment-wrapper {
           margin: 15px 0px;
+
           .col {
             .wrapper-editable {
               .head {

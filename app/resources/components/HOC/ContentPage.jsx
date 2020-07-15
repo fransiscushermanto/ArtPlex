@@ -10,8 +10,31 @@ export default (OriginalComponent) => {
     const { user } = myApp;
     useEffect(() => {
       if (user === null) {
-        history.push("/");
-        window.location.reload();
+        if (arrLocation[1].split("@")[1] !== undefined) {
+          const data = new FormData();
+          data.append("username", arrLocation[1].split("@")[1]);
+          axios.post("/api/actions/check_username.php", data).then((res) => {
+            if (res.data.success) {
+              if (arrLocation[2] !== undefined) {
+                const data = new FormData();
+                data.append("author_id", res.data.author_id);
+                data.append("story_id", arrLocation[2]);
+                axios
+                  .post("/api/actions/check_story_public.php", data)
+                  .then((res) => {
+                    if (!res.data.success) {
+                      history.push("/404");
+                    }
+                  });
+              }
+            } else {
+              history.push("/404");
+            }
+          });
+        } else {
+          history.push("/");
+          window.location.reload();
+        }
       } else {
         if (arrLocation[1] === "p") {
           if (arrLocation[2] === undefined) {

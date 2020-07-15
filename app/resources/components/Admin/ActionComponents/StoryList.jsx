@@ -132,7 +132,7 @@ const StoryList = ({
           } else {
             setHasMore(true);
           }
-          storyLength.current += res.data.stories.legnth;
+          storyLength.current += res.data.stories.length;
           let tempStories = [...listStoryData];
           res.data.stories.map((story) => {
             tempStories.push(story);

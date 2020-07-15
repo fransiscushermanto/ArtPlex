@@ -3,7 +3,11 @@ import { Add } from "@material-ui/icons";
 import { grey } from "@material-ui/core/colors";
 import axios from "axios";
 
-import { CategoryCard, AddCategoryCard } from "../../Function/Factories";
+import {
+  CategoryCard,
+  AddCategoryCard,
+  CategoryDetail,
+} from "../../Function/Factories";
 const CategoryList = ({
   user,
   setStatusAction,
@@ -18,14 +22,15 @@ const CategoryList = ({
 }) => {
   const [hasMore, setHasMore] = useState(true);
   const [openDetailPane, setOpenDetailPane] = useState(false);
+  const [stories, setStories] = useState([]);
   const categoryLength = useRef(0);
   const deletedNumber = useRef(0);
   const arrayOfCategoryIdAdded = useRef([]);
+  const totalCategory = useRef(0);
 
   async function handleScroll() {
     const ele = document.getElementById("tabular-scroll");
-
-    if (ele.offsetHeight + Math.ceil(ele.scrollTop) !== ele.scrollHeight) {
+    if (ele.offsetHeight + Math.ceil(ele.scrollTop) < ele.scrollHeight) {
       return;
     }
     const limit = 12;
@@ -44,13 +49,12 @@ const CategoryList = ({
         data.append("deleted_number", deletedNumber.current);
         const res = await axios.post("/api/actions/get_list_tag.php", data);
         if (res.data.success) {
-          console.log(res.data);
           if (res.data.categories.length < limit) {
             setHasMore(false);
           } else {
             setHasMore(true);
           }
-          categoryLength.current += res.data.categories.legnth;
+          categoryLength.current += res.data.categories.length;
           let tempCategories = [
             ...listCategoryData.filter(
               (category) => category.category_id !== null
@@ -68,6 +72,11 @@ const CategoryList = ({
             tempCategories.push(newCategory);
           });
           // console.log(tempCategories);
+          tempNewCategories.length > 0
+            ? null
+            : (document.getElementById(
+                "category-list-wrapper"
+              ).style.marginBottom = "0px");
           setListCategoryData({ categories: tempCategories });
         }
       }
@@ -167,7 +176,12 @@ const CategoryList = ({
   };
 
   const onCancelAddCard = (target) => {
-    document.getElementById("category-list-wrapper").style.marginBottom = "0px";
+    listCategoryData.filter((category) => category.category_id === null)
+      .length > 1
+      ? null
+      : (document.getElementById("category-list-wrapper").style.marginBottom =
+          "0px");
+
     const temp = [...listCategoryData];
     const index = temp.indexOf(target);
     temp.splice(index, 1);
@@ -181,6 +195,25 @@ const CategoryList = ({
     setListCategoryData({ categories: temp });
   };
 
+  const loadCategoryStoryList = async (category_id, current_page = "") => {
+    const data = new FormData();
+
+    data.append("category_id", category_id);
+    const res = await axios.post("/api/actions/get_category_detail.php", data);
+    if (res.data.success) {
+      setStories(res.data.stories);
+    } else {
+      setStories([]);
+    }
+  };
+
+  const loadMoreCategoryStoryList = async (category_id, currentpage) => {
+    const data = new FormData();
+    data.append("page", currentpage);
+    data.append("category_id", category_id);
+    return await axios.post("/api/actions/get_category_detail.php", data);
+  };
+
   const saveNewCard = async (formData) => {
     const temp = [...listCategoryData];
     const index = temp.indexOf(tempCategoryData);
@@ -188,7 +221,13 @@ const CategoryList = ({
     data.append("tag", formData.tag);
     const res = await axios.post("/api/actions/create_tag.php", data);
     if (res.data.success) {
+      listCategoryData.filter((category) => category.category_id === null)
+        .length > 1
+        ? null
+        : (document.getElementById("category-list-wrapper").style.marginBottom =
+            "0px");
       arrayOfCategoryIdAdded.current.push(res.data.categories.category_id);
+      totalCategory.current += 1;
       temp[index] = res.data.categories;
       setListCategoryData({ categories: temp });
       setStatusAction({
@@ -212,6 +251,7 @@ const CategoryList = ({
       .get("/api/actions/get_list_tag.php")
       .then((res) => {
         categoryLength.current = res.data.categories.length;
+        totalCategory.current = res.data.total_category;
         setListCategoryData({ categories: res.data.categories });
       })
       .catch((err) => console.log(err));
@@ -226,6 +266,7 @@ const CategoryList = ({
         .get("/api/actions/get_list_tag.php")
         .then((res) => {
           categoryLength.current = res.data.categories.length;
+          totalCategory.current = res.data.total_category;
           arrayOfCategoryIdAdded.current = [];
           setListCategoryData({ categories: res.data.categories });
           setReload(false);
@@ -257,8 +298,38 @@ const CategoryList = ({
 
   return (
     <>
-      <div className="detail-categories-pane"></div>
+      {openDetailPane ? (
+        <CategoryDetail
+          setOpenDetailPane={setOpenDetailPane}
+          category={tempCategoryData}
+          loadCategoryStoryList={loadCategoryStoryList}
+          loadMoreCategoryStoryList={loadMoreCategoryStoryList}
+          stories={stories}
+          setStories={setStories}
+        />
+      ) : null}
+
       <div className="inner-action-pane category-pane" id="tabular-scroll">
+        <header
+          style={{
+            position: "sticky",
+            top: "0",
+            padding: "5px 30px",
+            zIndex: "1500",
+          }}
+        >
+          <span
+            style={{
+              fontSize: "20px",
+              lineHeight: "1px",
+              fontWeight: "500",
+              color: "black",
+            }}
+          >
+            Found : {totalCategory.current}{" "}
+            {totalCategory.current > 1 ? "Categories" : "Category"}
+          </span>
+        </header>
         <div className="floating-btn" onClick={() => onAddCard()}>
           <Add style={{ color: grey[50] }} />
           <span>Add Tag</span>
@@ -281,9 +352,11 @@ const CategoryList = ({
                         addState={category.add}
                         openEditPane={openEditPane}
                         openDeletePane={openDeletePane}
+                        openDetailPane={openDetailPane}
                         onCancelAddCard={onCancelAddCard}
                         tempCategoryData={tempCategoryData}
                         tempSaveNewCard={tempSaveNewCard}
+                        setOpenDetailPane={setOpenDetailPane}
                         setTempCategoryData={setTempCategoryData}
                         saveEdit={saveEdit}
                         saveDelete={saveDelete}

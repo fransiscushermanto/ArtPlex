@@ -41,14 +41,9 @@ $stories =  [
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,615;0,700;0,800;1,400;1,500;1,600;1,615;1,700;1,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="/app/assets/css/open-iconic-bootstrap.min.css" />
     <link rel="stylesheet" href="/app/assets/css/animate.css" />
-    <link rel="stylesheet" href="/app/assets/css/owl.theme.default.min.css" />
-    <link rel="stylesheet" href="/app/assets/css/magnific-popup.css" />
     <link rel="stylesheet" href="/app/assets/css/aos.css" />
     <link rel="stylesheet" href="/app/assets/css/ionicons.min.css" />
-    <link rel="stylesheet" href="/app/assets/css/flaticon.css" />
-    <link rel="stylesheet" href="/app/assets/css/icomoon.css" />
     <link rel="stylesheet" href="/app/assets/css/app.css" />
 
 </head>

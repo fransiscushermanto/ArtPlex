@@ -40,7 +40,7 @@ const ForgetPasswordGroup = () => {
     if (res.data.success) {
       setType("reset");
       setAuth(res.data.error);
-      setVerifiedStatus(res.data.status);
+      setVerifiedStatus(res.data.verified);
       sendMail();
     } else {
       setAuth(res.data.error);

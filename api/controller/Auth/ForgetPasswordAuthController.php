@@ -16,24 +16,24 @@ class ForgetPasswordController
 
     function checkEmail()
     {
-        $query_check = $this->conn->prepare("SELECT `user_id`, `status` FROM `users` WHERE `email` = ?");
+        $query_check = $this->conn->prepare("SELECT `user_id`, `verified` FROM `users` WHERE `email` = ?");
         $query_check->bind_param("s", $this->email);
         $query_check->execute();
         $res = $query_check->get_result();
         $row = $res->fetch_assoc();
         if ($row > 0) {
-            $status = $row["status"];
-            if ($status === 'on') {
+            $verified = $row["verified"];
+            if ($verified === 1) {
                 return (object) array(
                     "success" => true,
                     "error" => "",
-                    "status" => $status,
+                    "verified" => true,
                 );
             } else {
                 return (object) array(
                     "success" => false,
                     "error" => "Email is not verified yet.",
-                    "status" => $status,
+                    "verified" => false,
                 );
             }
         } else {

@@ -49,6 +49,7 @@ const StoryView = ({ user }) => {
     comments: [],
   });
   const commentLength = useRef(0);
+  const deletedNumber = useRef(0);
   const accessTime = useRef("");
 
   useEffect(() => {
@@ -106,6 +107,7 @@ const StoryView = ({ user }) => {
         data.append("story_id", storyId);
         data.append("page", currentpage);
         data.append("access_time", accessTime.current);
+        data.append("deleted_number", deletedNumber);
         const res = await axios.post("/api/actions/get_more_comment.php", data);
         // console.log(res.data);
         if (res.data.success) {
@@ -246,6 +248,7 @@ const StoryView = ({ user }) => {
             story_id={storyId}
             comments={storyInfo.comments}
             setHasMore={setHasMore}
+            deletedNumber={deletedNumber}
           />
           {loading ? (
             <div className="loader widht-100 d-flex justify-content-center">

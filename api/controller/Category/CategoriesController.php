@@ -12,14 +12,13 @@ class CategoriesController
 
     public function createTag()
     {
-        $this->category_id = $this->generateTagID();
-        $query_add = $this->conn->prepare("INSERT INTO `categories` (`category_id`, `tag`) VALUES(?, ?)");
-        $query_add->bind_param("ss", $this->category_id, $this->tag);
+        $query_add = $this->conn->prepare("INSERT INTO `categories` (`tag`) VALUES(?)");
+        $query_add->bind_param("s", $this->tag);
         if ($query_add->execute()) {
             return (object) array(
                 "success" => true,
                 "categories" => (object) array(
-                    "category_id" => $this->category_id,
+                    "category_id" => mysqli_insert_id($this->conn),
                     "tag" => $this->tag,
                     "total_used_story" => 0,
                     "edit" => false,
@@ -143,20 +142,8 @@ class CategoriesController
             $query .= "  WHERE `tag` LIKE ? ";
             $whereState = true;
         }
-        // if (count($arr_added) > 0) {
 
-        //     foreach ($arr_added as $key) {
-        //         if (!$whereState) {
-        //             $query .= " WHERE ";
-        //             $query .= " category_id <> '$key' ";
-        //             $whereState = true;
-        //         } else {
-        //             $query .= " AND ";
-        //             $query .= " category_id <> '$key' ";
-        //         }
-        //     }
-        // }
-        $query .= " LIMIT ? OFFSET ? ";
+        $query .= " ORDER BY category_id ASC LIMIT ? OFFSET ? ";
         $query_search = $this->conn->prepare($query);
         if ($tag !== "") $query_search->bind_param("sii", $tag, $limit, $offset);
         else $query_search->bind_param("ii", $limit, $offset);
@@ -182,7 +169,7 @@ class CategoriesController
             } while ($row = $res->fetch_assoc());
         }
 
-        return (object) array("success" => (count($arr_category) > 0), "categories" => $arr_category, "limit" => $limit, "offset" => $offset, "page" => $page,);
+        return (object) array("success" => (count($arr_category) > 0), "categories" => $arr_category, "limit" => $limit, "offset" => $offset, "page" => $page, "total_category" => $this->getCategoryCount(),);
     }
 
     public function generateTagID()
@@ -193,15 +180,16 @@ class CategoriesController
         return $result;
     }
 
-    public function getUsedBy($page = 0, $keyword = "")
+    public function getDetail($page = 0, $keyword = "")
     {
         $arr_story = array();
-        $limit = 10;
+        $limit = 6;
         $offset = ($page * $limit);
         $query = "SELECT u.username, u.user_id, u.name, s.story_id, s.title, sp.publish_date FROM categories c 
-        JOIN stories s ON c.story_id = s.story_id 
+        JOIN stories_categories sc ON c.category_id = sc.category_id 
+        JOIN stories s on sc.story_id = s.story_id  
         JOIN users u ON s.user_id = u.user_id 
-        JOIN stories_published sp ON s.story_id = sp.story_id
+        JOIN stories_publish sp ON s.story_id = sp.story_id
         WHERE c.category_id = ? ";
         if ($keyword !== "") $query .= "AND s.title LIKE ?";
         $query .=  "LIMIT ? OFFSET ?";
@@ -214,14 +202,16 @@ class CategoriesController
         $row = $res->fetch_assoc();
 
         if ($row > 0) {
-            array_push($arr_story, (object)array(
-                "user_id" => $row['user_id'],
-                "name" => $row['name'],
-                "username" => $row['username'],
-                "story_id" => $row['story_id'],
-                "title" => $row['title'],
-                "publish_date" => $row['publish_date'],
-            ));
+            do {
+                array_push($arr_story, (object)array(
+                    "user_id" => $row['user_id'],
+                    "name" => $row['name'],
+                    "username" => $row['username'],
+                    "story_id" => $row['story_id'],
+                    "title" => $row['title'],
+                    "publish_date" => $row['publish_date'],
+                ));
+            } while ($row = $res->fetch_assoc());
         }
 
         return ["success" => (count($arr_story) > 0), "stories" => $arr_story];
@@ -231,8 +221,8 @@ class CategoriesController
     {
         $count = 0;
         $query = "SELECT COUNT(*) category_count FROM categories c 
-        JOIN stories_categories sc ON c.category_id = sc.category_id 
-        WHERE c.category_id = ? ";
+                  JOIN stories_categories sc ON c.category_id = sc.category_id 
+                  WHERE c.category_id = ? ";
         $query_get = $this->conn->prepare($query);
         $query_get->bind_param("s", $category_id);
         $query_get->execute();
@@ -257,5 +247,14 @@ class CategoriesController
         $query_count->execute();
         $res = $query_count->get_result();
         return $total_story = $res->num_rows;
+    }
+
+    public function getCategoryCount()
+    {
+        $query_count = $this->conn->prepare("SELECT COUNT(*) category_count FROM categories ;");
+        $query_count->execute();
+        $res = $query_count->get_result();
+        $row = $res->fetch_assoc();
+        return $row['category_count'];
     }
 }

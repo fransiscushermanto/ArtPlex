@@ -427,11 +427,8 @@ class StoriesController
                 );
             } while ($row  = $res->fetch_assoc());
         }
-        if (count($arr_publish) > 0) {
-            return (object) array("success" => true, "stories" => $arr_publish,);
-        } else {
-            return (object) array("success" => false, "stories" => $arr_publish, "error" => mysqli_error($this->conn),);
-        }
+
+        return (object) array("success" => (count($arr_publish) > 0), "stories" => $arr_publish,);
     }
     public function getStory()
     {

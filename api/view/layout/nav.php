@@ -1,5 +1,5 @@
 <nav class="navbar px-md-0 navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light 
-    <?php echo $auth->hasUser() ? 'bg-white' : 'transparent' ?> <?php echo $route->has("reset") || $route->has("verify") || $route->has("login") || $route->has("register") || $route->has("forget") ? "hidden" : "" ?> " id="ftco-navbar">
+    <?php echo $auth->hasUser() || $route->getCurrentPathName()[0] === '@' ? 'bg-white' : 'transparent' ?> <?php echo $route->has("reset") || $route->has("verify") || $route->has("login") || $route->has("register") || $route->has("forget") ? "hidden" : "" ?> " id="ftco-navbar">
     <div class="container">
         <a href="/" class="navbar-brand font-weight-bolder">
             <?php echo env("APP_NAME", "React App"); ?>
