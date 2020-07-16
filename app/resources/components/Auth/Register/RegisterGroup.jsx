@@ -53,7 +53,7 @@ const RegisterGroup = () => {
     data.append("email", formData.email);
     data.append("password", formData.password);
     const res = await axios.post("/api/actions/register.php", data);
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data.success) {
       setAuth(res.data.error);
       sendMail();
