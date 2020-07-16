@@ -124,6 +124,7 @@ const HomeGroup = ({ user }) => {
               type="text"
               name="title"
               id="search-bar"
+              maxLength="500"
               onChange={handleSubmit(startSearch)}
               placeholder="Search title"
               className={openSearchBar ? "form-control show " : "form-control"}

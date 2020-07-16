@@ -224,6 +224,7 @@ const ActionGroup = ({ user, setStatusAction, statusAction }) => {
             type="text"
             name="search"
             id="search"
+            maxLength="500"
             className="form-control"
             value={searchDefaultValueByType()}
             placeholder={`Search ${type.charAt(0).toUpperCase() +

@@ -256,7 +256,10 @@ const UserList = ({
       onClick={deleteUser}
     />
   ) : (
-    <div className="inner-action-pane user-pane" id="tabular-scroll">
+    <div
+      className="inner-action-pane user-pane flex-column justify-content-start"
+      id="tabular-scroll"
+    >
       <table className="table">
         <thead>
           <tr>{renderTableColumn()}</tr>
@@ -264,6 +267,17 @@ const UserList = ({
 
         <tbody>{listUserData !== undefined ? renderTableRow() : null}</tbody>
       </table>
+      {listUserData ? (
+        listUserData.length > 0 ? null : (
+          <div className="width-100" style={{ textAlign: "center" }}>
+            <h1 className="font-weight-bold">No Users Found</h1>
+          </div>
+        )
+      ) : (
+        <div className="width-100" style={{ textAlign: "center" }}>
+          <h1 className="font-weight-bold">No Users Found</h1>
+        </div>
+      )}
     </div>
   );
 };
