@@ -28,6 +28,7 @@ const Comment = ({
   const [showMoreButton, setShowMoreButton] = useState(false);
   const [dropdown, setDropdown] = useState(false);
   const editCommentQuillRef = useRef(null);
+  const showCommentRef = useRef(null);
   const dropdownRef = useRef(null);
 
   const handleChange = (text, delta, source, editor) => {
@@ -62,6 +63,12 @@ const Comment = ({
       });
     }
   };
+
+  useEffect(() => {
+    if (showCommentRef.current) {
+      showCommentRef.current.editor.enable(false);
+    }
+  }, [showCommentRef.current]);
 
   useEffect(() => {
     if (document.getElementById("ftco-navbar")) {
@@ -212,6 +219,7 @@ const Comment = ({
                 </div>
                 <div className="body-wrapper">
                   <ReactQuill
+                    ref={showCommentRef}
                     className="body-comment"
                     id="comment-body"
                     value={comment_body}

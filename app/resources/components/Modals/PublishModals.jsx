@@ -37,7 +37,7 @@ const PublishModals = ({
   useEffect(() => {
     setTitle(titleParams);
     setBody(status === "on" ? bodyParams : "");
-    console.log(typeof body, titleParams, bodyParams);
+    // console.log(typeof body, titleParams, bodyParams);
   }, [titleParams, bodyParams]);
 
   useEffect(() => {

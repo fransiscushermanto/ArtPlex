@@ -7,10 +7,9 @@ export default (OriginalComponent) => {
     const location = useLocation();
     const { user } = myApp;
     let arrLocation = location.pathname.split("/");
-    console.log(user);
     useEffect(() => {
       if (user === null) {
-        console.log(history);
+        // console.log(history);
         history.push("/");
         window.location.reload();
       } else {

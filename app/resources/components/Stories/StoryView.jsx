@@ -74,7 +74,7 @@ const StoryView = ({ user }) => {
       data.append("user_id", user.id);
       accessTime.current = date;
       const res = await axios.post("/api/actions/get_story.php", data);
-      console.log(res.data);
+      // console.log(res.data);
       if (res.data.success) {
         setAuthorData(res.data.author);
         setStoryInfo({
@@ -214,12 +214,13 @@ const StoryView = ({ user }) => {
                       key={index}
                       style={{ listStyle: "none", margin: "0 6px 8px 0" }}
                     >
-                      <Link
+                      <Tag label={category.tag} {...category} />
+                      {/* <Link
                         to={`/tag/${category.tag}`}
                         className="no-animation"
                       >
                         <Tag label={category.tag} {...category} />
-                      </Link>
+                      </Link> */}
                     </li>
                   );
                 })

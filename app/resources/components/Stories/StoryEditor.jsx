@@ -145,6 +145,7 @@ const StoryEditor = ({ user }) => {
   };
 
   const handleTitleChange = (text, delta, source, editor) => {
+    // console.log("HAYO");
     setTitle(text);
     titleChange = titleChange.compose(delta);
   };
@@ -178,7 +179,7 @@ const StoryEditor = ({ user }) => {
   useEffect(() => {
     timer = setTimeout(() => {
       setTyping(false);
-      console.log("STOP TYPING");
+      // console.log("STOP TYPING");
     }, timeoutVal);
     return () => clearTimeout(timer);
   }, [title, body, titleChange.length(), bodyChange.length()]);
@@ -257,6 +258,8 @@ const StoryEditor = ({ user }) => {
   };
 
   useEffect(() => {
+    titleChange = new Delta();
+    bodyChange = new Delta();
     window.addEventListener(
       "keydown",
       function(e) {
@@ -293,7 +296,7 @@ const StoryEditor = ({ user }) => {
         (window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) &&
         e.keyCode == 83
       ) {
-        console.log("HANDLE KEY SAVE");
+        // console.log("HANDLE KEY SAVE");
         if (titleChange.length() > 0 && bodyChange.length() > 0) {
           setSaved(false);
           titleChange = bodyChange = new Delta();
@@ -316,16 +319,26 @@ const StoryEditor = ({ user }) => {
 
   useEffect(() => {
     if (type) {
-      if (
-        (type === "edit" && saved === null && titleChange.length() > 0) ||
-        (type === "edit" && saved === null && bodyChange.length() > 0)
-      ) {
-        titleChange = new Delta();
-        bodyChange = new Delta();
-        setSaved(true);
+      if (type === "edit" && saved === null) {
+        if (bodyChange.length() > 0 || titleChange.length() > 0) {
+          // console.log("MASIH ADA");
+          clearTimeout(timer);
+          setTyping(false);
+          titleChange = new Delta();
+          bodyChange = new Delta();
+          setSaved(true);
+        } else {
+          // console.log("MASIH ADA 1");
+          clearTimeout(timer);
+          setTyping(false);
+          // console.log(bodyChange.length(), titleChange.length());
+          titleChange = new Delta();
+          bodyChange = new Delta();
+          setSaved(true);
+        }
       }
     }
-  }, [type, saved, body, title]);
+  }, [type, saved, body, title, bodyChange.length(), titleChange.length()]);
 
   useEffect(() => {
     let mount = true;
@@ -395,7 +408,7 @@ const StoryEditor = ({ user }) => {
         className="container new-story-wrapper height-100"
       >
         <Prompt
-          when={bodyChange.length() > 0 || titleChange.length() > 0}
+          when={titleChange.length() > 0 || bodyChange.length() > 0}
           message={"There are unsaved changes. Are you sure you want to leave?"}
         />
         <div className="col height-100">

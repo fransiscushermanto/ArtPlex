@@ -27,7 +27,7 @@ const CommentGroup = ({
     data.append("body", bodyComment);
     data.append("story_id", story_id);
     const res = await axios.post("/api/actions/create_comment.php", data);
-    console.log(res.data);
+    // console.log(res.data);
     if (res.data.success) {
       setBodyComment("");
       let temp = [...comments];

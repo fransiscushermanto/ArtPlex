@@ -161,7 +161,7 @@ const CommentList = ({
       return;
     }
     const limit = 10;
-    console.log(listCommentData, commentLength.current);
+    // console.log(listCommentData, commentLength.current);
     if (commentLength.current >= limit && listCommentData) {
       const currentpage = Math.round(commentLength.current / limit);
       if (hasMore) {
@@ -248,40 +248,37 @@ const CommentList = ({
             listCommentData.length > 0 ? (
               listCommentData.map((comment, index) => {
                 return (
-                  console.log(comment),
-                  (
-                    <div key={index} className="inner-comment-list-wrapper">
-                      <Comment
-                        comment_body={comment.comment_body}
-                        comment_id={comment.comment_id}
-                        comment_publish_time={comment.publish_date}
-                        commenter={comment.comment_name}
-                        comment_status={comment.status}
-                        comment_user_id={comment.user_id}
-                        style={{ cursor: "none", pointerEvents: "none" }}
-                      />
-                      <div className="action-btn">
-                        <span>
-                          <Delete
-                            onClick={() => {
-                              setOpenDeleteModal(false);
-                              setOpenDeleteModal(true);
-                              setTempCommentData(comment);
-                            }}
-                          />
-                        </span>
-                        <span>
-                          <InfoOutlined
-                            title="Detail"
-                            onClick={() => {
-                              setOpenDetail(true);
-                              setTempCommentData(comment);
-                            }}
-                          />
-                        </span>
-                      </div>
+                  <div key={index} className="inner-comment-list-wrapper">
+                    <Comment
+                      comment_body={comment.comment_body}
+                      comment_id={comment.comment_id}
+                      comment_publish_time={comment.publish_date}
+                      commenter={comment.comment_name}
+                      comment_status={comment.status}
+                      comment_user_id={comment.user_id}
+                      style={{ cursor: "none", pointerEvents: "none" }}
+                    />
+                    <div className="action-btn">
+                      <span>
+                        <Delete
+                          onClick={() => {
+                            setOpenDeleteModal(false);
+                            setOpenDeleteModal(true);
+                            setTempCommentData(comment);
+                          }}
+                        />
+                      </span>
+                      <span>
+                        <InfoOutlined
+                          title="Detail"
+                          onClick={() => {
+                            setOpenDetail(true);
+                            setTempCommentData(comment);
+                          }}
+                        />
+                      </span>
                     </div>
-                  )
+                  </div>
                 );
               })
             ) : (
