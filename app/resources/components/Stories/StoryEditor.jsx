@@ -181,9 +181,10 @@ const StoryEditor = ({ user }) => {
       console.log("STOP TYPING");
     }, timeoutVal);
     return () => clearTimeout(timer);
-  }, [title, body]);
+  }, [title, body, titleChange.length(), bodyChange.length()]);
 
   const sendToServer = async () => {
+    setTyping(false);
     setStatusAction({
       open: true,
       message: "Saving...",
@@ -311,7 +312,7 @@ const StoryEditor = ({ user }) => {
 
   useEffect(() => {
     handleAutoSave();
-  }, [typing, titleChange.length(), bodyChange.length()]);
+  }, [typing]);
 
   useEffect(() => {
     if (type) {
@@ -404,7 +405,10 @@ const StoryEditor = ({ user }) => {
                 className="title-editable"
                 theme={"bubble"}
                 ref={titleQuillRef}
-                onChange={handleTitleChange}
+                onChange={(text, delta, source, editor) => {
+                  handleTitleChange(text, delta, source, editor);
+                  handleStillTyping();
+                }}
                 value={title}
                 formats={StoryEditor.titleFormats}
                 placeholder={"Title"}
@@ -416,13 +420,19 @@ const StoryEditor = ({ user }) => {
           </div>
           <div className="row">
             <div className="body">
-              <ToolbarEditor quillRef={quillRef} />
+              <ToolbarEditor
+                quillRef={quillRef}
+                handleStillTyping={handleStillTyping}
+              />
               <ReactQuill
                 ref={quillRef}
                 className="body-editable"
                 id="body-editable"
                 theme={"bubble"}
-                onChange={handleBodyChange}
+                onChange={(text, delta, source, editor) => {
+                  handleBodyChange(text, delta, source, editor);
+                  handleStillTyping();
+                }}
                 value={body}
                 formats={StoryEditor.formats}
                 placeholder={"Body"}

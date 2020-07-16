@@ -130,7 +130,7 @@ Quill.register("modules/clink", (quill) => {
 
 __webpack_public_path__ = `${window.STATIC_URL}app/assets/temp-img`;
 
-const ToolBarEditor = ({ quillRef }) => {
+const ToolBarEditor = ({ quillRef, handleStillTyping }) => {
   const { user } = myApp;
 
   const boldText = () => {
@@ -169,7 +169,9 @@ const ToolBarEditor = ({ quillRef }) => {
     ele.appendChild(file);
     var img = document.getElementById("artplex-img");
     img.click();
+
     img.addEventListener("change", async function() {
+      handleStillTyping();
       if (img.files && img.files[0]) {
         var FR = new FileReader();
 
@@ -253,7 +255,13 @@ const ToolBarEditor = ({ quillRef }) => {
         </button>
       </div>
       <div id="sidebar-controls">
-        <button id="show-controls" onClick={showControl}>
+        <button
+          id="show-controls"
+          onClick={() => {
+            showControl();
+            handleStillTyping();
+          }}
+        >
           <span className="svgIcon svgIcon--addMediaPlus svgIcon--25px">
             <svg className="svgIcon-use" width="25" height="25">
               <path
@@ -264,7 +272,13 @@ const ToolBarEditor = ({ quillRef }) => {
           </span>
         </button>
         <span className="controls">
-          <button id="image-button" onClick={imageText}>
+          <button
+            id="image-button"
+            onClick={() => {
+              imageText();
+              handleStillTyping();
+            }}
+          >
             <span className="svgIcon svgIcon--addMediaImage svgIcon--25px">
               <svg className="svgIcon-use" width="25" height="25">
                 <g fillRule="evenodd">
@@ -284,7 +298,13 @@ const ToolBarEditor = ({ quillRef }) => {
               </svg>
             </span>
           </button> */}
-          <button id="divider-button" onClick={dividerText}>
+          <button
+            id="divider-button"
+            onClick={() => {
+              dividerText();
+              handleStillTyping();
+            }}
+          >
             <span className="svgIcon svgIcon--addMediaPart svgIcon--25px">
               <svg className="svgIcon-use" width="25" height="25">
                 <g fillRule="evenodd">
