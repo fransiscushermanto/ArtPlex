@@ -92,6 +92,7 @@ const CommentGroup = ({
                 deletedNumber={deletedNumber}
                 comment_object={comment}
                 comments_array={comments}
+                comment_menu={comment.menu}
                 storyInfo={storyInfo}
                 setStoryInfo={setStoryInfo}
                 comment_body={comment.comment_body}

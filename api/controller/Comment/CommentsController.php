@@ -46,6 +46,7 @@ class CommentsController
                         "user_id" => $this->user_id,
                         "comment_name" => $row['name'],
                         "comment_username" => $row["username"],
+                        "menu" => true,
                     ),
                     "success" => true,
                 );
@@ -152,6 +153,7 @@ class CommentsController
                     "user_id" => $row["user_id"],
                     "comment_name" => $row['name'],
                     "comment_username" => $row["username"],
+                    "menu" => (((int)$row['user_id']) === $this->user_id),
                 ));
             } while ($row = $res->fetch_assoc());
         }

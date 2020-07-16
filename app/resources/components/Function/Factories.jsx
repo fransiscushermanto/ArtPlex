@@ -9,7 +9,10 @@ import {
   Check,
   Warning,
   AddCircleOutline,
+  Close,
 } from "@material-ui/icons";
+import { Snackbar, IconButton } from "@material-ui/core";
+import { Alert as MuiAlert } from "@material-ui/lab";
 import { red, green, grey } from "@material-ui/core/colors";
 import { ProgressBar } from "react-bootstrap";
 import { useForm } from "react-hook-form";
@@ -517,5 +520,40 @@ export const CategoryDetail = ({
         </div>
       </div>
     </div>
+  );
+};
+
+export const SnackBar = ({ openState, handleClose, severity, message }) => {
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  return (
+    <Snackbar
+      anchorOrigin={{
+        vertical: "bottom",
+        horizontal: "left",
+      }}
+      open={openState}
+      autoHideDuration={6000}
+      onClose={handleClose}
+    >
+      <Alert
+        onClick={handleClose}
+        severity={severity}
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            onClick={handleClose}
+          >
+            <Close fontSize="small" />
+          </IconButton>
+        }
+      >
+        {message}
+      </Alert>
+    </Snackbar>
   );
 };

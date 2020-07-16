@@ -5,7 +5,7 @@ import ReactQuill, { Quill } from "react-quill";
 import axios from "axios";
 import ImageResize from "quill-image-resize-module";
 
-import { restrictedKey, totalWord } from "../Function/Factories";
+import { restrictedKey, totalWord, SnackBar } from "../Function/Factories";
 import ToolbarEditor from "../Function/ToolbarEditor";
 import PublishModal from "../Modals/PublishModals";
 import CheckMail from "../Auth/CheckMail";
@@ -16,7 +16,6 @@ import "react-quill/dist/quill.bubble.css";
 import "react-quill/dist/quill.core.css";
 import "react-quill/dist/quill.bubble.css";
 import "highlight.js/styles/darcula.css";
-
 let Block = Quill.import("blots/block");
 let Delta = Quill.import("delta");
 
@@ -60,6 +59,11 @@ const StoryEditor = ({ user }) => {
   const [categories, setCategories] = useState([]);
   const [shown, setShown] = useState({ title: "", body: "" });
   const [openSendEmailPage, setOpenSendEmailPage] = useState(false);
+  const [statusAction, setStatusAction] = useState({
+    open: false,
+    severity: "",
+    message: "",
+  });
   const quillRef = useRef(null);
   const titleQuillRef = useRef(null);
   let timer,
@@ -180,6 +184,11 @@ const StoryEditor = ({ user }) => {
   }, [title, body]);
 
   const sendToServer = async () => {
+    setStatusAction({
+      open: true,
+      message: "Saving...",
+      severity: "info",
+    });
     const titleQuill = titleQuillRef.current.editor;
     const bodyQuill = quillRef.current.editor;
     const total_word = titleQuill.getLength() - 1 + (bodyQuill.getLength() - 1);
@@ -197,6 +206,11 @@ const StoryEditor = ({ user }) => {
     const res = await axios.post("/api/actions/story_write.php", data);
     if (storyId) {
       if (res.data.success) {
+        setStatusAction({
+          open: true,
+          message: "Saved",
+          severity: "success",
+        });
         setTitle(res.data.title_html);
         setBody(res.data.body_html);
 
@@ -208,13 +222,37 @@ const StoryEditor = ({ user }) => {
           body: res.data.body,
         });
         setSaved(true);
+      } else {
+        setStatusAction({
+          open: true,
+          message: "Save Failed",
+          severity: "warning",
+        });
       }
     } else {
       if (res.data.success) {
         setSaved(true);
         history.push(`/p/${res.data.story_id}/edit`);
+        setStatusAction({
+          open: true,
+          message: "Saved",
+          severity: "success",
+        });
+      } else {
+        setStatusAction({
+          open: true,
+          message: "Save Failed",
+          severity: "warning",
+        });
       }
     }
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setStatusAction({ ...statusAction, open: false });
   };
 
   useEffect(() => {
@@ -273,28 +311,42 @@ const StoryEditor = ({ user }) => {
 
   useEffect(() => {
     handleAutoSave();
-  }, [typing]);
+  }, [typing, titleChange.length(), bodyChange.length()]);
 
   useEffect(() => {
     if (type) {
       if (
-        type === "edit" &&
-        saved === null &&
-        titleChange.length() > 0 &&
-        bodyChange.length() > 0
+        (type === "edit" && saved === null && titleChange.length() > 0) ||
+        (type === "edit" && saved === null && bodyChange.length() > 0)
       ) {
         titleChange = new Delta();
         bodyChange = new Delta();
         setSaved(true);
       }
     }
-  }, [type, saved, title, body]);
+  }, [type, saved, body, title]);
 
   useEffect(() => {
-    if (saved === false && saved !== null) {
-      sendToServer();
+    let mount = true;
+    const ac = new AbortController();
+    if (mount) {
+      if (saved === false && saved !== null) {
+        sendToServer();
+      }
     }
+    return () => {
+      ac.abort();
+      mount = false;
+    };
   }, [title, body, saved]);
+
+  useEffect(() => {
+    if (modal) {
+      document.getElementById("ftco-navbar").style.display = "none";
+    } else {
+      document.getElementById("ftco-navbar").style.display = "flex";
+    }
+  }, [modal]);
 
   window.onpopstate = function(e) {
     if (titleChange.length() > 0 || bodyChange.length() > 0) {
@@ -313,6 +365,12 @@ const StoryEditor = ({ user }) => {
     <CheckMail email={user.email} type={"verify"} />
   ) : (
     <>
+      <SnackBar
+        openState={statusAction.open}
+        handleClose={handleClose}
+        severity={statusAction.severity}
+        message={statusAction.message}
+      />
       {modal ? (
         <PublishModal
           status={status}

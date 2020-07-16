@@ -19,6 +19,7 @@ const Comment = ({
   comments_array,
   storyInfo,
   setStoryInfo,
+  comment_menu,
 }) => {
   const [openEditComment, setOpenEditComment] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
@@ -63,10 +64,12 @@ const Comment = ({
   };
 
   useEffect(() => {
-    if (openDeleteModal) {
-      document.getElementById("ftco-navbar").style.display = "none";
-    } else {
-      document.getElementById("ftco-navbar").style.display = "flex";
+    if (document.getElementById("ftco-navbar")) {
+      if (openDeleteModal) {
+        document.getElementById("ftco-navbar").style.display = "none";
+      } else {
+        document.getElementById("ftco-navbar").style.display = "flex";
+      }
     }
   }, [openDeleteModal]);
 
@@ -102,12 +105,8 @@ const Comment = ({
   }, [openEditComment]);
 
   useEffect(() => {
-    if (user) {
-      if (user.id === comment_user_id) {
-        setShowMoreButton(true);
-      }
-    }
-  }, [comment_id, user]);
+    setShowMoreButton(comment_menu);
+  }, [comment_menu]);
 
   return (
     <>

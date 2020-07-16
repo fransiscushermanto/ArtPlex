@@ -30,9 +30,10 @@ const CategoryList = ({
 
   async function handleScroll() {
     const ele = document.getElementById("tabular-scroll");
-    if (ele.offsetHeight + Math.ceil(ele.scrollTop) < ele.scrollHeight) {
+    if (ele.offsetHeight + Math.ceil(ele.scrollTop) !== ele.scrollHeight) {
       return;
     }
+    console.log(categoryLength.current);
     const limit = 12;
     if (categoryLength.current >= limit && listCategoryData) {
       const currentpage = Math.round(categoryLength.current / limit);
@@ -54,12 +55,14 @@ const CategoryList = ({
           } else {
             setHasMore(true);
           }
+
           categoryLength.current += res.data.categories.length;
           let tempCategories = [
             ...listCategoryData.filter(
               (category) => category.category_id !== null
             ),
           ];
+
           let tempNewCategories = [
             ...listCategoryData.filter(
               (category) => category.category_id === null
@@ -68,6 +71,7 @@ const CategoryList = ({
           res.data.categories.map((category) => {
             tempCategories.push(category);
           });
+
           tempNewCategories.map((newCategory) => {
             tempCategories.push(newCategory);
           });

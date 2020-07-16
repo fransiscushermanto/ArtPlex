@@ -734,6 +734,7 @@ class StoriesController
                         "user_id" => $row["user_id"],
                         "comment_name" => $row["name"],
                         "comment_username" => $row["username"],
+                        "menu" => (((int) $this->user_id) === $row["user_id"]),
                     ));
                 } while ($row = mysqli_fetch_assoc($res));
             }

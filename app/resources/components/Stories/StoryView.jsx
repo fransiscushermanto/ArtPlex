@@ -71,9 +71,10 @@ const StoryView = ({ user }) => {
 
       var date = new Date(time.data.dateString);
       data.append("access_time", date);
+      data.append("user_id", user.id);
       accessTime.current = date;
       const res = await axios.post("/api/actions/get_story.php", data);
-      // console.log(res.data);
+      console.log(res.data);
       if (res.data.success) {
         setAuthorData(res.data.author);
         setStoryInfo({
@@ -108,8 +109,9 @@ const StoryView = ({ user }) => {
         data.append("page", currentpage);
         data.append("access_time", accessTime.current);
         data.append("deleted_number", deletedNumber);
+        data.append("user_id", user.id);
         const res = await axios.post("/api/actions/get_more_comment.php", data);
-        // console.log(res.data);
+        console.log(res.data);
         if (res.data.success) {
           setLoading(false);
           if (res.data.comments.length < limit) {

@@ -28,7 +28,7 @@ export default (OriginalComponent) => {
     if (user !== null) {
       return <OriginalComponent user={user} type={arrLocation[2]} />;
     } else {
-      history.push("/");
+      history.push("/login");
       window.location.reload();
     }
   };

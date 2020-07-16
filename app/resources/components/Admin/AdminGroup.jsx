@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { Close } from "@material-ui/icons";
-import { Snackbar, IconButton } from "@material-ui/core";
-import { Alert as MuiAlert } from "@material-ui/lab";
 
 import SidePane from "./SidePane";
 import ActionPane from "./ActionPane";
+import { SnackBar } from "../Function/Factories";
+
 const AdminGroup = ({ user, type }) => {
   const [openSidePane, setOpenSidePane] = useState(true);
   const [statusAction, setStatusAction] = useState({
@@ -20,10 +19,6 @@ const AdminGroup = ({ user, type }) => {
     }
     setStatusAction({ ...statusAction, open: false });
   };
-
-  function Alert(props) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
 
   useEffect(() => {
     if (document.getElementById("ftco-navbar")) {
@@ -42,32 +37,12 @@ const AdminGroup = ({ user, type }) => {
           statusAction={statusAction}
           setStatusAction={setStatusAction}
         />
-        <Snackbar
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-          open={statusAction.open}
-          autoHideDuration={6000}
-          onClose={handleClose}
-        >
-          <Alert
-            onClick={handleClose}
-            severity={statusAction.severity}
-            action={
-              <IconButton
-                size="small"
-                aria-label="close"
-                color="inherit"
-                onClick={handleClose}
-              >
-                <Close fontSize="small" />
-              </IconButton>
-            }
-          >
-            {statusAction.message}
-          </Alert>
-        </Snackbar>
+        <SnackBar
+          openState={statusAction.open}
+          handleClose={handleClose}
+          severity={statusAction.severity}
+          message={statusAction.message}
+        />
       </div>
     </div>
   );
