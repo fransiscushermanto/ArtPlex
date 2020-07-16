@@ -4,6 +4,7 @@ $category_id = (isset($_POST['category_id'])) ? $_POST['category_id'] : "";
 $story_title = (isset($_POST['title'])) ? $_POST['title'] : "";
 $access_time = (isset($_POST['access_time'])) ? $_POST['access_time'] : "";
 $deleted_number = (isset($_POST['deleted_number'])) ? json_decode($_POST['deleted_number']) : 0;
+
 include_once("../../vendor/autoload.php");
 include_once("../helper.php");
 include_once("../database.php");

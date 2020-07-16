@@ -140,7 +140,6 @@ class CategoriesController
         if ($tag !== "") {
             $tag = '%' . $tag . '%';
             $query .= "  WHERE `tag` LIKE ? ";
-            $whereState = true;
         }
 
         $query .= " ORDER BY category_id ASC LIMIT ? OFFSET ? ";
@@ -169,7 +168,7 @@ class CategoriesController
             } while ($row = $res->fetch_assoc());
         }
 
-        return (object) array("success" => (count($arr_category) > 0), "categories" => $arr_category, "limit" => $limit, "offset" => $offset, "page" => $page, "total_category" => $this->getCategoryCount(),);
+        return (object) array("success" => (count($arr_category) > 0), "categories" => $arr_category, "limit" => $limit, "offset" => $offset, "page" => $page, "total_category" => $this->getCategoryCount($tag),);
     }
 
     public function generateTagID()
@@ -249,9 +248,15 @@ class CategoriesController
         return $total_story = $res->num_rows;
     }
 
-    public function getCategoryCount()
+    public function getCategoryCount($keyword = "")
     {
-        $query_count = $this->conn->prepare("SELECT COUNT(*) category_count FROM categories ;");
+        $query = "SELECT COUNT(*) category_count FROM categories ";
+        if ($keyword !== "") {
+            $keyword = '%' . $keyword . '%';
+            $query .= " WHERE `tag` LIKE ? ";
+        }
+        $query_count = $this->conn->prepare($keyword);
+        $query_count->bind_param("s", $keyword);
         $query_count->execute();
         $res = $query_count->get_result();
         $row = $res->fetch_assoc();

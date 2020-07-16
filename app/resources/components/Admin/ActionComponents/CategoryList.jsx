@@ -293,6 +293,7 @@ const CategoryList = ({
       data.append("tag", searchCategories);
       axios.post("/api/actions/get_list_tag.php", data).then((res) => {
         categoryLength.current = res.data.categories.length;
+        totalCategory.current = res.data.total_category;
         setListCategoryData({ categories: res.data.categories });
       });
     } else {
