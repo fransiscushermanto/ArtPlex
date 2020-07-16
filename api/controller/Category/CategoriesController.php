@@ -255,8 +255,8 @@ class CategoriesController
             $keyword = '%' . $keyword . '%';
             $query .= " WHERE `tag` LIKE ? ";
         }
-        $query_count = $this->conn->prepare($keyword);
-        $query_count->bind_param("s", $keyword);
+        $query_count = $this->conn->prepare($query);
+        if ($keyword !== "") $query_count->bind_param("s", $keyword);
         $query_count->execute();
         $res = $query_count->get_result();
         $row = $res->fetch_assoc();
