@@ -677,15 +677,12 @@ class StoriesController
 
     public function getMoreComment($page = 0, $search = "", $access_time, $deleted_number = 0)
     {
-        // if ($access_time !== "") {
         try {
             $dt = DateTime::createFromFormat("D M d Y H:i:s e+", $access_time);
             $access_time = $dt->format("Y-m-d H:i:s");
         } catch (Exception $eh) {
             return (object) array("success" => false, "comments" => [], "error" => "Failed to parse time", "page" => $page, "access_time" => $access_time);
         }
-
-        // }
 
         $arr_comment = $this->getStoryRelatedComment($page, $search, $access_time, $deleted_number);
         if (count($arr_comment) > 0) {
@@ -713,13 +710,13 @@ class StoriesController
             if ($access_time !== "") $query .= " AND c.publish_date < ? ";
             if ($search !== "") {
                 $search = '%' . $search . '%';
-                $query .= " AND u.name LIKE ? OR c.body LIKE ? ";
+                //$query .= " AND (u.name LIKE ? OR c.body LIKE ?) ";
+                $query .= " AND (u.name LIKE ? OR c.body LIKE ?) ";
             }
             $query .= " ORDER BY c.publish_date DESC LIMIT ? OFFSET ?;";
             $query_get = $this->conn->prepare($query);
             if ($search !== "") $query_get->bind_param("ssssii", $this->story_id, $access_time, $search, $search, $limit, $offset);
             else $query_get->bind_param("ssii", $this->story_id, $access_time, $limit, $offset);
-            // $query_get->bind_param("sii", $this->story_id, $limit, $offset);
             $query_get->execute();
             $res = $query_get->get_result();
             $row = $res->fetch_assoc();

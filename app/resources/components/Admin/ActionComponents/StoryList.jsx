@@ -75,6 +75,9 @@ const StoryList = ({
       .then((time) => (accessTime.current = new Date(time.data.dateString)));
 
     const data = new FormData();
+    if (searchStories !== "") {
+      data.append("title", searchStories);
+    }
     data.append("type", radioPage.checked);
     axios
       .post("/api/actions/admin_get_list_story.php", data)
