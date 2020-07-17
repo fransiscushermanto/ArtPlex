@@ -37,13 +37,15 @@ const CommentGroup = ({
   };
 
   useEffect(() => {
-    if (
-      commentQuillRef.current.editor.getText() === "\n" ||
-      commentQuillRef.current.editor.getText() === ""
-    ) {
-      setAllowSubmit(false);
-    } else {
-      setAllowSubmit(true);
+    if (commentQuillRef.current !== null) {
+      if (
+        commentQuillRef.current.editor.getText() === "\n" ||
+        commentQuillRef.current.editor.getText() === ""
+      ) {
+        setAllowSubmit(false);
+      } else {
+        setAllowSubmit(true);
+      }
     }
   }, [commentQuillRef, bodyComment]);
 
