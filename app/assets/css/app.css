@@ -8925,7 +8925,7 @@ textarea.form-control {
         width: 100%; }
         .story-public .col:nth-child(1) .title .ql-container .ql-editor {
           width: 100%;
-          font-size: 42px;
+          font-size: 32px;
           font-weight: 500;
           font-family: Garamond, Georgia, serif;
           padding-bottom: 0px;
@@ -8939,8 +8939,14 @@ textarea.form-control {
             font-weight: 600; }
           .story-public .col:nth-child(1) .title .ql-container .ql-editor > h1 {
             font-size: 36px !important; }
+            @media (max-width: 991.98px) {
+              .story-public .col:nth-child(1) .title .ql-container .ql-editor > h1 {
+                font-size: 30px !important; } }
           .story-public .col:nth-child(1) .title .ql-container .ql-editor > h2 {
             font-size: 30px !important; }
+            @media (max-width: 991.98px) {
+              .story-public .col:nth-child(1) .title .ql-container .ql-editor > h2 {
+                font-size: 24px !important; } }
           .story-public .col:nth-child(1) .title .ql-container .ql-editor .divider {
             border: none;
             color: #111;
@@ -8988,6 +8994,9 @@ textarea.form-control {
           font-weight: 500;
           font-family: Garamond, Georgia, serif;
           color: black; }
+          @media (max-width: 991.98px) {
+            .story-public .col:nth-child(1) .body .ql-container .ql-editor {
+              font-size: 20px; } }
           .story-public .col:nth-child(1) .body .ql-container .ql-editor p {
             width: 100%; }
           .story-public .col:nth-child(1) .body .ql-container .ql-editor img {
@@ -8997,8 +9006,14 @@ textarea.form-control {
             font-size: 20px; }
           .story-public .col:nth-child(1) .body .ql-container .ql-editor > h1 {
             font-size: 36px !important; }
+            @media (max-width: 991.98px) {
+              .story-public .col:nth-child(1) .body .ql-container .ql-editor > h1 {
+                font-size: 30px !important; } }
           .story-public .col:nth-child(1) .body .ql-container .ql-editor > h2 {
             font-size: 30px !important; }
+            @media (max-width: 991.98px) {
+              .story-public .col:nth-child(1) .body .ql-container .ql-editor > h2 {
+                font-size: 24px !important; } }
           .story-public .col:nth-child(1) .body .ql-container .ql-editor::before {
             font-style: normal !important;
             font-weight: 500; }
