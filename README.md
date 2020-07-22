@@ -11,15 +11,15 @@ To run the app in localhost:
 3. Create the .env files by copypaste the .env.local.
 4. Import mysql files that already being given in this project.
 
-# Please use the db name as what you have initialized in .env.
+> Please use the db name as what you have initialized in .env.
 
 5. Run "php -S localhost:8000".
 
-# Take notes this app is running in port 8000 for development.
+> Take notes this app is running in port 8000 for development.
 
 6. If you want to try to change the codes, just simple "npm run watch" and the webpack will compiled everything.
 
-# Make sure you have Node installed in your computer.
+> Make sure you have Node installed in your computer.
 
 # Notes:
 
