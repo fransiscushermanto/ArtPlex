@@ -55,13 +55,13 @@ const StoryView = ({ user }) => {
   useEffect(() => {
     const getStory = async () => {
       const proxyurl = "https://cors-anywhere.herokuapp.com/";
-      const url = "http://timeapi.herokuapp.com/utc/now";
+      const url = "http://worldclockapi.com/api/json/est/now";
 
       const data = new FormData();
       data.append("story_id", storyId);
       data.append("type", "public");
 
-      const time = await axios.get(proxyurl + url, {
+      const time = await axios.get(proxyurl+url, {
         headers: {
           "x-apikey": "59a7ad19f5a9fa0808f11931",
           "Access-Control-Allow-Origin": "*",
@@ -69,7 +69,8 @@ const StoryView = ({ user }) => {
         },
       });
 
-      var date = new Date(time.data.dateString);
+
+      var date = new Date(time.data.currentDateTime);
       data.append("access_time", date);
       if (user !== null) {
         data.append("user_id", user.id);
